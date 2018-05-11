@@ -1,0 +1,87 @@
+.items-group {
+    width: 46%;
+    display: flex;
+    text-align: right;
+    padding-bottom: 20px;
+}
+
+.modal-content.modal-content {
+    background-color: #f0f2f4;
+}
+
+.modal-header.modal-header {
+    background-image: linear-gradient(to bottom, #f0f0f0 0, #cdd5db 100%)
+}
+
+.capture .capture-sum,
+.refund .refund-sum {
+    width: 35%;
+    text-align: center;
+}
+
+.modal-body,
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.float-right {
+    float: right;
+    clear: both;
+}
+
+.text-strong {
+    font-weight: bold;
+}
+
+.p-left {
+    padding-left: 10px;
+}
+
+.p-bottom {
+    padding-bottom: 10px;
+}
+
+.m-bottom {
+    margin-bottom: 10px;
+}
+
+.confirm-box {
+    text-align: center;
+    padding: 10px;
+}
+
+.error-message {
+    position: relative;
+    margin-left: -8px;
+}
+
+.inactiveLink {
+    pointer-events: none;
+    cursor: default;
+}
+
+.klarna-action-success {
+    color: #008000;
+}
+
+.klarna-action-fail {
+    color: #ff0000;
+}
+
+.error-messages {
+    list-style-position: inside;
+}
+
+.messages-text {
+    margin-left: -24px;
+}

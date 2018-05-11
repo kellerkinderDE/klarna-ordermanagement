@@ -1,0 +1,159 @@
+<?php
+
+use BestitKlarnaOrderManagement\Components\Facade\OrderManagement as OrderManagementFacade;
+use BestitKlarnaOrderManagement\Controllers\JsonableResponseTrait;
+use BestitKlarnaOrderManagement\Components\PaymentInsights;
+use Shopware\Components\CSRFWhitelistAware;
+
+/**
+ * Controller to show the Order Management functions for an order
+ *
+ * @author Senan Sharhan <senan.sharhan@bestit-online.de>
+ */
+class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Controller_Action implements CSRFWhitelistAware
+{
+    use JsonableResponseTrait;
+
+    /** @var Enlight_Controller_Plugins_ViewRenderer_Bootstrap */
+    protected $viewRenderer;
+    /** @var PaymentInsights */
+    protected $paymentInsights;
+    /** @var OrderManagementFacade */
+    protected $orderManagementFacade;
+
+    /**
+     * Configures the Controller
+     *
+     * Add the Order Management Template dir
+     */
+    public function preDispatch()
+    {
+        $this->get('template')->addTemplateDir($this->container->getParameter('bestit_order_management.template_dir'));
+        $this->viewRenderer = $this->Front()->Plugins()->get('ViewRenderer');
+        $this->viewRenderer->setNoRender();
+
+        $this->orderManagementFacade = $this->get('bestit_klarna_order_management.components.facade.order_management');
+        $this->paymentInsights = $this->get('bestit_klarna_order_management.components.payment_insights');
+    }
+
+    /**
+     * @return array
+     */
+    public function getWhitelistedCSRFActions()
+    {
+        return [
+            'index',
+            'createCapture',
+            'createRefund',
+            'resendCustomerCommunication',
+            'extendAuthTime',
+            'release',
+            'releaseAndRefund',
+            'cancelOrder',
+            'isKlarnaOrder',
+        ];
+    }
+
+    /**
+     * Order Management overview
+     */
+    public function indexAction()
+    {
+        $this->viewRenderer->setNoRender(false);
+        $shopwareOrderId = (int) $this->Request()->getParam('orderId');
+
+        $this->orderManagementFacade->showKlarnaOrder($this->View(), $shopwareOrderId);
+    }
+
+    /**
+     * Create a capture and return the new view
+     */
+    public function createCaptureAction()
+    {
+        $klarnaOrderId = $this->Request()->getParam('order_id');
+        $amount = $this->Request()->getParam('amount');
+        $lineItemsAsJson = $this->Request()->getParam('selectedLines');
+        $description = $this->Request()->getParam('description', '');
+
+        $response = $this->orderManagementFacade->captureOrder($klarnaOrderId, $amount, $lineItemsAsJson, $description);
+
+        $this->jsonResponse($response);
+    }
+
+    /**
+     * Create a refund and return the new view
+     */
+    public function createRefundAction()
+    {
+        $klarnaOrderId = $this->Request()->getParam('order_id');
+        $refundAmount = $this->Request()->getParam('amount');
+        $lineItemsAsJson = $this->Request()->getParam('selectedLines');
+        $description = $this->Request()->getParam('description', '');
+
+        $response = $this->orderManagementFacade->refundOrder(
+            $klarnaOrderId,
+            $refundAmount,
+            $lineItemsAsJson,
+            $description
+        );
+
+        $this->jsonResponse($response);
+    }
+
+    /**
+     * Trigger resend of customer communication
+     */
+    public function resendCustomerCommunicationAction()
+    {
+        $klarnaOrderId = $this->Request()->getParam('order_id');
+        $captureId = $this->Request()->getParam('capture_id');
+        $response = $this->orderManagementFacade->resendCustomerCommunication($klarnaOrderId, $captureId);
+
+        $this->jsonResponse($response);
+    }
+
+    /**
+     * Extend authorization time
+     */
+    public function extendAuthTimeAction()
+    {
+        $klarnaOrderId = $this->Request()->getParam('order_id');
+        $response = $this->orderManagementFacade->extendAuthTime($klarnaOrderId);
+
+        $this->jsonResponse($response);
+    }
+
+    /**
+     * Release remaining authorization
+     */
+    public function releaseAction()
+    {
+        $klarnaOrderId = $this->Request()->getParam('order_id');
+        $response = $this->orderManagementFacade->releaseRemainingAmount($klarnaOrderId);
+
+        $this->jsonResponse($response);
+    }
+
+    /**
+     * Cancel Order
+     */
+    public function cancelOrderAction()
+    {
+        $klarnaOrderId = $this->Request()->getParam('order_id');
+        $response = $this->orderManagementFacade->cancelOrder($klarnaOrderId);
+
+        $this->jsonResponse($response);
+    }
+
+    /**
+     * Check if the order is a klarna order or not
+     */
+    public function isKlarnaOrderAction()
+    {
+        $paymentId = (int) $this->Request()->getParam('paymentId');
+
+        $this->jsonResponse([
+            'success' => $this->paymentInsights->isKlarnaPaymentMethodId($paymentId)
+        ]);
+    }
+}

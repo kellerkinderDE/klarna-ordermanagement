@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container
+        xmlns="http://symfony.com/schema/dic/services"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service
+                class="BestitKlarnaOrderManagement\Subscriber\Controller\Backend\Order"
+                id="bestit_klarna_order_management.subscriber.controller.backend.order">
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.address_changed"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.order_deleted"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.payment_status_changed"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.order_tracking_code_changed"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.line_item_added"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.line_item_changed"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.line_item_deleted"/>
+            <argument type="service" id="bestit_klarna_order_management.components.payment_insights"/>
+            <argument type="string">%bestit_order_management.controllers_dir%</argument>
+            <argument type="string">%bestit_order_management.template_dir%</argument>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Subscriber\Controller\Backend\TemplateModifiers"
+                id="bestit_klarna_order_management.subscriber.controller.backend.template_modifiers">
+            <argument type="service" id="template"/>
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Subscriber\Doctrine\OrderTrigger"
+                id="bestit_klarna_order_management.subscriber.doctrine.order_trigger">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_subscriber"/>
+        </service>
+    </services>
+</container>

@@ -1,0 +1,43 @@
+<?php
+
+namespace BestitKlarnaOrderManagement\Components\DependencyInjection;
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+
+/**
+ * Injects our dependencies into the DIC.
+ *
+ * @package BestitKlarnaOrderManagement\Components\DependencyInjection
+ *
+ * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
+ */
+class DependencyInjectionExtension implements DependencyInjectionExtensionInterface
+{
+    /**
+     * @param ContainerBuilder $containerBuilder
+     *
+     * @return void
+     */
+    public function injectDependencies(ContainerBuilder $containerBuilder)
+    {
+        $orderManagementDir = __DIR__ . '/../..';
+
+        $containerBuilder->setParameter(
+            'bestit_order_management.template_dir',
+            "{$orderManagementDir}/Resources/views/"
+        );
+        $containerBuilder->setParameter(
+            'bestit_order_management.controllers_dir',
+            "{$orderManagementDir}/Controllers/"
+        );
+
+        $loader = new XmlFileLoader(
+            $containerBuilder,
+            new FileLocator()
+        );
+
+        $loader->load("{$orderManagementDir}/Resources/services.xml");
+    }
+}

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container
+        xmlns="http://symfony.com/schema/dic/services"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <imports>
+        <!-- Module specific imports -->
+        <import resource="subscriber.xml"/>
+        <import resource="shopware_modules.xml"/>
+    </imports>
+
+    <services>
+        <!--
+        /////////////////
+        /   Serializer
+        /////////////////
+        -->
+        <service
+                class="Symfony\Component\Serializer\Serializer"
+                id="symfony.component.serializer.serializer">
+            <factory class="BestitKlarnaOrderManagement\Components\Factory\Serializer" method="create"/>
+        </service>
+
+        <!--
+        /////////////////
+        /   API Client
+        /////////////////
+        -->
+        <service
+                class="GuzzleHttp\Client"
+                id="bestit_klarna_order_management.guzzle_http.client">
+            <factory class="BestitKlarnaOrderManagement\Components\Factory\HttpClient" method="create"/>
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
+            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
+            <argument type="string">%bestit_klarna.plugin_name%</argument>
+            <argument type="string">%bestit_klarna.plugin_version%</argument>
+        </service>
+
+        <!--
+        /////////////////
+        /   API Resources
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\Api\Resource\Order"
+                id="bestit_klarna_order_management.components.api.resource.order">
+            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Api\Resource\Capture"
+                id="bestit_klarna_order_management.components.api.resource.capture">
+            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Api\Resource\Refund"
+                id="bestit_klarna_order_management.components.api.resource.refund">
+            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+        </service>
+
+        <!--
+        /////////////////
+        /   Facades
+        /////////////////
+
+        The facades are all public, so they can be used in controllers.
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\Facade\Capture"
+                id="bestit_klarna_order_management.components.facade.capture">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.api.resource.capture"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_writer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.logging.transaction_logger"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Facade\Refund"
+                id="bestit_klarna_order_management.components.facade.refund">
+            <argument type="service" id="bestit_klarna_order_management.components.api.resource.refund"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_writer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.logging.transaction_logger"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Facade\Order"
+                id="bestit_klarna_order_management.components.facade.order">
+            <argument type="service" id="bestit_klarna_order_management.components.api.resource.order"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_writer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.logging.transaction_logger"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Facade\OrderManagement"
+                id="bestit_klarna_order_management.components.facade.order_management">
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.capture"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.refund"/>
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="snippets"/>
+        </service>
+
+        <!--
+        /////////////////
+        /   Logging
+        /////////////////
+        -->
+        <service
+                class="Monolog\Logger"
+                id="bestit_klarna_order_management.logger">
+            <argument>%bestit_klarna.plugin_name%</argument>
+            <call method="pushHandler">
+                <argument type="service" id="bestit_klarna_order_management.logging.handler.rotating_file_handler"/>
+            </call>
+        </service>
+
+        <service
+                class="Monolog\Handler\RotatingFileHandler"
+                id="bestit_klarna_order_management.logging.handler.rotating_file_handler">
+            <factory class="BestitKlarnaOrderManagement\Components\Logging\Handler\RotatingFileHandlerFactory"
+                     method="create"/>
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
+            <argument type="string">%kernel.logs_dir%/bestit_klarna_%kernel.environment%.log</argument>
+            <argument>0</argument>
+            <argument>100</argument>
+            <call method="setFormatter">
+                <argument type="service" id="bestit_klarna_order_management.logging.formatter.json_formatter"/>
+            </call>
+        </service>
+
+        <service
+                class="Monolog\Formatter\JsonFormatter"
+                id="bestit_klarna_order_management.logging.formatter.json_formatter">
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\ConfigReader"
+                id="bestit_klarna_order_management.components.config_reader">
+            <argument type="service" id="shopware.plugin.cached_config_reader"/>
+            <argument type="string">%bestit_klarna.plugin_name%</argument>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\ConfigReader"
+                id="bestit_klarna_order_management.components.shop_aware.config_reader">
+            <argument type="service" id="shopware.plugin.cached_config_reader"/>
+            <argument type="string">%bestit_klarna.plugin_name%</argument>
+            <call method="setShop">
+                <argument type="service" id="bestit_klarna_order_management.sw_modules.detached_shop"/>
+            </call>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\PaymentInsights"
+                id="bestit_klarna_order_management.components.payment_insights">
+            <argument type="service" id="dbal_connection"/>
+            <argument type="string">%bestit_klarna.plugin_name%</argument>
+        </service>
+
+        <!--
+        /////////////////
+        /   Triggers
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\OrderStatusChanged"
+                id="bestit_klarna_order_management.components.trigger.order_status_changed">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <!--
+                Because this service will be mainly used in the backend - do NOT use the shop aware config reader.
+                There is no shop defined in the backend so that will throw an error.
+            -->
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
+            <argument type="service" id="bestit_klarna_order_management.components.payment_insights"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.action.action_factory"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\Action\ActionFactory"
+                id="bestit_klarna_order_management.components.trigger.action.action_factory">
+            <!--
+                Because this service will be mainly used in the backend - do NOT use the shop aware config reader.
+                There is no shop defined in the backend so that will throw an error.
+            -->
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
+            <!--
+                The sorting of the action arguments is *important*. The capture action has to be the first one
+                and the refund action the second one. Do *not* change that.
+            -->
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.action.capture"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.action.refund"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\Action\Capture"
+                id="bestit_klarna_order_management.components.trigger.action.capture">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.capture"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\Action\Refund"
+                id="bestit_klarna_order_management.components.trigger.action.refund">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.refund"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\AddressChanged"
+                id="bestit_klarna_order_management.components.trigger.address_changed">
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.order_transformer"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\OrderDeleted"
+                id="bestit_klarna_order_management.components.trigger.order_deleted">
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\PaymentStatusChanged"
+                id="bestit_klarna_order_management.components.trigger.payment_status_changed">
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.payment_insights"/>
+            <argument type="service" id="snippets"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\OrderTrackingCodeChanged"
+                id="bestit_klarna_order_management.components.trigger.order_tracking_code_changed">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.capture"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\LineItemAdded"
+                id="bestit_klarna_order_management.components.trigger.line_item_added">
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.helper.order_updater"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\LineItemChanged"
+                id="bestit_klarna_order_management.components.trigger.line_item_changed">
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.helper.order_updater"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\LineItemDeleted"
+                id="bestit_klarna_order_management.components.trigger.line_item_deleted">
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.helper.order_updater"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\Helper\OrderUpdater"
+                id="bestit_klarna_order_management.components.trigger.helper.order_updater">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.order_transformer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+        </service>
+
+        <service
+                class="Symfony\Component\Finder\Finder"
+                id="bestit_klarna_order_management.finder"
+                shared="false">
+            <factory class="BestitKlarnaOrderManagement\Components\Factory\Finder" method="create"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Logging\ZipCreator"
+                id="bestit_klarna_order_management.components.logging.zip_creator">
+            <argument type="service" id="bestit_klarna_order_management.finder"/>
+            <argument type="string">%kernel.logs_dir%</argument>
+        </service>
+
+        <!--
+        /////////////////
+        /   DataProvider
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\DataProvider\DataProvider"
+                id="bestit_klarna_order_management.components.data_provider.data_provider">
+            <argument type="service" id="models"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\DataWriter"
+                id="bestit_klarna_order_management.components.data_writer">
+            <argument type="service" id="dbal_connection"/>
+        </service>
+
+        <!--
+        /////////////////
+        /   Transformer
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\Transformer\OrderTransformer"
+                id="bestit_klarna_order_management.components.transformer.order_transformer">
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.converter.mode_converter"/>
+        </service>
+
+        <!--
+        /////////////////
+        /   Calculators
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\Calculator\PhpCalculator"
+                id="bestit_klarna_order_management.components.calculator.php_calculator">
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Calculator\BcMathCalculator"
+                id="bestit_klarna_order_management.components.calculator.bc_math_calculator">
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Calculator\CalculatorInterface"
+                id="bestit_klarna_order_management.components.calculator.calculator">
+            <factory class="BestitKlarnaOrderManagement\Components\Calculator\CalculatorFactory" method="create"/>
+            <!-- The first supported calculator will be used - so the one with the highest priority has to be defined first -->
+            <!-- In this case the "bcmath" calculator is the one with the highest priority. -->
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.bc_math_calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.php_calculator"/>
+        </service>
+
+        <!--
+        /////////////////
+        /   Converter
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\Converter\ModeConverter"
+                id="bestit_klarna_order_management.components.converter.mode_converter">
+            <argument type="service" id="bestit_klarna_order_management.components.converter.product"/>
+            <argument type="service" id="bestit_klarna_order_management.components.converter.premium_product"/>
+            <argument type="service" id="bestit_klarna_order_management.components.converter.voucher"/>
+            <argument type="service" id="bestit_klarna_order_management.components.converter.rebate"/>
+            <argument type="service" id="bestit_klarna_order_management.components.converter.surcharge_discount"/>
+            <argument type="service" id="bestit_klarna_order_management.components.converter.bundle"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Converter\Product"
+                id="bestit_klarna_order_management.components.converter.product"/>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Converter\PremiumProduct"
+                id="bestit_klarna_order_management.components.converter.premium_product"/>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Converter\Voucher"
+                id="bestit_klarna_order_management.components.converter.voucher"/>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Converter\Rebate"
+                id="bestit_klarna_order_management.components.converter.rebate"/>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Converter\SurchargeDiscount"
+                id="bestit_klarna_order_management.components.converter.surcharge_discount"/>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Converter\Bundle"
+                id="bestit_klarna_order_management.components.converter.bundle"/>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Converter\DefaultMode"
+                id="bestit_klarna_order_management.components.converter.default_mode"/>
+
+        <!--
+        /////////////////
+        /   Api Middleware
+        /////////////////
+        -->
+        <service class="BestitKlarnaOrderManagement\Components\Api\Middleware\Logging"
+                 id="bestit_klarna_order_management.components.api.middleware.logging">
+            <argument type="service" id="bestit_klarna_order_management.logger"/>
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Logging\TransactionLogger"
+                id="bestit_klarna_order_management.components.logging.transaction_logger">
+            <argument type="service" id="dbal_connection"/>
+        </service>
+    </services>
+</container>
