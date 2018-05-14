@@ -16,7 +16,7 @@ If using this package, you will need to implement Klarna Payments order Klarna C
 Via Composer
 
 ``` bash
-$ composer require bestit/klarnaordermanagement
+$ composer require bestit/klarna-ordermanagement
 ```
 
 ### Registering dependencies
@@ -85,9 +85,9 @@ If you discover any security related issues, please email [best it](mailto:suppo
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/bestit/klarnaordermanagement.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/bestit/klarna-ordermanagement.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/bestit/klarnaordermanagement.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/bestit/klarna-ordermanagement.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/bestit/klarnaordermanagement
-[link-downloads]: https://packagist.org/packages/bestit/klarnaordermanagement
+[link-packagist]: https://packagist.org/packages/bestit/klarna-ordermanagement
+[link-downloads]: https://packagist.org/packages/bestit/klarna-ordermanagement
