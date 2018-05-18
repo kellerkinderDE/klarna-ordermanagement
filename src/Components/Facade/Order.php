@@ -8,8 +8,8 @@ use BestitKlarnaOrderManagement\Components\Api\Model\ShippingAddress;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Order as OrderResource;
 use BestitKlarnaOrderManagement\Components\Api\Response;
-use BestitKlarnaOrderManagement\Components\DataWriter;
 use BestitKlarnaOrderManagement\Components\Logging\TransactionLoggerInterface;
+use BestitKlarnaOrderManagement\Components\Storage\DataWriter;
 use Shopware\Models\Order\Status;
 use Symfony\Component\Serializer\Serializer;
 

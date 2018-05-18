@@ -6,7 +6,7 @@ use BestitKlarnaOrderManagement\Components\Api\Model\LineItem;
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrder;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Constants;
-use BestitKlarnaOrderManagement\Components\DataProvider\DataProvider;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Transformer\OrderTransformer;
 

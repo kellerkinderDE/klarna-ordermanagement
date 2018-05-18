@@ -3,7 +3,7 @@
 namespace BestitKlarnaOrderManagement\Components\Facade;
 
 use BestitKlarnaOrderManagement\Components\Calculator\CalculatorInterface;
-use BestitKlarnaOrderManagement\Components\DataProvider\DataProvider;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Facade\Capture as CaptureFacade;
 use BestitKlarnaOrderManagement\Components\Facade\Refund as RefundFacade;

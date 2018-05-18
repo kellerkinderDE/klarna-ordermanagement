@@ -4,7 +4,7 @@ namespace BestitKlarnaOrderManagement\Components\Trigger;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
 use BestitKlarnaOrderManagement\Components\Api\Response;
-use BestitKlarnaOrderManagement\Components\DataProvider\DataProvider;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Trigger\Helper\OrderUpdater;
 
 /**

@@ -4,10 +4,9 @@ namespace BestitKlarnaOrderManagement\Components\Trigger;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
 use BestitKlarnaOrderManagement\Components\Api\Response;
-use BestitKlarnaOrderManagement\Components\DataProvider\DataProvider;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
 use Enlight_Components_Snippet_Manager;
-use Shopware\Models\Order\Order as SwOrder;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 
 /**

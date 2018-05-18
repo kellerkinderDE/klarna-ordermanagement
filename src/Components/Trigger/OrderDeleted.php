@@ -4,7 +4,7 @@ namespace BestitKlarnaOrderManagement\Components\Trigger;
 
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
-use BestitKlarnaOrderManagement\Components\DataProvider\DataProvider;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 
 /**
  * Cancels the order in Klarna when an order is deleted in shopware.

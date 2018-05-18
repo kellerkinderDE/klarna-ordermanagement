@@ -76,8 +76,8 @@
             <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
             <argument type="service" id="bestit_klarna_order_management.components.api.resource.capture"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_writer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_writer"/>
             <argument type="service" id="bestit_klarna_order_management.components.logging.transaction_logger"/>
         </service>
 
@@ -86,7 +86,7 @@
                 id="bestit_klarna_order_management.components.facade.refund">
             <argument type="service" id="bestit_klarna_order_management.components.api.resource.refund"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_writer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_writer"/>
             <argument type="service" id="bestit_klarna_order_management.components.logging.transaction_logger"/>
         </service>
 
@@ -95,14 +95,14 @@
                 id="bestit_klarna_order_management.components.facade.order">
             <argument type="service" id="bestit_klarna_order_management.components.api.resource.order"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_writer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_writer"/>
             <argument type="service" id="bestit_klarna_order_management.components.logging.transaction_logger"/>
         </service>
 
         <service
                 class="BestitKlarnaOrderManagement\Components\Facade\OrderManagement"
                 id="bestit_klarna_order_management.components.facade.order_management">
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
             <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
             <argument type="service" id="bestit_klarna_order_management.components.facade.capture"/>
             <argument type="service" id="bestit_klarna_order_management.components.facade.refund"/>
@@ -182,7 +182,7 @@
             -->
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
             <argument type="service" id="bestit_klarna_order_management.components.payment_insights"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
             <argument type="service" id="bestit_klarna_order_management.components.trigger.action.action_factory"/>
         </service>
         <service
@@ -214,20 +214,20 @@
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\AddressChanged"
                 id="bestit_klarna_order_management.components.trigger.address_changed">
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
             <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
             <argument type="service" id="bestit_klarna_order_management.components.transformer.order_transformer"/>
         </service>
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\OrderDeleted"
                 id="bestit_klarna_order_management.components.trigger.order_deleted">
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
             <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
         </service>
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\PaymentStatusChanged"
                 id="bestit_klarna_order_management.components.trigger.payment_status_changed">
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
             <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
             <argument type="service" id="bestit_klarna_order_management.components.payment_insights"/>
             <argument type="service" id="snippets"/>
@@ -237,32 +237,32 @@
                 id="bestit_klarna_order_management.components.trigger.order_tracking_code_changed">
             <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
             <argument type="service" id="bestit_klarna_order_management.components.facade.capture"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
         </service>
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\LineItemAdded"
                 id="bestit_klarna_order_management.components.trigger.line_item_added">
             <argument type="service" id="bestit_klarna_order_management.components.trigger.helper.order_updater"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
         </service>
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\LineItemChanged"
                 id="bestit_klarna_order_management.components.trigger.line_item_changed">
             <argument type="service" id="bestit_klarna_order_management.components.trigger.helper.order_updater"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
         </service>
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\LineItemDeleted"
                 id="bestit_klarna_order_management.components.trigger.line_item_deleted">
             <argument type="service" id="bestit_klarna_order_management.components.trigger.helper.order_updater"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
         </service>
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\Helper\OrderUpdater"
                 id="bestit_klarna_order_management.components.trigger.helper.order_updater">
             <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
             <argument type="service" id="bestit_klarna_order_management.components.transformer.order_transformer"/>
-            <argument type="service" id="bestit_klarna_order_management.components.data_provider.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
         </service>
 
         <service
@@ -285,13 +285,13 @@
         /////////////////
         -->
         <service
-                class="BestitKlarnaOrderManagement\Components\DataProvider\DataProvider"
-                id="bestit_klarna_order_management.components.data_provider.data_provider">
+                class="BestitKlarnaOrderManagement\Components\Storage\DataProvider"
+                id="bestit_klarna_order_management.components.storage.data_provider">
             <argument type="service" id="models"/>
         </service>
         <service
-                class="BestitKlarnaOrderManagement\Components\DataWriter"
-                id="bestit_klarna_order_management.components.data_writer">
+                class="BestitKlarnaOrderManagement\Components\Storage\DataWriter"
+                id="bestit_klarna_order_management.components.storage.data_writer">
             <argument type="service" id="dbal_connection"/>
         </service>
 

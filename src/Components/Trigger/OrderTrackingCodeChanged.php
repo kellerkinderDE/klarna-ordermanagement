@@ -5,7 +5,7 @@ namespace BestitKlarnaOrderManagement\Components\Trigger;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Facade\Capture as CaptureFacade;
-use BestitKlarnaOrderManagement\Components\DataProvider\DataProvider;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrderModel;
 
 /**

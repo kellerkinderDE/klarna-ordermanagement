@@ -8,7 +8,6 @@ use BestitKlarnaOrderManagement\Components\Api\Model\ShippingAddress;
 use BestitKlarnaOrderManagement\Components\Calculator\CalculatorInterface;
 use BestitKlarnaOrderManagement\Components\Converter\ModeConverter;
 use Shopware\Models\Order\Billing as SwOrderBillingModel;
-use Shopware\Models\Order\Detail;
 use Shopware\Models\Order\Shipping as SwOrderShippingModel;
 
 /**

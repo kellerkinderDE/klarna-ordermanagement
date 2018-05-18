@@ -3,7 +3,7 @@
 namespace BestitKlarnaOrderManagement\Components\Trigger;
 
 use BestitKlarnaOrderManagement\Components\Api\Response;
-use BestitKlarnaOrderManagement\Components\DataProvider\DataProvider;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Transformer\OrderTransformer;
 use Shopware\Models\Order\Billing;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;

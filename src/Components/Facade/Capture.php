@@ -9,10 +9,10 @@ use BestitKlarnaOrderManagement\Components\Api\Model\ShippingInfo;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Capture as CaptureResource;
 use BestitKlarnaOrderManagement\Components\Api\Response;
-use BestitKlarnaOrderManagement\Components\DataProvider\DataProvider;
-use BestitKlarnaOrderManagement\Components\DataWriter;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Logging\TransactionLoggerInterface;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
+use BestitKlarnaOrderManagement\Components\Storage\DataWriter;
 use Shopware\Models\Order\Status;
 use Symfony\Component\Serializer\Serializer;
 
