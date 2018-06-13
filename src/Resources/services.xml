@@ -384,5 +384,33 @@
                 id="bestit_klarna_order_management.components.logging.transaction_logger">
             <argument type="service" id="dbal_connection"/>
         </service>
+
+        <!--
+        /////////////////
+        /   DataFormatter
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\DataFormatter\BreadcrumbBuilder"
+                id="bestit_klarna_order_management.components.data_formatter.breadcrumb_builder">
+            <argument type="service" id="shopware_storefront.category_service"/>
+            <argument type="service" id="shopware_storefront.context_service"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\DataFormatter\ProductUrlBuilder"
+                id="bestit_klarna_order_management.components.data_formatter.product_url_builder">
+            <argument type="service" id="router"/>
+        </service>
+
+        <!--
+        /////////////////
+        /   Shared
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\Shared\Localizer"
+                id="bestit_klarna_order_management.components.shared.localizer">
+            <argument type="service" id="bestit_klarna_order_management.sw_modules.detached_shop"/>
+        </service>
     </services>
 </container>
