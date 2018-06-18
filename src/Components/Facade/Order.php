@@ -4,6 +4,7 @@ namespace BestitKlarnaOrderManagement\Components\Facade;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\BillingAddress;
 use BestitKlarnaOrderManagement\Components\Api\Model\LineItem;
+use BestitKlarnaOrderManagement\Components\Api\Model\MerchantReferences;
 use BestitKlarnaOrderManagement\Components\Api\Model\ShippingAddress;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Order as OrderResource;
@@ -139,7 +140,7 @@ class Order
     }
 
     /**
-     * @param  int       $orderId
+     * @param  string    $orderId
      * @param  int       $orderAmount
      * @param LineItem[] $newLineItem
      *
@@ -170,5 +171,20 @@ class Order
         $request->addQueryParameter('order_id', $orderId);
 
         return $this->orderResource->acknowledge($request);
+    }
+
+    /**
+     * @param string             $orderId
+     * @param MerchantReferences $merchantReferences
+     *
+     * @return Response
+     */
+    public function updateMerchantReferences($orderId, MerchantReferences $merchantReferences)
+    {
+        $request = Request::createFromPayload(
+            $this->serializer->normalize($merchantReferences)
+        )->addQueryParameter('order_id', $orderId);
+
+        return $this->orderResource->updateMerchantReferences($request);
     }
 }
