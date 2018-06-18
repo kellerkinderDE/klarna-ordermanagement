@@ -203,4 +203,29 @@ class Order
 
         return $this->wrapGuzzleResponse($response);
     }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function updateMerchantReferences(Request $request)
+    {
+        $baseUrl = $request->getBaseUrl();
+        $orderId = $request->getQueryParameter('order_id');
+
+        try {
+            $response = $this->httpClient->patch(
+                "{$baseUrl}/ordermanagement/v1/orders/{$orderId}/merchant-references",
+                [
+                    'json' => $request->getPayload(),
+                    'headers' => $request->getHeaders()
+                ]
+            );
+        } catch (RequestException $e) {
+            return $this->wrapGuzzleException($e);
+        }
+
+        return $this->wrapGuzzleResponse($response);
+    }
 }
