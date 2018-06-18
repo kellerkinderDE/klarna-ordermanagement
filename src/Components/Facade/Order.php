@@ -158,4 +158,17 @@ class Order
 
         return $response;
     }
+
+    /**
+     * @param string $orderId
+     *
+     * @return Response
+     */
+    public function acknowledge($orderId)
+    {
+        $request = new Request();
+        $request->addQueryParameter('order_id', $orderId);
+
+        return $this->orderResource->acknowledge($request);
+    }
 }
