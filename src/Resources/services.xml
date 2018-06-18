@@ -412,5 +412,10 @@
                 id="bestit_klarna_order_management.components.shared.localizer">
             <argument type="service" id="bestit_klarna_order_management.sw_modules.detached_shop"/>
         </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\SignatureGenerator\SignatureGenerator"
+                id="bestit_klarna_order_management.components.signature_generator.signature_generator">
+        </service>
     </services>
 </container>
