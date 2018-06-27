@@ -102,9 +102,6 @@ class Order implements SubscriberInterface
             'Enlight_Controller_Action_PostDispatch_Backend_Order' => [
                 'loadExtJsKlarnaTab',
             ],
-            'Enlight_Controller_Dispatcher_ControllerPath_Backend_BestitOrderManagement' => [
-                'registerBestitOrderManagementController'
-            ],
         ];
     }
 
@@ -345,15 +342,5 @@ class Order implements SubscriberInterface
             $view->extendsTemplate('backend/ExtJs/view/detail/window.js');
             $view->extendsTemplate('backend/ExtJs/controller/detail.js');
         }
-    }
-
-    /**
-     * Get the path to the backend controller of the Order Management Controller
-     *
-     * @return string
-     */
-    public function registerBestitOrderManagementController()
-    {
-        return "{$this->controllersDir}/Backend/BestitOrderManagement.php";
     }
 }

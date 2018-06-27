@@ -35,5 +35,12 @@
             <argument type="service" id="service_container"/>
             <tag name="doctrine.event_subscriber"/>
         </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Subscriber\Controller\Backend\RegisterController"
+                id="bestit_klarna_order_management.subscriber.controller.backend.register_controller">
+            <argument type="string">%bestit_order_management.controllers_dir%</argument>
+            <tag name="shopware.event_subscriber"/>
+        </service>
     </services>
 </container>
