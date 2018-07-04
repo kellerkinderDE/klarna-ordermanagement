@@ -21,7 +21,7 @@ interface BreadcrumbBuilderInterface
      *
      * @return array
      */
-    public function buildForLineItems(array $lineItems);
+    public function addBreadcrumb(array $lineItems);
 
     /**
      * Builds a breadcrumb for the given categories.

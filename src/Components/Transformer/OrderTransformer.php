@@ -7,6 +7,8 @@ use BestitKlarnaOrderManagement\Components\Api\Model\LineItem;
 use BestitKlarnaOrderManagement\Components\Api\Model\ShippingAddress;
 use BestitKlarnaOrderManagement\Components\Calculator\CalculatorInterface;
 use BestitKlarnaOrderManagement\Components\Converter\ModeConverter;
+use BestitKlarnaOrderManagement\Components\DataFormatter\BreadcrumbBuilderInterface;
+use BestitKlarnaOrderManagement\Components\DataFormatter\ProductUrlBuilderInterface;
 use Shopware\Models\Order\Billing as SwOrderBillingModel;
 use Shopware\Models\Order\Shipping as SwOrderShippingModel;
 
@@ -17,21 +19,38 @@ use Shopware\Models\Order\Shipping as SwOrderShippingModel;
  *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
-class OrderTransformer
+class OrderTransformer implements OrderTransformerInterface
 {
     /** @var CalculatorInterface */
     protected $calculator;
     /** @var ModeConverter */
     protected $modeConverter;
+    /** @var ProductUrlBuilderInterface */
+    protected $productUrlBuilder;
+    /** @var BreadcrumbBuilderInterface */
+    protected $breadcrumbBuilder;
+    /** @var ProductIdentifiersTransformerInterface */
+    protected $productIdentifiersTransformer;
 
     /**
-     * @param CalculatorInterface $calculator
-     * @param ModeConverter       $modeConverter
+     * @param CalculatorInterface                    $calculator
+     * @param ModeConverter                          $modeConverter
+     * @param ProductUrlBuilderInterface             $productUrlBuilder
+     * @param BreadcrumbBuilderInterface             $breadcrumbBuilder
+     * @param ProductIdentifiersTransformerInterface $productIdentifiersTransformer
      */
-    public function __construct(CalculatorInterface $calculator, ModeConverter $modeConverter)
-    {
+    public function __construct(
+        CalculatorInterface $calculator,
+        ModeConverter $modeConverter,
+        ProductUrlBuilderInterface $productUrlBuilder,
+        BreadcrumbBuilderInterface $breadcrumbBuilder,
+        ProductIdentifiersTransformerInterface $productIdentifiersTransformer
+    ) {
         $this->calculator = $calculator;
         $this->modeConverter = $modeConverter;
+        $this->productUrlBuilder = $productUrlBuilder;
+        $this->breadcrumbBuilder = $breadcrumbBuilder;
+        $this->productIdentifiersTransformer = $productIdentifiersTransformer;
     }
 
     /**
@@ -99,7 +118,14 @@ class OrderTransformer
     {
         $newLineItems = [];
 
-        foreach ($details as $detail) {
+        /**
+         * Build the product URLs and the breadcrumbs for all items in one batch
+         * to avoid many SQL queries.
+         */
+        $detailsWithUrl = $this->productUrlBuilder->addProductUrls($details);
+        $detailsWithUrlAndBreadcrumb = $this->breadcrumbBuilder->addBreadcrumb($detailsWithUrl);
+
+        foreach ($detailsWithUrlAndBreadcrumb as $detail) {
             $lineItem = new LineItem();
             $lineItem->type = $this->modeConverter->convert((int) $detail['modus'], (float) $detail['price']);
             $lineItem->reference = substr($detail['articleordernumber'], 0, 64);
@@ -118,6 +144,11 @@ class OrderTransformer
             }
 
             $lineItem->totalTaxAmount = $this->calculator->toCents($totalTaxAmount);
+
+            $lineItem->productIdentifiers = $this->productIdentifiersTransformer->toKlarnaModel($detail);
+            $lineItem->productUrl = isset($detail['linkDetails']) ? $detail['linkDetails'] : null;
+            $lineItem->imageUrl = isset($detail['image']) ? $detail['image'] : null;
+
             $newLineItems[] = $lineItem;
         }
 

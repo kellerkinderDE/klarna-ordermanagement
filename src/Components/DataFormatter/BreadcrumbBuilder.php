@@ -44,7 +44,7 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
      *
      * @return array
      */
-    public function buildForLineItems(array $lineItems)
+    public function addBreadcrumb(array $lineItems)
     {
         $baseProducts = $this->createBaseProducts($lineItems);
 

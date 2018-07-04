@@ -57,6 +57,8 @@ class LineItemAdded
         $tax = $this->dataProvider->getTax($taxId);
 
         $newDetail = [
+            'variantId' => $articleDetail->getId(),
+            'articleID' => $articleDetail->getArticleId(),
             'modus' => $mode,
             'price' => $price,
             'articleordernumber' => $articleNumber,
