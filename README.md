@@ -8,8 +8,10 @@ This is a package for [shopware](https://en.shopware.com/) plugins.
 It adds support for the [Klarna OrderManagement API](https://developers.klarna.com/api/#order-management-api) and also includes a UI in the shopware backend.
 If using this package, you will need to implement Klarna Payments order Klarna Checkout yourself.
 
-// TODO: add link to Klarna Payments / Klarna Checkout once they're ready
-// TODO: add link to documentation once it's ready
+// TODO: Add Klarna Checkout link once its ready
+
+* [Klarna Payments Docs][link-kp-docs]
+* [Order Management Docs][link-om-docs]
 
 ## Install
 
@@ -44,7 +46,7 @@ public function build(ContainerBuilder $containerBuilder)
     parent::build($containerBuilder);
 
     //
-    
+
     $dependencyInjectionExtensions = [
         \BestitKlarnaOrderManagement\Components\DependencyInjection\DependencyInjectionExtension::class
     ];
@@ -65,9 +67,51 @@ public function build(ContainerBuilder $containerBuilder)
 }
 ```
 
+Then you can use the `OMInstaller` for any ohter necessary setup:
+
+```php
+public function install(InstallContext $context)
+{
+    // ...
+
+    $this->getOmInstaller()->install($this, $context);
+
+    // ...
+}
+
+public function uninstall(UninstallContext $context)
+{
+    // ...
+
+    $this->getOmInstaller()->uninstall($this, $context);
+
+    // ...
+}
+
+public function update(UpdateContext $context)
+{
+    // ...
+
+    $this->getOmInstaller()->update($this, $context);
+
+    // ...
+}
+
+protected function getOmInstaller()
+{
+    if ($this->omInstaller !== null) {
+        return $this->omInstaller;
+    }
+
+    $this->omInstaller = new OmInstaller($this->container->get('shopware.snippet_database_handler'));
+
+    return $this->omInstaller;
+}
+```
+
 ## Usage
 
-// Link to documentation will be added here once it is ready
+See the [docs][link-om-docs] for more information.
 
 ## Change log
 
@@ -91,3 +135,5 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 [link-packagist]: https://packagist.org/packages/bestit/klarna-ordermanagement
 [link-downloads]: https://packagist.org/packages/bestit/klarna-ordermanagement
+[link-om-docs]: https://klarna.bestit-online.de/de/om/master/uebersicht
+[link-kp-docs]: https://klarna.bestit-online.de/de/kp/master/installation
