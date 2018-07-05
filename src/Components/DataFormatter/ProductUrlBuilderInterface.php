@@ -17,5 +17,5 @@ interface ProductUrlBuilderInterface
      *
      * @return array
      */
-    public function buildProductUrls(array $lineItems);
+    public function addProductUrls(array $lineItems);
 }

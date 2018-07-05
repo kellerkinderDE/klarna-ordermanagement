@@ -16,6 +16,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.trigger.line_item_changed"/>
             <argument type="service" id="bestit_klarna_order_management.components.trigger.line_item_deleted"/>
             <argument type="service" id="bestit_klarna_order_management.components.payment_insights"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
             <argument type="string">%bestit_order_management.controllers_dir%</argument>
             <argument type="string">%bestit_order_management.template_dir%</argument>
             <tag name="shopware.event_subscriber"/>

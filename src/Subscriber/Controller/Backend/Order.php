@@ -2,7 +2,9 @@
 
 namespace BestitKlarnaOrderManagement\Subscriber\Controller\Backend;
 
+use BestitKlarnaOrderManagement\Components\Exception\NoOrderFoundException;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Trigger\AddressChanged as AddressChangedTrigger;
 use BestitKlarnaOrderManagement\Components\Trigger\LineItemAdded as LineItemAddedTrigger;
 use BestitKlarnaOrderManagement\Components\Trigger\LineItemChanged as LineItemChangedTrigger;
@@ -40,6 +42,8 @@ class Order implements SubscriberInterface
     protected $lineItemDeletedTrigger;
     /** @var PaymentInsights */
     protected $paymentInsights;
+    /** @var DataProvider */
+    protected $dataProvider;
     /** @var string */
     protected $controllersDir;
     /** @var string */
@@ -54,6 +58,7 @@ class Order implements SubscriberInterface
      * @param LineItemChangedTrigger          $lineItemChangedTrigger
      * @param LineItemDeletedTrigger          $lineItemDeletedTrigger
      * @param PaymentInsights                 $paymentInsights
+     * @param DataProvider                    $dataProvider
      * @param string                          $controllersDir
      * @param string                          $templateDir
      */
@@ -66,6 +71,7 @@ class Order implements SubscriberInterface
         LineItemChangedTrigger $lineItemChangedTrigger,
         LineItemDeletedTrigger $lineItemDeletedTrigger,
         PaymentInsights $paymentInsights,
+        DataProvider $dataProvider,
         $controllersDir,
         $templateDir
     ) {
@@ -77,6 +83,7 @@ class Order implements SubscriberInterface
         $this->lineItemChangedTrigger = $lineItemChangedTrigger;
         $this->lineItemDeletedTrigger = $lineItemDeletedTrigger;
         $this->paymentInsights = $paymentInsights;
+        $this->dataProvider = $dataProvider;
         $this->controllersDir = $controllersDir;
         $this->templateDir = $templateDir;
     }
@@ -210,6 +217,8 @@ class Order implements SubscriberInterface
             return;
         }
 
+        $this->registerShopForOrder($orderId);
+
         // If id is empty => a new line item was added
         if (empty($request->getParam('id'))) {
             $response = $this->lineItemAddedTrigger->execute(
@@ -262,6 +271,8 @@ class Order implements SubscriberInterface
 
             return;
         }
+
+        $this->registerShopForOrder($orderId);
 
         $response = $this->lineItemDeletedTrigger->execute($orderId, $positions);
 
@@ -342,5 +353,27 @@ class Order implements SubscriberInterface
             $view->extendsTemplate('backend/ExtJs/view/detail/window.js');
             $view->extendsTemplate('backend/ExtJs/controller/detail.js');
         }
+    }
+
+    /**
+     * @param int $orderId
+     *
+     * @return void
+     *
+     * @throws NoOrderFoundException
+     */
+    protected function registerShopForOrder($orderId)
+    {
+        $swOrder = $this->dataProvider->getSwOrder($orderId);
+
+        if ($swOrder === null) {
+            throw new NoOrderFoundException("Order {$orderId} can not be found");
+        }
+
+        /**
+         * Registers the shop in which the order was placed.
+         * This is needed to assemble the correct product and product image url.
+         */
+        $swOrder->getShop()->registerResources();
     }
 }
