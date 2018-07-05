@@ -36,7 +36,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [0.1.1] - 2018-05-18
 ### Changed
--
+- Improve DataProvider/DataWriter
 
 ## 0.1.0 - 2018-05-14
 
