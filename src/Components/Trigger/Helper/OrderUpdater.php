@@ -9,6 +9,11 @@ use BestitKlarnaOrderManagement\Components\Constants;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Transformer\OrderTransformer;
+use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
+use Shopware\Bundle\StoreFrontBundle\Service\MediaServiceInterface;
+use Shopware\Bundle\StoreFrontBundle\Struct\BaseProduct;
+use Shopware\Models\Order\Detail;
+use Shopware_Components_Config;
 
 /**
  * Updates the order with the given line items.
@@ -26,20 +31,35 @@ class OrderUpdater
     protected $orderTransformer;
     /** @var DataProvider */
     protected $dataProvider;
+    /** @var Shopware_Components_Config */
+    protected $config;
+    /** @var MediaServiceInterface */
+    protected $mediaService;
+    /** @var ContextServiceInterface */
+    protected $contextService;
 
     /**
-     * @param OrderFacade      $orderFacade
-     * @param OrderTransformer $orderTransformer
-     * @param DataProvider     $dataProvider
+     * @param OrderFacade                $orderFacade
+     * @param OrderTransformer           $orderTransformer
+     * @param DataProvider               $dataProvider
+     * @param Shopware_Components_Config $config
+     * @param MediaServiceInterface      $mediaService
+     * @param ContextServiceInterface    $contextService
      */
     public function __construct(
         OrderFacade $orderFacade,
         OrderTransformer $orderTransformer,
-        DataProvider $dataProvider
+        DataProvider $dataProvider,
+        Shopware_Components_Config $config,
+        MediaServiceInterface $mediaService,
+        ContextServiceInterface $contextService
     ) {
         $this->orderFacade = $orderFacade;
         $this->orderTransformer = $orderTransformer;
         $this->dataProvider = $dataProvider;
+        $this->config = $config;
+        $this->mediaService = $mediaService;
+        $this->contextService = $contextService;
     }
 
     /**
@@ -50,6 +70,8 @@ class OrderUpdater
      */
     public function execute($orderId, array $orderDetails)
     {
+        $orderDetails = $this->addProductInformationToOrderDetails($orderDetails);
+
         $swOrder = $this->dataProvider->getSwOrder($orderId);
 
         $shippingCosts = $swOrder->getInvoiceShipping() ?: 0;
@@ -84,6 +106,11 @@ class OrderUpdater
         return $shippingCosts >= 0;
     }
 
+    /**
+     * @param KlarnaOrder $klarnaOrder
+     *
+     * @return LineItem|null
+     */
     protected function getShippingCostLineItem(KlarnaOrder $klarnaOrder)
     {
         foreach ($klarnaOrder->orderLines as $lineItem) {
@@ -109,5 +136,41 @@ class OrderUpdater
         }
 
         return $totalAmount;
+    }
+
+    /**
+     * @param array $orderDetails
+     *
+     * @return array
+     */
+    protected function addProductInformationToOrderDetails(array $orderDetails)
+    {
+        $baseFile = $this->config->get('baseFile');
+
+        foreach ($orderDetails as $key => $orderDetail) {
+            $articleId = (int) $orderDetail['articleID'];
+            $variantId = (int) $orderDetail['variantId'];
+            $orderNumber = $orderDetail['articleordernumber'];
+
+            if ($articleId === 0) {
+                continue;
+            }
+
+            $linkDetails = null;
+            $image = null;
+
+            if ($articleId !== 0) {
+                $linkDetails = "{$baseFile}?sViewport=detail&module=frontend&sArticle={$articleId}";
+
+                $media = $this->mediaService->getCover(new BaseProduct($articleId, $variantId, $orderNumber), $this->contextService->getShopContext());
+
+                $image = $media === null ? null : $media->getFile();
+            }
+
+            $orderDetails[$key]['linkDetails'] = $linkDetails;
+            $orderDetails[$key]['image'] = $image;
+        }
+
+        return $orderDetails;
     }
 }
