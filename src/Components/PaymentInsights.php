@@ -70,4 +70,22 @@ class PaymentInsights
 
         return $count > 0;
     }
+
+    /**
+     * Get payment using the ip
+     *
+     * @param int $paymentId
+     *
+     * @return array
+     */
+    public function getPaymentById($paymentId)
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('payment.*')
+            ->from('s_core_paymentmeans', 'payment')
+            ->where('payment.id = :paymentId')
+            ->setParameter('paymentId', $paymentId)
+            ->execute()
+            ->fetch();
+    }
 }
