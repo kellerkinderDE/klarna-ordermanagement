@@ -2,6 +2,7 @@
 
 namespace BestitKlarnaOrderManagement\Components\Factory;
 
+use BestitKlarnaOrderManagement\Components\Serializer\CustomObjectNormalizer;
 use BestitKlarnaOrderManagement\Components\Serializer\OptionsNormalizer;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -32,6 +33,8 @@ class Serializer
             new PhpDocExtractor()
         );
 
+        $customObjectNormalizer = new CustomObjectNormalizer($objectNormalizer);
+
         /**
          * Because the `ObjectNormalizer` supports all objects, it will try to normalize/denormalize
          * DateTime Objects which will throw an Exception because the DateTime objects constructor
@@ -41,7 +44,13 @@ class Serializer
          * it needs to be specified first. It will just ignore all other objects.
          * Internally the serializer loops over all normalizers and grabs the first supported one.
          */
-        $normalizers = [new DateTimeNormalizer(), new ArrayDenormalizer(), new OptionsNormalizer(), $objectNormalizer];
+        $normalizers = [
+            new DateTimeNormalizer(),
+            new ArrayDenormalizer(),
+            new OptionsNormalizer(),
+            $customObjectNormalizer,
+            $objectNormalizer
+        ];
         $encoders = [new JsonEncoder()];
 
         return new SymfonySerializer($normalizers, $encoders);

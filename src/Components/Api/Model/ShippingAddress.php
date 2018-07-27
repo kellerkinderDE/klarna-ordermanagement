@@ -23,7 +23,7 @@ class ShippingAddress
     /** @var string */
     public $streetAddress;
 
-    /** @var string */
+    /** @var string|null */
     public $streetAddress2;
 
     /** @var string */
@@ -32,7 +32,7 @@ class ShippingAddress
     /** @var string */
     public $city;
 
-    /** @var string */
+    /** @var string|null */
     public $region;
 
     /** @var string */
