@@ -56,7 +56,7 @@
 
                         <div class="flex-between w-50 float-right">
                             <span>{s name='RefundableAmount'}Maximum refundable amount:{/s}</span>
-                            <span>{$order.order_amount|bestitToMajorUnit|currency}</span>
+                            <span>{$order.captured_amount|bestitToMajorUnit|currency}</span>
                         </div>
 
                         <div class="flex-between w-50 float-right">
@@ -66,7 +66,7 @@
 
                         <div class="flex-between w-50 float-right">
                             <span>{s name='RefundRemainingAuthAmount'}Remaining refundable amount:{/s}</span>
-                            <span>{$order.remaining_authorized_amount|bestitToMajorUnit|currency}</span>
+                            <span>{($order.captured_amount - $order.refunded_amount)|bestitToMajorUnit|currency}</span>
                         </div>
 
                     </div>

@@ -6,6 +6,14 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [Unreleased]
 
+## [0.2.1] - 2018-07-27
+### Changed
+- Make sure empty strings are always transformed to `null` when deserializing data
+
+### Fixed
+- Maximux refundable amount being the order amount instead of the captured amount (backend view)
+- Remaining refundable amount not being calculated correctly (backend view)
+
 ## [0.2.0] - 2018-07-05
 ### Changed
 - Renamed `buildForLineItems` in the `BreadcrumbBuilder` to `addBreadcrumb`
