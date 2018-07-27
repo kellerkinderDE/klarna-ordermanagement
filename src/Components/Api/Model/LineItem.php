@@ -20,7 +20,7 @@ class LineItem
     /** @var int */
     public $quantity;
 
-    /** @var string */
+    /** @var string|null */
     public $quantityUnit;
 
     /** @var string */

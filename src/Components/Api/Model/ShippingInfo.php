@@ -14,21 +14,21 @@ class ShippingInfo
     /** @var string */
     public $shippingCompany;
 
-    /** @var string */
+    /** @var string|null */
     public $shippingMethod;
 
-    /** @var string */
+    /** @var string|null */
     public $trackingNumber;
 
-    /** @var string */
+    /** @var string|null */
     public $trackingUri;
 
-    /** @var string */
+    /** @var string|null */
     public $returnShippingCompany;
 
-    /** @var string */
+    /** @var string|null */
     public $returnTrackingNumber;
 
-    /** @var string */
+    /** @var string|null */
     public $returnTrackingUri;
 }

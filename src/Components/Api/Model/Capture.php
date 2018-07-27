@@ -25,7 +25,7 @@ class Capture
     /** @var DateTime */
     public $capturedAt;
 
-    /** @var string */
+    /** @var string|null */
     public $description;
 
     /** @var LineItem[] */
