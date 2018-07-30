@@ -3,6 +3,7 @@
 namespace BestitKlarnaOrderManagement\Components;
 
 use Doctrine\DBAL\Connection;
+use PDO;
 
 /**
  * Collection of methods that aggregate data relating to payment means.
@@ -87,5 +88,37 @@ class PaymentInsights
             ->setParameter('paymentId', $paymentId)
             ->execute()
             ->fetch();
+    }
+
+    /**
+     * @param int $paymentId
+     *
+     * @return string
+     */
+    public function getPluginNameById($paymentId)
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('plugin.name')
+            ->from('s_core_paymentmeans', 'payment')
+            ->join('payment', 's_core_plugins', 'plugin', 'payment.pluginID = plugin.id')
+            ->where('payment.id = :paymentId')
+            ->setParameter('paymentId', $paymentId)
+            ->execute()
+            ->fetchColumn();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSupportedExternalCheckoutIds()
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('payment.id')
+            ->from('s_core_paymentmeans', 'payment')
+            ->join('payment', 's_core_plugins', 'plugin', 'payment.pluginID = plugin.id')
+            ->andWhere('plugin.name IN (:pluginNames)')
+            ->setParameter(':pluginNames', Constants::SUPPORTED_EXTERNAL_CHECKOUT, Connection::PARAM_STR_ARRAY)
+            ->execute()
+            ->fetchAll(PDO::FETCH_COLUMN);
     }
 }
