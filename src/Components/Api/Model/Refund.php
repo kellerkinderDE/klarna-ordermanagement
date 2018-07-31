@@ -19,7 +19,7 @@ class Refund
     /** @var DateTime */
     public $refundedAt;
 
-    /** @var string */
+    /** @var string|null */
     public $description;
 
     /** @var LineItem[] */
