@@ -4,7 +4,10 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## [Unreleased]
+## [0.2.2] - 2018-07-31
+### Added
+- Add more functionality to the PaymentInsights
+
 ### Fixed
 - Refund throwing an exception when the description field is empty
 
