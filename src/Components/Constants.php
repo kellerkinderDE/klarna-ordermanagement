@@ -57,4 +57,9 @@ class Constants
     const RELEASE_REMAINING_AMOUNT_ACTION = 'release_remaining_amount';
     const CREATE_CAPTURE_ACTION = 'create_capture';
     const CREATE_REFUND_ACTION = 'create_refund';
+
+    /**
+     * Supported External Checkout by Klarna
+     */
+    const SUPPORTED_EXTERNAL_CHECKOUT = ['SwagPaymentPaypal', 'BestitAmazonPay'];
 }
