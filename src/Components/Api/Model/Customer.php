@@ -11,9 +11,30 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
  */
 class Customer
 {
-    /** @var string */
+    /** @var string|null */
     public $dateOfBirth;
 
-    /** @var string */
+    /** @var string|null */
     public $nationalIdentificationNumber;
+
+    /** @var string|null */
+    public $title;
+
+    /** @var string|null */
+    public $gender;
+
+    /** @var string|null */
+    public $lastFourSsn;
+
+    /** @var string|null */
+    public $type;
+
+    /** @var string|null */
+    public $vatId;
+
+    /** @var string|null */
+    public $organizationRegistrationId;
+
+    /** @var string|null */
+    public $organizationEntityType;
 }
