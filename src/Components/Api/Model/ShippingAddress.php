@@ -41,6 +41,9 @@ class ShippingAddress
     /** @var string */
     public $email;
 
-    /** @var string */
+    /** @var string|null */
     public $phone;
+
+    /** @var string|null */
+    public $organizationName;
 }
