@@ -4,6 +4,10 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [0.2.3] - 2018-08-06
+### Added
+- New fields, which are required for B2B support, to Klarna models (ShippingAddress/BillingAddress/Customer)
+
 ## [0.2.2] - 2018-07-31
 ### Added
 - Add more functionality to the PaymentInsights
