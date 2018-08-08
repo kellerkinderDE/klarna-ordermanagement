@@ -4,6 +4,12 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## Unreleased
+
+## [0.2.4] - 2018-08-08
+### Added
+- Make sure that changing the payment method to Klarna is not possible in the backend
+
 ## [0.2.3] - 2018-08-06
 ### Added
 - New fields, which are required for B2B support, to Klarna models (ShippingAddress/BillingAddress/Customer)
