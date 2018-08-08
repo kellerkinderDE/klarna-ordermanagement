@@ -45,17 +45,12 @@ class CustomObjectNormalizer extends AbstractNormalizer
             return $this->objectNormalizer->denormalize($data, $class, $format, $context);
         }
 
-        /**
-         * Make sure that all empty values are being sent as `NULL` to Klarna.
-         * That's what they expect.
-         */
-        foreach ($data as $key => $value) {
-            if (is_string($value) && empty($value)) {
-                $data[$key] = null;
-            }
-        }
-
-        return $this->objectNormalizer->denormalize($data, $class, $format, $context);
+        return $this->objectNormalizer->denormalize(
+            $this->transformEmptyStringsToNull($data),
+            $class,
+            $format,
+            $context
+        );
     }
 
     /**
@@ -83,7 +78,13 @@ class CustomObjectNormalizer extends AbstractNormalizer
      */
     public function normalize($object, $format = null, array $context = array())
     {
-        return $this->objectNormalizer->normalize($object, $format, $context);
+        $normalizedData = $this->objectNormalizer->normalize($object, $format, $context);
+
+        if (!is_array($normalizedData)) {
+            return $normalizedData;
+        }
+
+        return $this->transformEmptyStringsToNull($normalizedData);
     }
 
     /**
@@ -97,5 +98,25 @@ class CustomObjectNormalizer extends AbstractNormalizer
     public function supportsNormalization($data, $format = null)
     {
         return $this->objectNormalizer->supportsNormalization($data, $format);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function transformEmptyStringsToNull(array $data)
+    {
+        /**
+         * Make sure that all empty values are being sent as `NULL` to Klarna.
+         * That's what they expect.
+         */
+        foreach ($data as $key => $value) {
+            if (is_string($value) && empty($value)) {
+                $data[$key] = null;
+            }
+        }
+
+        return $data;
     }
 }
