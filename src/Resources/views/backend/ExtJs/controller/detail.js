@@ -1,5 +1,6 @@
 //{block name="backend/order/controller/detail"}
 //{$smarty.block.parent}
+//{namespace name="backend/bestit_order_management/order_detail"}
 /**
  * We defined this variable in order to be able to call the parent function when viewing the confirm callback.
  *
@@ -85,14 +86,23 @@ Ext.define('Shopware.apps.BestitExtendOrder.controller.Detail', {
         var oldPaymentId = record.raw.paymentId;
         var newPaymentId = record.get('paymentId');
         var parentArguments = arguments;
+        var title = '{s name=messagebox_change_payment/title}Change Payment{/s}';
+
+        if (!BestitKlarna.controller.Order.isKlarnaPaymentId(oldPaymentId) && BestitKlarna.controller.Order.isKlarnaPaymentId(newPaymentId)) {
+            Ext.MessageBox.alert(
+                title,
+                '{s name=messagebox_change_payment/to_klarna_payment_method_not_possible}Changing the payment method from a non Klarna payment method to a Klarna payment method is not possible.{/s}'
+            );
+
+            return;
+        }
 
         if (oldPaymentId === newPaymentId || !BestitKlarna.controller.Order.isKlarnaPaymentId(oldPaymentId)) {
             me.callParent(arguments);
             return;
         }
 
-        var title = '{s name=messagebox_changePayment/title}Change Payment{/s}';
-        var message = '{s name=messagebox_changePayment/message}Do you really want to change the payment method? Changing the payment method will cancel this order towards Klarna.{/s}';
+        var message = '{s name=messagebox_change_payment/change_confirmation_message}Do you really want to change the payment method? Changing the payment method will cancel this order towards Klarna.{/s}';
 
         Ext.MessageBox.confirm(title, message, function (response) {
             if (response !== 'yes') {
