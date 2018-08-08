@@ -99,6 +99,8 @@ Ext.define('Shopware.apps.BestitExtendOrder.controller.Detail', {
 
         if (oldPaymentId === newPaymentId || !BestitKlarna.controller.Order.isKlarnaPaymentId(oldPaymentId)) {
             me.callParent(arguments);
+            // We need to do this because shopware doesn't update that value but we rely on it on subsequent calls.
+            record.raw.paymentId = newPaymentId;
             return;
         }
 
@@ -110,6 +112,8 @@ Ext.define('Shopware.apps.BestitExtendOrder.controller.Detail', {
             }
 
             onSaveDetailsOrg.apply(me, parentArguments);
+            // We need to do this because shopware doesn't update that value but we rely on it on subsequent calls.
+            record.raw.paymentId = newPaymentId;
         });
     }
 });

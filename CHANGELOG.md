@@ -6,6 +6,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.2.5] - 2018-08-08
+### Fixed
+- Changing the payment method to Klarna was possible under some circumstances
+
 ## [0.2.4] - 2018-08-08
 ### Added
 - Make sure that changing the payment method to Klarna is not possible in the backend
