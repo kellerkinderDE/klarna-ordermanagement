@@ -13,7 +13,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {s name='submitCaptureText'} Are you sure that you want to capture an amount that is different from the actual positions?{/s}
+                    <span class="capture-confirmation-normal">{s name='submitCaptureTextNormal'} Are you sure that you want to capture?{/s}</span>
+                    <span class="capture-confirmation-differs">{s name='submitCaptureTextDiffers'} Are you sure that you want to capture an amount that is different from the actual positions?{/s}</span>
                 </div>
                 <div class="confirm-box">
                     <a data-url="{url controller="BestitOrderManagement" action="createCapture"}"
