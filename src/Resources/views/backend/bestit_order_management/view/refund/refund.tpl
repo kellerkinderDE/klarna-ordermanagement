@@ -77,7 +77,7 @@
                     </div>
 
                     <div>
-                        <button type="button" class="btn btn-primary float-right" data-toggle="modal"
+                        <button type="button" class="btn btn-primary float-right js-confirmation-btn" data-order="{$order|json_encode|escape}" data-action="refund" data-toggle="modal"
                                 data-target="#submit-refund-Modal">{s name='Refund'}Refund{/s}</button>
                     </div>
                 </div>

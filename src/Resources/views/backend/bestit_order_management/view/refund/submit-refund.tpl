@@ -12,9 +12,12 @@
                             aria-label="Close">&times;
                     </button>
                 </div>
+
                 <div class="modal-body">
-                    {s name='submitRefundText'} Are you sure that you want to refund this amount?{/s}
+                    <span class="refund-confirmation-normal">{s name='submitRefundTextNormal'} Are you sure that you want to refund this amount?{/s}</span>
+                    <span class="refund-confirmation-differs">{s name='submitRefundTextDiffers'} Are you sure that you want to refund an amount that is different from the actual positions?{/s}</span>
                 </div>
+
                 <div class="confirm-box">
                     <a data-url="{url controller="BestitOrderManagement" action="createRefund"}"
                        data-order="{$order|json_encode|escape}"

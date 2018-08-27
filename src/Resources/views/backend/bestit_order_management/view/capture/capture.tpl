@@ -77,7 +77,7 @@
                     </div>
 
                     <div>
-                        <button type="button" class="btn btn-primary float-right" data-toggle="modal"
+                        <button type="button" class="btn btn-primary float-right js-confirmation-btn" data-order="{$order|json_encode|escape}" data-action="capture" data-toggle="modal"
                                 data-target="#submit-capture-Modal">{s name='Capture'}Capture{/s}</button>
                     </div>
                 </div>
