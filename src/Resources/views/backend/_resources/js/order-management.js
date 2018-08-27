@@ -67,6 +67,47 @@ $(function () {
     }
 
     /**
+     * Checks if the sum is different from the actual positions and shows the suitable text
+     *
+     */
+    var $submitBtn = $('.js-confirmation-btn');
+    $submitBtn.click(function (e) {
+        var $target = $(e.currentTarget);
+        var order = $target.data('order');
+        var action = $target.attr('data-action');
+        var amountClass = '.js--sum.' + action;
+        var confirmationNormalClass = '.' + action + '-confirmation-normal';
+        var confirmationDiffersClass = '.' + action + '-confirmation-differs';
+        var orderLineName = action + '_order_line';
+        var amount = $(amountClass).val();
+
+
+        var selectedLines = [];
+        $('input[name^=' + orderLineName + ']').each(function (i, e) {
+            var $el = $(e);
+            if (!$el.is(':checked')) {
+                return;
+            }
+
+            var $quantity = $el.closest('tr').find('.js--orderLine-quantity');
+            order.order_lines[i].quantity = parseInt($quantity.val());
+            selectedLines.push(order.order_lines[i]);
+        });
+
+        var sum = selectedLines.reduce(function (sum, orderline) {
+            return sum + (orderline.quantity * orderline.unit_price);
+        }, 0);
+
+        if ((amount * 100) === sum) {
+            $(confirmationNormalClass).show();
+            $(confirmationDiffersClass).hide();
+        } else {
+            $(confirmationDiffersClass).show();
+            $(confirmationNormalClass).hide();
+        }
+    });
+
+    /**
      * Filter selected lines
      * Get captured/refund amount
      * Get description
@@ -88,7 +129,7 @@ $(function () {
         var selectedLines = [];
         $('input[name^=' + orderLineName + ']').each(function (i, e) {
             var $el = $(e);
-            if(!$el.is(':checked')){
+            if (!$el.is(':checked')) {
                 return;
             }
 

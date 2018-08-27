@@ -6,6 +6,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.2.6] - 2018-08-23
+### Fixed
+- Shows the suitable text for confirmation capture and refund amount.  
+
 ## [0.2.5] - 2018-08-08
 ### Fixed
 - Changing the payment method to Klarna was possible under some circumstances
