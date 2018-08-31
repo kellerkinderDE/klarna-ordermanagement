@@ -6,6 +6,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.2.7] - 2018-08-28
+### Fixed
+- Round the capture and refund amount in order to be able to compare it correctly.  
+
 ## [0.2.6] - 2018-08-23
 ### Fixed
 - Shows the suitable text for confirmation capture and refund amount.  

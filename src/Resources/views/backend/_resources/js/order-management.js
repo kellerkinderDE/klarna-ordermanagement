@@ -98,7 +98,10 @@ $(function () {
             return sum + (orderline.quantity * orderline.unit_price);
         }, 0);
 
-        if ((amount * 100) === sum) {
+        amount = Math.round(amount * 100);
+        sum = Math.round(sum);
+
+        if (amount === sum) {
             $(confirmationNormalClass).show();
             $(confirmationDiffersClass).hide();
         } else {
