@@ -6,6 +6,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.2.9] - 2018-11-05
+### Added
+- Changed string to string|null on $shippingCompany to prevent NULL errors 
+
 ## [0.2.8] - 2018-10-19
 ### Added
 - Added a Shop Aware HTTP Client Service, required in KP and KCO for sub shop settings 
