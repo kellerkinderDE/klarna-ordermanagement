@@ -17,4 +17,11 @@ interface ActionFactoryInterface
      * @return ActionInterface|null
      */
     public function create($orderStatusId);
+
+    /**
+     * @param int $orderDetailStatusId
+     *
+     * @return ActionInterface|null
+     */
+    public function createForDetailStatus($orderDetailStatusId);
 }

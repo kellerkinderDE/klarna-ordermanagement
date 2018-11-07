@@ -19,20 +19,30 @@ class ActionFactory implements ActionFactoryInterface
     protected $captureAction;
     /** @var ActionInterface */
     protected $refundAction;
+    /** @var PartialCapture */
+    protected $partialCaptureAction;
+    /** @var PartialRefund */
+    protected $partialRefundAction;
 
     /**
-     * @param ConfigReader    $configReader
-     * @param ActionInterface $captureAction
-     * @param ActionInterface $refundAction
+     * @param ConfigReader $configReader
+     * @param Capture $captureAction
+     * @param Refund $refundAction
+     * @param PartialCapture $partialCaptureAction
+     * @param PartialRefund $partialRefundAction
      */
     public function __construct(
         ConfigReader $configReader,
-        ActionInterface $captureAction,
-        ActionInterface $refundAction
+        Capture $captureAction,
+        Refund $refundAction,
+        PartialCapture $partialCaptureAction,
+        PartialRefund $partialRefundAction
     ) {
         $this->configReader = $configReader;
         $this->captureAction = $captureAction;
         $this->refundAction = $refundAction;
+        $this->partialCaptureAction = $partialCaptureAction;
+        $this->partialRefundAction = $partialRefundAction;
     }
 
     /**
@@ -51,6 +61,27 @@ class ActionFactory implements ActionFactoryInterface
 
         if ($orderStatusId === $refundOn) {
             return $this->refundAction;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param int $orderDetailStatusId
+     *
+     * @return ActionInterface|null
+     */
+    public function createForDetailStatus($orderDetailStatusId)
+    {
+        $partialCaptureOn = (int) $this->configReader->get('partial_capture_on_position_status');
+        $partialRefundOn = (int) $this->configReader->get('partial_refund_on_position_status');
+
+        if ($orderDetailStatusId === $partialCaptureOn) {
+            return $this->partialCaptureAction;
+        }
+
+        if ($orderDetailStatusId === $partialRefundOn) {
+            return $this->partialRefundAction;
         }
 
         return null;

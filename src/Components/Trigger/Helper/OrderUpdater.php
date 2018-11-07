@@ -12,7 +12,6 @@ use BestitKlarnaOrderManagement\Components\Transformer\OrderTransformer;
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
 use Shopware\Bundle\StoreFrontBundle\Service\MediaServiceInterface;
 use Shopware\Bundle\StoreFrontBundle\Struct\BaseProduct;
-use Shopware\Models\Order\Detail;
 use Shopware_Components_Config;
 
 /**
@@ -162,7 +161,10 @@ class OrderUpdater
             if ($articleId !== 0) {
                 $linkDetails = "{$baseFile}?sViewport=detail&module=frontend&sArticle={$articleId}";
 
-                $media = $this->mediaService->getCover(new BaseProduct($articleId, $variantId, $orderNumber), $this->contextService->getShopContext());
+                $media = $this->mediaService->getCover(
+                    new BaseProduct($articleId, $variantId, $orderNumber),
+                    $this->contextService->getShopContext()
+                );
 
                 $image = $media === null ? null : $media->getFile();
             }
