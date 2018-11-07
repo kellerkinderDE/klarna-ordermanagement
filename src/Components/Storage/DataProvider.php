@@ -74,7 +74,7 @@ class DataProvider
         return $this->connection->createQueryBuilder()
             ->select('sod.*, sad.id as variantId')
             ->from('s_order_details', 'sod')
-            ->join('sod', 's_articles_details', 'sad', 'sod.articleordernumber = sad.ordernumber')
+            ->leftJoin('sod', 's_articles_details', 'sad', 'sod.articleordernumber = sad.ordernumber')
             ->where('sod.orderID = :orderId')
             ->setParameter('orderId', $orderId)
             ->execute()

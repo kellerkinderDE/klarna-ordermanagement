@@ -186,6 +186,19 @@
             <argument type="service" id="bestit_klarna_order_management.components.trigger.action.action_factory"/>
         </service>
         <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\OrderDetailStatusChanged"
+                id="bestit_klarna_order_management.components.trigger.order_detail_status_changed">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <!--
+                Because this service will be mainly used in the backend - do NOT use the shop aware config reader.
+                There is no shop defined in the backend so that will throw an error.
+            -->
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
+            <argument type="service" id="bestit_klarna_order_management.components.payment_insights"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.action.action_factory"/>
+        </service>
+        <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\Action\ActionFactory"
                 id="bestit_klarna_order_management.components.trigger.action.action_factory">
             <!--
@@ -193,12 +206,10 @@
                 There is no shop defined in the backend so that will throw an error.
             -->
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
-            <!--
-                The sorting of the action arguments is *important*. The capture action has to be the first one
-                and the refund action the second one. Do *not* change that.
-            -->
             <argument type="service" id="bestit_klarna_order_management.components.trigger.action.capture"/>
             <argument type="service" id="bestit_klarna_order_management.components.trigger.action.refund"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.action.partial_capture"/>
+            <argument type="service" id="bestit_klarna_order_management.components.trigger.action.partial_refund"/>
         </service>
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\Action\Capture"
@@ -210,6 +221,22 @@
                 id="bestit_klarna_order_management.components.trigger.action.refund">
             <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
             <argument type="service" id="bestit_klarna_order_management.components.facade.refund"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\Action\PartialCapture"
+                id="bestit_klarna_order_management.components.trigger.action.partial_capture">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.capture"/>
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.order_detail_transformer"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+        </service>
+        <service
+                class="BestitKlarnaOrderManagement\Components\Trigger\Action\PartialRefund"
+                id="bestit_klarna_order_management.components.trigger.action.partial_refund">
+            <argument type="service" id="bestit_klarna_order_management.components.facade.refund"/>
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.order_detail_transformer"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
         <service
                 class="BestitKlarnaOrderManagement\Components\Trigger\AddressChanged"
@@ -316,6 +343,13 @@
         <service
                 class="BestitKlarnaOrderManagement\Components\Transformer\ProductIdentifiersTransformer"
                 id="bestit_klarna_order_management.components.transformer.product_identifiers_transformer">
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Transformer\OrderDetailTransformer"
+                id="bestit_klarna_order_management.components.transformer.order_detail_transformer">
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.converter.mode_converter"/>
         </service>
 
         <!--
@@ -427,6 +461,33 @@
         <service
                 class="BestitKlarnaOrderManagement\Components\SignatureGenerator\SignatureGenerator"
                 id="bestit_klarna_order_management.components.signature_generator.signature_generator">
+        </service>
+
+        <!--
+        /////////////////
+        /   Pickware
+        /////////////////
+        -->
+        <service
+                class="BestitKlarnaOrderManagement\Components\Pickware\RefundOnCancellation"
+                id="bestit_klarna_order_management.components.pickware.refund_on_cancellation">
+            <argument type="service" id="models"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.order_detail_transformer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.refund"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Pickware\CaptureOnShipped"
+                id="bestit_klarna_order_management.components.pickware.capture_on_shipped">
+            <argument type="service" id="models"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.order_detail_transformer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.capture"/>
+            <argument type="service" id="bestit_klarna_order_management.components.facade.refund"/>
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
         </service>
     </services>
 </container>

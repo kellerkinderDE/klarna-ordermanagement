@@ -133,17 +133,18 @@ class OrderTransformer implements OrderTransformerInterface
             $lineItem->quantity = (int) $detail['quantity'];
             $lineItem->quantityUnit = $detail['unit'] ?: null;
             $lineItem->unitPrice = $this->calculator->toCents($detail['price']);
-            $lineItem->taxRate = $this->calculator->toCents($detail['tax_rate']);
             $lineItem->totalAmount = $this->calculator->toCents((float) $detail['price'] * (int) $detail['quantity']);
             $lineItem->totalDiscountAmount = 0;
 
-            if ($detail['tax_rate'] === 0) {
-                $totalTaxAmount = 0;
+            if (empty($detail['tax_rate'])) {
+                $lineItem->taxRate = 0;
+                $lineItem->totalTaxAmount = 0;
             } else {
-                $totalTaxAmount = ((float) $detail['price'] * (int) $detail['quantity']) / 100 * $detail['tax_rate'];
+                $lineItem->taxRate = $this->calculator->toCents($detail['tax_rate']);
+                $lineItem->totalTaxAmount = $this->calculator->toCents(
+                    ((float) $detail['price'] * (int) $detail['quantity']) / 100 * $detail['tax_rate']
+                );
             }
-
-            $lineItem->totalTaxAmount = $this->calculator->toCents($totalTaxAmount);
 
             $lineItem->productIdentifiers = $this->productIdentifiersTransformer->toKlarnaModel($detail);
             $lineItem->productUrl = isset($detail['linkDetails']) ? $detail['linkDetails'] : null;
