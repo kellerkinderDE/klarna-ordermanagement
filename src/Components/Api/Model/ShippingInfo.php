@@ -11,7 +11,7 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
  */
 class ShippingInfo
 {
-    /** @var string */
+    /** @var string|null */
     public $shippingCompany;
 
     /** @var string|null */
