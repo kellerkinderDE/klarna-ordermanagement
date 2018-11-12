@@ -49,21 +49,29 @@ class Refund
     }
 
     /**
-     * @param string        $orderId
-     * @param int           $refundAmount
-     * @param string|null   $lineItemsAsJson
-     * @param string|null   $description
+     * @param string $orderId
+     * @param int $refundAmount
+     * @param string|array|null $lineItems
+     * @param string|null $description
      *
      * @return Response
+     *
+     * @deprecated Passing $lineItems as a JSON string is deprecated and will be removed in 2.0.
+     *             You should pass an array of LineItem objects instead.
      */
-    public function create($orderId, $refundAmount, $lineItemsAsJson = null, $description = null)
+    public function create($orderId, $refundAmount, $lineItems = null, $description = null)
     {
         $refund = new RefundModel();
 
         $refund->refundedAmount = $refundAmount;
         $refund->description = $description;
-        if ($lineItemsAsJson !== null) {
-            $refund->orderLines = $this->serializer->deserialize($lineItemsAsJson, LineItem::class . '[]', 'json');
+
+        if ($lineItems !== null) {
+            if (is_array($lineItems)) {
+                $refund->orderLines = $lineItems;
+            } else {
+                $refund->orderLines = $this->serializer->deserialize($lineItems, LineItem::class . '[]', 'json');
+            }
         }
 
         $request = Request::createFromPayload($this->serializer->normalize($refund))
