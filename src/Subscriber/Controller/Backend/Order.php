@@ -2,6 +2,7 @@
 
 namespace BestitKlarnaOrderManagement\Subscriber\Controller\Backend;
 
+use BestitKlarnaOrderManagement\Components\ConfigReader;
 use BestitKlarnaOrderManagement\Components\Exception\NoOrderFoundException;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
@@ -44,23 +45,26 @@ class Order implements SubscriberInterface
     protected $paymentInsights;
     /** @var DataProvider */
     protected $dataProvider;
+    /** @var ConfigReader */
+    protected $configReader;
     /** @var string */
     protected $controllersDir;
     /** @var string */
     protected $templateDir;
 
     /**
-     * @param AddressChangedTrigger           $addressChangedTrigger
-     * @param OrderDeletedTrigger             $orderDeletedTrigger
-     * @param PaymentStatusChangedTrigger     $paymentStatusChangedTrigger
+     * @param AddressChangedTrigger $addressChangedTrigger
+     * @param OrderDeletedTrigger $orderDeletedTrigger
+     * @param PaymentStatusChangedTrigger $paymentStatusChangedTrigger
      * @param OrderTrackingCodeChangedTrigger $orderTrackingCodeChangedTrigger
-     * @param LineItemAddedTrigger            $lineItemAddedTrigger
-     * @param LineItemChangedTrigger          $lineItemChangedTrigger
-     * @param LineItemDeletedTrigger          $lineItemDeletedTrigger
-     * @param PaymentInsights                 $paymentInsights
-     * @param DataProvider                    $dataProvider
-     * @param string                          $controllersDir
-     * @param string                          $templateDir
+     * @param LineItemAddedTrigger $lineItemAddedTrigger
+     * @param LineItemChangedTrigger $lineItemChangedTrigger
+     * @param LineItemDeletedTrigger $lineItemDeletedTrigger
+     * @param PaymentInsights $paymentInsights
+     * @param DataProvider $dataProvider
+     * @param ConfigReader $configReader
+     * @param string $controllersDir
+     * @param string $templateDir
      */
     public function __construct(
         AddressChangedTrigger $addressChangedTrigger,
@@ -72,6 +76,7 @@ class Order implements SubscriberInterface
         LineItemDeletedTrigger $lineItemDeletedTrigger,
         PaymentInsights $paymentInsights,
         DataProvider $dataProvider,
+        ConfigReader $configReader,
         $controllersDir,
         $templateDir
     ) {
@@ -84,6 +89,7 @@ class Order implements SubscriberInterface
         $this->lineItemDeletedTrigger = $lineItemDeletedTrigger;
         $this->paymentInsights = $paymentInsights;
         $this->dataProvider = $dataProvider;
+        $this->configReader = $configReader;
         $this->controllersDir = $controllersDir;
         $this->templateDir = $templateDir;
     }
@@ -351,7 +357,12 @@ class Order implements SubscriberInterface
         if ($request->getActionName() === 'load') {
             $view->extendsTemplate('backend/ExtJs/view/detail/overview.js');
             $view->extendsTemplate('backend/ExtJs/view/detail/window.js');
-            $view->extendsTemplate('backend/ExtJs/controller/detail.js');
+
+            if ($this->pickwareEnabled()) {
+                $view->extendsTemplate('backend/ExtJs/controller/detail-pickware.js');
+            } else {
+                $view->extendsTemplate('backend/ExtJs/controller/detail.js');
+            }
         }
     }
 
@@ -375,5 +386,17 @@ class Order implements SubscriberInterface
          * This is needed to assemble the correct product and product image url.
          */
         $swOrder->getShop()->registerResources();
+    }
+
+    /**
+     * If a PickWare is enabled, true will be returned.
+     *
+     * @return bool
+     */
+    protected function pickwareEnabled()
+    {
+        $pickwareEnabled = (int) $this->configReader->get('pickware_enabled', 0);
+
+        return $pickwareEnabled === 1;
     }
 }
