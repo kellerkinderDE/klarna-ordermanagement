@@ -6,6 +6,12 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.2.10] - 2018-11-12
+### Added
+- Added Status of the position: "Completed" for support of Pickware
+- Added Status of the position: "Cancelled" for support of Pickware
+- Added Implementation of a configuration for the order line status to react on
+
 ## [0.2.9] - 2018-11-05
 ### Added
 - Changed string to string|null on $shippingCompany to prevent NULL errors 

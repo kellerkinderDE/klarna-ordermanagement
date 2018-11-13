@@ -4,6 +4,7 @@ namespace BestitKlarnaOrderManagement\Subscriber\Doctrine;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Shopware\Models\Order\Detail as SwOrderDetail;
 use Shopware\Models\Order\Order as SwOrderModel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -47,11 +48,29 @@ class OrderTrigger implements EventSubscriber
     public function preUpdate(PreUpdateEventArgs $args)
     {
         $orderTrigger = $this->container->get('bestit_klarna_order_management.components.trigger.order_status_changed');
+        $orderDetailTrigger = $this->container->get(
+            'bestit_klarna_order_management.components.trigger.order_detail_status_changed'
+        );
 
         $entity = $args->getEntity();
 
         if ($entity instanceof SwOrderModel && $args->hasChangedField('orderStatus')) {
             $orderTrigger->executeDefinedTriggers($entity);
         }
+
+        if ($entity instanceof SwOrderDetail && $args->hasChangedField('status') && $this->pickwareIsNotEnabled()) {
+            $orderDetailTrigger->executeDefinedTriggers($entity);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function pickwareIsNotEnabled()
+    {
+        $configReader = $this->container->get('bestit_klarna_order_management.components.config_reader');
+        $pickwareIsNotEnabled = (int) $configReader->get('pickware_enabled', 0);
+
+        return $pickwareIsNotEnabled === 0;
     }
 }

@@ -66,12 +66,15 @@ class Capture
     /**
      * @param string              $orderId
      * @param int                 $amount
-     * @param string|null         $lineItemsAsJson
+     * @param string|array|null   $lineItems
      * @param string|null         $description
      * @param ShippingInfo[]|null $shippingInfo
      * @return Response
+     *
+     * @deprecated Passing $lineItems as a JSON string is deprecated and will be removed in 2.0.
+     *             You should pass an array of LineItem objects instead.
      */
-    public function create($orderId, $amount, $lineItemsAsJson = null, $description = null, array $shippingInfo = null)
+    public function create($orderId, $amount, $lineItems = null, $description = null, array $shippingInfo = null)
     {
         $capture = new CaptureModel();
 
@@ -93,8 +96,13 @@ class Capture
 
         $capture->shippingInfo = $shippingInfo;
 
-        if ($lineItemsAsJson !== null) {
-            $capture->orderLines = $this->serializer->deserialize($lineItemsAsJson, LineItem::class . '[]', 'json');
+
+        if ($lineItems !== null) {
+            if (is_array($lineItems)) {
+                $capture->orderLines = $lineItems;
+            } else {
+                $capture->orderLines = $this->serializer->deserialize($lineItems, LineItem::class . '[]', 'json');
+            }
         }
 
         $request = Request::createFromPayload($this->serializer->normalize($capture))
