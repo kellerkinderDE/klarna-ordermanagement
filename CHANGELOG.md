@@ -6,6 +6,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.2.11] - 2018-11-12
+### Added
+- Added AuthorizationHelper class to set the right auth header, when using orders from sub shop
+
 ## [0.2.10] - 2018-11-12
 ### Added
 - Added Status of the position: "Completed" for support of Pickware

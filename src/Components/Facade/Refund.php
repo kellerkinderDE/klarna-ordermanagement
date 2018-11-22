@@ -7,6 +7,7 @@ use BestitKlarnaOrderManagement\Components\Api\Model\Refund as RefundModel;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Refund as RefundResource;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Logging\TransactionLoggerInterface;
+use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
 use BestitKlarnaOrderManagement\Components\Storage\DataWriter;
 use Shopware\Models\Order\Status;
 use Symfony\Component\Serializer\Serializer;
@@ -29,23 +30,28 @@ class Refund
     protected $dataWriter;
     /** @var TransactionLoggerInterface */
     protected $transactionLogger;
+    /** @var AuthorizationHelper */
+    protected $authorizationHelper;
 
     /**
      * @param RefundResource             $refundResource
      * @param Serializer                 $serializer
      * @param DataWriter                 $dataWriter
      * @param TransactionLoggerInterface $transactionLogger
+     * @param AuthorizationHelper        $authorizationHelper
      */
     public function __construct(
         RefundResource $refundResource,
         Serializer $serializer,
         DataWriter $dataWriter,
-        TransactionLoggerInterface $transactionLogger
+        TransactionLoggerInterface $transactionLogger,
+        AuthorizationHelper $authorizationHelper
     ) {
         $this->refundResource = $refundResource;
         $this->serializer = $serializer;
         $this->dataWriter = $dataWriter;
         $this->transactionLogger = $transactionLogger;
+        $this->authorizationHelper = $authorizationHelper;
     }
 
     /**
@@ -77,6 +83,7 @@ class Refund
         $request = Request::createFromPayload($this->serializer->normalize($refund))
             ->addQueryParameter('order_id', $orderId)
         ;
+        $this->authorizationHelper->setAuthHeader($request);
 
         $response = $this->refundResource->create($request);
 

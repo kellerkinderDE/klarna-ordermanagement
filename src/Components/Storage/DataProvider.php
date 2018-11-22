@@ -65,6 +65,25 @@ class DataProvider
     }
 
     /**
+     * @param int $klarnaOrderId
+     *
+     * @return string|null
+     */
+    public function getShopwareOrderId($klarnaOrderId)
+    {
+        $shopwareOrderId = $this->connection->createQueryBuilder()
+            ->select('id')
+            ->from('s_order')
+            ->where('transactionID = :transactionID')
+            ->setParameter('transactionID', $klarnaOrderId)
+            ->execute()
+            ->fetchColumn()
+        ;
+
+        return $shopwareOrderId ?: null;
+    }
+
+    /**
      * @param int $orderId
      *
      * @return array
