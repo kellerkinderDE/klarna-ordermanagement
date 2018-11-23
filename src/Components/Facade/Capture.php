@@ -11,6 +11,7 @@ use BestitKlarnaOrderManagement\Components\Api\Resource\Capture as CaptureResour
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Logging\TransactionLoggerInterface;
+use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Storage\DataWriter;
 use Shopware\Models\Order\Status;
@@ -38,6 +39,8 @@ class Capture
     protected $dataWriter;
     /** @var TransactionLoggerInterface */
     protected $transactionLogger;
+    /** @var AuthorizationHelper */
+    protected $authorizationHelper;
 
     /**
      * @param Order                      $orderFacade
@@ -46,6 +49,7 @@ class Capture
      * @param DataProvider               $dataProvider
      * @param DataWriter                 $dataWriter
      * @param TransactionLoggerInterface $transactionLogger
+     * @param AuthorizationHelper        $authorizationHelper
      */
     public function __construct(
         OrderFacade $orderFacade,
@@ -53,7 +57,8 @@ class Capture
         Serializer $serializer,
         DataProvider $dataProvider,
         DataWriter $dataWriter,
-        TransactionLoggerInterface $transactionLogger
+        TransactionLoggerInterface $transactionLogger,
+        AuthorizationHelper $authorizationHelper
     ) {
         $this->orderFacade = $orderFacade;
         $this->captureResource = $captureResource;
@@ -61,6 +66,7 @@ class Capture
         $this->dataProvider = $dataProvider;
         $this->dataWriter = $dataWriter;
         $this->transactionLogger = $transactionLogger;
+        $this->authorizationHelper = $authorizationHelper;
     }
 
     /**
@@ -107,6 +113,7 @@ class Capture
 
         $request = Request::createFromPayload($this->serializer->normalize($capture))
             ->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         $response = $this->captureResource->create($request);
         $this->transactionLogger->createCapture($request, $response);
@@ -146,6 +153,7 @@ class Capture
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
         $request->addQueryParameter('capture_id', $captureId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         return $this->captureResource->resend($request);
     }
@@ -167,6 +175,7 @@ class Capture
         $request = Request::createFromPayload([
             'shipping_info' => $this->serializer->normalize([$shippingInfoModel])
         ])->addQueryParameter('order_id', $orderId)->addQueryParameter('capture_id', $captureId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         return $this->captureResource->updateShippingInfo($request);
     }
