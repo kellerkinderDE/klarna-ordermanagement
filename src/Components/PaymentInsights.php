@@ -73,6 +73,22 @@ class PaymentInsights
     }
 
     /**
+     * @param int $orderId
+     *
+     * @return string
+     */
+    public function getOrderChanged($orderId)
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('o.changed')
+            ->from('s_order', 'o')
+            ->where('o.id = :orderId')
+            ->setParameter('orderId', $orderId)
+            ->execute()
+            ->fetchColumn();
+    }
+
+    /**
      * Get payment using the ip
      *
      * @param int $paymentId
