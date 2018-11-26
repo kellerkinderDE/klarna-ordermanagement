@@ -17,6 +17,7 @@ use Enlight\Event\SubscriberInterface;
 use Enlight_Controller_Action;
 use Enlight_Controller_ActionEventArgs;
 use Enlight_Hook_HookArgs;
+use Shopware;
 
 /**
  * Subscribers for the backend order page(s).
