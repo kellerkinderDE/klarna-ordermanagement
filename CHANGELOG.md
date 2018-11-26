@@ -6,6 +6,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.2.12] - 2018-11-12
+### Added
+- Added 'changed' request parameter to make backend non klarna orders editable again
+
 ## [0.2.11] - 2018-11-12
 ### Added
 - Added AuthorizationHelper class to set the right auth header, when using orders from sub shop
