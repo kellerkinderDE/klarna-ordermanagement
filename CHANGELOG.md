@@ -5,8 +5,11 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+## [0.2.13] - 2018-11-26
+### Added
+- Fix: Missing use
 
-## [0.2.12] - 2018-11-12
+## [0.2.12] - 2018-11-26
 ### Added
 - Added 'changed' request parameter to make backend non klarna orders editable again
 
