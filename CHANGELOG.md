@@ -5,6 +5,10 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+## [0.2.14] - 2018-11-26
+### Added
+- Added: |null for reference in LineItem in order to be compatible with custom products plugin
+
 ## [0.2.13] - 2018-11-26
 ### Added
 - Fix: Missing use
