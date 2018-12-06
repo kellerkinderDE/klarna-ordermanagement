@@ -11,7 +11,12 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
  */
 class LineItem
 {
-    /** @var string */
+    /**
+     * Since custom product plugin order line items (values) dont have an
+     * article ordernumber, we have to allow null
+     *
+     * @var string|null
+     */
     public $reference;
 
     /** @var string */
