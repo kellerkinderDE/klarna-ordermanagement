@@ -84,7 +84,7 @@ class AuthorizationHelper
         }
 
         $swOrder = $this->dataProvider->getSwOrder($swOrderId);
-        $shop = $swOrder->getShop();
+        $shop = $swOrder->getLanguageSubShop();
 
         $this->configReader->setShop($shop);
     }
