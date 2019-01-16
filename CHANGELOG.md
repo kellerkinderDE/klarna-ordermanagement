@@ -5,6 +5,10 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+## [0.2.17] - 2019-01-16
+### Added
+- Changed string to string|null on $title to prevent NULL errors 
+
 ## [0.2.16] - 2018-11-12
 ### Fixed
 - Also use language shop ids for sub shop settings 

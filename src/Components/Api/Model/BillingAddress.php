@@ -17,7 +17,7 @@ class BillingAddress
     /** @var string */
     public $familyName;
 
-    /** @var string */
+    /** @var string|null */
     public $title;
 
     /** @var string */
