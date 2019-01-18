@@ -5,6 +5,35 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+## [0.2.16] - 2018-11-12
+### Fixed
+- Also use language shop ids for sub shop settings 
+
+## [0.2.15] - 2018-11-26
+### Added
+- Added: Constants for Custom Products Plugin
+
+## [0.2.14] - 2018-11-26
+### Added
+- Added: |null for reference in LineItem in order to be compatible with custom products plugin
+
+## [0.2.13] - 2018-11-26
+### Added
+- Fix: Missing use
+
+## [0.2.12] - 2018-11-26
+### Added
+- Added 'changed' request parameter to make backend non klarna orders editable again
+
+## [0.2.11] - 2018-11-12
+### Added
+- Added AuthorizationHelper class to set the right auth header, when using orders from sub shop
+
+## [0.2.10] - 2018-11-12
+### Added
+- Added Status of the position: "Completed" for support of Pickware
+- Added Status of the position: "Cancelled" for support of Pickware
+- Added Implementation of a configuration for the order line status to react on
 
 ## [0.2.9] - 2018-11-05
 ### Added

@@ -10,6 +10,7 @@ use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Order as OrderResource;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Logging\TransactionLoggerInterface;
+use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
 use BestitKlarnaOrderManagement\Components\Storage\DataWriter;
 use Shopware\Models\Order\Status;
 use Symfony\Component\Serializer\Serializer;
@@ -31,23 +32,28 @@ class Order
     protected $dataWriter;
     /** @var TransactionLoggerInterface */
     protected $transactionLogger;
+    /** @var AuthorizationHelper */
+    protected $authorizationHelper;
 
     /**
      * @param OrderResource              $orderResource
      * @param Serializer                 $serializer
      * @param DataWriter                 $dataWriter
      * @param TransactionLoggerInterface $transactionLogger
+     * @param AuthorizationHelper        $authorizationHelper
      */
     public function __construct(
         OrderResource $orderResource,
         Serializer $serializer,
         DataWriter $dataWriter,
-        TransactionLoggerInterface $transactionLogger
+        TransactionLoggerInterface $transactionLogger,
+        AuthorizationHelper $authorizationHelper
     ) {
         $this->orderResource = $orderResource;
         $this->serializer = $serializer;
         $this->dataWriter = $dataWriter;
         $this->transactionLogger = $transactionLogger;
+        $this->authorizationHelper = $authorizationHelper;
     }
 
     /**
@@ -59,6 +65,7 @@ class Order
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         return $this->orderResource->get($request);
     }
@@ -72,6 +79,7 @@ class Order
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         $response = $this->orderResource->extendAuthTime($request);
 
@@ -89,6 +97,7 @@ class Order
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         $response = $this->orderResource->releaseRemainingAmount($request);
 
@@ -106,6 +115,7 @@ class Order
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         $response = $this->orderResource->cancel($request);
 
@@ -135,6 +145,7 @@ class Order
             'shipping_address' => $this->serializer->normalize($shipping),
             'billing_address' => $this->serializer->normalize($billing)
         ])->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         return $this->orderResource->updateAddress($request);
     }
@@ -152,6 +163,7 @@ class Order
             'order_amount' => $orderAmount,
             'order_lines' => $this->serializer->normalize($newLineItem),
         ])->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         $response = $this->orderResource->updateOrder($request);
 
@@ -169,6 +181,7 @@ class Order
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         return $this->orderResource->acknowledge($request);
     }
@@ -184,6 +197,7 @@ class Order
         $request = Request::createFromPayload(
             $this->serializer->normalize($merchantReferences)
         )->addQueryParameter('order_id', $orderId);
+        $this->authorizationHelper->setAuthHeader($request);
 
         return $this->orderResource->updateMerchantReferences($request);
     }

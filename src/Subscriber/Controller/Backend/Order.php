@@ -17,6 +17,7 @@ use Enlight\Event\SubscriberInterface;
 use Enlight_Controller_Action;
 use Enlight_Controller_ActionEventArgs;
 use Enlight_Hook_HookArgs;
+use Shopware;
 
 /**
  * Subscribers for the backend order page(s).
@@ -215,6 +216,15 @@ class Order implements SubscriberInterface
         $orderId = $request->getParam('orderId');
 
         if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
+            /*
+             * Shopware checks from SW 5.5.0 on for the request parameter 'changed'. The parameter is missing
+             * which leads to an error preventing of editing non klarna orders. So we have to add it.
+             */
+            if (version_compare(Shopware::VERSION, '5.5.0', '>=')) {
+                $changed = $this->paymentInsights->getOrderChanged($orderId);
+                $request->setParam('changed', $changed);
+            }
+
             $args->setReturn($args->getSubject()->executeParent(
                 $args->getMethod(),
                 $args->getArgs()
@@ -265,11 +275,21 @@ class Order implements SubscriberInterface
     {
         /** @var  Enlight_Controller_Action $controller */
         $controller = $args->getSubject();
+        $request = $controller->Request();
         $args->setProcessed(true);
         $positions = $controller->Request()->getParam('positions', [['id' => $controller->Request()->getParam('id')]]);
         $orderId = $controller->Request()->getParam('orderID');
 
         if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
+            /*
+             * Shopware checks from SW 5.5.0 on for the request parameter 'changed'. The parameter is missing
+             * which leads to an error preventing of editing non klarna orders. So we have to add it.
+             */
+            if (version_compare(Shopware::VERSION, '5.5.0', '>=')) {
+                $changed = $this->paymentInsights->getOrderChanged($orderId);
+                $request->setParam('changed', $changed);
+            }
+
             $args->setReturn($args->getSubject()->executeParent(
                 $args->getMethod(),
                 $args->getArgs()
