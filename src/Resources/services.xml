@@ -479,6 +479,11 @@
         </service>
 
         <service
+                class="BestitKlarnaOrderManagement\Components\Shared\TaxHelper"
+                id="bestit_klarna_order_management.components.shared.tax_helper">
+        </service>
+
+        <service
                 class="BestitKlarnaOrderManagement\Components\SignatureGenerator\SignatureGenerator"
                 id="bestit_klarna_order_management.components.signature_generator.signature_generator">
         </service>
