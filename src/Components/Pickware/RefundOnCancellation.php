@@ -85,15 +85,21 @@ class RefundOnCancellation
         $cancelledItemsAsOrderDetails = $this->transformPickwareItemsToShopwareDetails($cancelledItems);
         $cancelledItemsAsKlarnaLineItems = $this->transformToKlarnaLineItems($cancelledItemsAsOrderDetails);
 
+        $klarnaOrderId = $order->getTransactionId();
+
+        if (empty($klarnaOrderId)) {
+            return;
+        }
+
         if ($this->shippingCosts !== null) {
             $cancelledItemsAsKlarnaLineItems = $this->appendShippingCostsLineItem(
-                $order->getTransactionId(),
+                $klarnaOrderId,
                 $cancelledItemsAsKlarnaLineItems
             );
         }
 
         $this->refundFacade->create(
-            $order->getTransactionId(),
+            $klarnaOrderId,
             $this->calculateRefundAmount($cancelledItemsAsOrderDetails),
             $cancelledItemsAsKlarnaLineItems
         );

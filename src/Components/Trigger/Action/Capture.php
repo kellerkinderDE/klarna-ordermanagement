@@ -41,6 +41,12 @@ class Capture implements ActionInterface
             return null;
         }
 
+        $klarnaOrderId = $swOrder->getTransactionId();
+
+        if (empty($klarnaOrderId)) {
+            return;
+        }
+
         $response = $this->captureFacade->create($swOrder->getTransactionId(), $klarnaOrder->remainingAuthorizedAmount);
 
         if ($response->isError()) {

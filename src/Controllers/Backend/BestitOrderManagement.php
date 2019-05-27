@@ -20,6 +20,10 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
     protected $paymentInsights;
     /** @var OrderManagementFacade */
     protected $orderManagementFacade;
+    /** @var Enlight_Components_Snippet_Manager */
+    protected $snippetManager;
+    /** @var Enlight_Components_Snippet_Namespace */
+    protected $nameSpace;
 
     /**
      * Configures the Controller
@@ -34,6 +38,8 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
 
         $this->orderManagementFacade = $this->get('bestit_klarna_order_management.components.facade.order_management');
         $this->paymentInsights = $this->get('bestit_klarna_order_management.components.payment_insights');
+        $this->snippetManager = $this->get('snippets');
+        $this->nameSpace = $this->snippetManager->getNamespace('backend/bestitOrderManagement');
     }
 
     /**
@@ -75,6 +81,18 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
         $lineItemsAsJson = $this->Request()->getParam('selectedLines');
         $description = $this->Request()->getParam('description', '');
 
+        $errorMessage = $this->nameSpace->get(
+            'CaptureFailed',
+            'Capture was not successful'
+        );
+
+        if (empty($klarnaOrderId)) {
+            return [
+                'success' => false,
+                'errorMessage' => $errorMessage
+            ];
+        }
+
         $response = $this->orderManagementFacade->captureOrder($klarnaOrderId, $amount, $lineItemsAsJson, $description);
 
         $this->jsonResponse($response);
@@ -89,6 +107,18 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
         $refundAmount = $this->Request()->getParam('amount');
         $lineItemsAsJson = $this->Request()->getParam('selectedLines');
         $description = $this->Request()->getParam('description', '');
+
+        $errorMessage = $this->nameSpace->get(
+            'RefundFailed',
+            'Refund was not successful'
+        );
+
+        if (empty($klarnaOrderId)) {
+            return [
+                'success' => false,
+                'errorMessage' => $errorMessage
+            ];
+        }
 
         $response = $this->orderManagementFacade->refundOrder(
             $klarnaOrderId,
