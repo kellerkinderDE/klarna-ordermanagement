@@ -66,8 +66,14 @@ class PartialCapture implements ActionInterface
             return null;
         }
 
+        $klarnaOrderId = $swOrder->getTransactionId();
+
+        if (empty($klarnaOrderId)) {
+            return null;
+        }
+
         $response = $this->captureFacade->create(
-            $swOrder->getTransactionId(),
+            $klarnaOrderId,
             $amountToCapture,
             $this->serializer->serialize(
                 [$this->detailTransformer->createLineItem($swOrderDetail)],

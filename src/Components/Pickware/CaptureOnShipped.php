@@ -105,6 +105,10 @@ class CaptureOnShipped
         $order = $orderDetail->getOrder();
         $orderTransactionId = $order->getTransactionId();
 
+        if (empty($orderTransactionId)) {
+            return;
+        }
+
         if ($shippedValue > 0) {
             $this->captureItem($orderTransactionId, $orderDetail, $shippedValue);
 
