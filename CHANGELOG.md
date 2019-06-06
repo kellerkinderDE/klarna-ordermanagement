@@ -4,10 +4,10 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## Unreleased
 ## [0.2.18] - 2019-05-27
 ### Added
 - Prevent capture/refund if transaction id is empty 
+- Tax helper to determine if user is allowed for tax free order
 
 ## [0.2.17] - 2019-01-16
 ### Added
