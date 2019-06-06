@@ -14,11 +14,23 @@
             "BestitKlarnaOrderManagement\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "BestitKlarnaOrderManagement\\Tests\\": "tests"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "5.6.4"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7",
+        "shopware/shopware": "5.4.0"
     }
 }

@@ -35,6 +35,10 @@ class DataWriter
      */
     public function updatePaymentStatus($transactionId, $statusId)
     {
+        if (empty($transactionId)) {
+            return 0;
+        }
+
         return $this->connection->update('s_order', ['cleared' => $statusId], ['transactionID' => $transactionId]);
     }
 }

@@ -45,6 +45,10 @@ class Refund implements ActionInterface
     {
         $klarnaOrderId = $swOrder->getTransactionId();
 
+        if (empty($klarnaOrderId)) {
+            return null;
+        }
+
         // No capture yet => just cancel the order
         if ($klarnaOrder->capturedAmount <= 0) {
             $response = $this->orderFacade->cancel($klarnaOrderId);

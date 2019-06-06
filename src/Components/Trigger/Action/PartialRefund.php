@@ -68,8 +68,14 @@ class PartialRefund implements ActionInterface
             return null;
         }
 
+        $klarnaOrderId = $swOrder->getTransactionId();
+
+        if (empty($klarnaOrderId)) {
+            return null;
+        }
+
         $response = $this->refundFacade->create(
-            $swOrder->getTransactionId(),
+            $klarnaOrderId,
             $amountToRefund,
             [
                 $this->orderDetailTransformer->createLineItem($swOrderDetail)
