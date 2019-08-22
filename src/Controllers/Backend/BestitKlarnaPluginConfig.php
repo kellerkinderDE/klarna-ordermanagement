@@ -22,8 +22,6 @@ class Shopware_Controllers_Backend_BestitKlarnaPluginConfig extends Shopware_Con
     protected $viewRenderer;
     /** @var OrderResource */
     protected $orderResource;
-    /** @var ZipCreator */
-    protected $logZipCreator;
 
     /**
      * @return void
@@ -33,7 +31,6 @@ class Shopware_Controllers_Backend_BestitKlarnaPluginConfig extends Shopware_Con
         $this->viewRenderer = $this->Front()->Plugins()->get('ViewRenderer');
         $this->viewRenderer->setNoRender();
         $this->orderResource = $this->get('bestit_klarna_order_management.components.api.resource.order');
-        $this->logZipCreator = $this->get('bestit_klarna_order_management.components.logging.zip_creator');
     }
 
     /**
@@ -69,23 +66,6 @@ class Shopware_Controllers_Backend_BestitKlarnaPluginConfig extends Shopware_Con
     }
 
     /**
-     * Downloads all saved logs
-     *
-     * @return void
-     */
-    public function downloadLogsAction()
-    {
-        $zipName = 'bestit_klarna_logs_' . time() . '.zip';
-
-        $this->logZipCreator->zipKlarnaLogFiles($zipName);
-
-        $this->Response()->setHeader('Content-Type', 'application/zip', true);
-        $this->Response()->setHeader('Content-Length', filesize($zipName), true);
-        $this->Response()->setHeader('Content-Disposition', "attachment; filename='{$zipName}'", true);
-        $this->Response()->setBody(file_get_contents($zipName));
-    }
-
-    /**
      * Returns a list with actions which should not be validated for CSRF protection
      *
      * @return string[]
@@ -93,8 +73,7 @@ class Shopware_Controllers_Backend_BestitKlarnaPluginConfig extends Shopware_Con
     public function getWhitelistedCSRFActions()
     {
         return [
-            'testApiCredentials',
-            'downloadLogs'
+            'testApiCredentials'
         ];
     }
 }
