@@ -4,6 +4,11 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [0.2.19] - 2019-08-22
+### Removed
+- Removed the downloadLogs action so it can't be used/called anymore. 
+- Removed the auhtorization Header from the logs.
+
 ## [0.2.18] - 2019-05-27
 ### Added
 - Prevent capture/refund if transaction id is empty 

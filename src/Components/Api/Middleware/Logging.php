@@ -57,6 +57,11 @@ class Logging implements SubscriberInterface
         $request = $event->getRequest();
         $response = $event->getResponse();
 
+        // Remove authorization header for securty reason
+        if($request->getHeader('Authorization') !== null) {
+            $request->setHeader('Authorization', 'REMOVED');
+        }
+
         $logLevel = $this->configReader->get('log_level', self::LOG_LEVEL_ERRORS);
 
         if ($logLevel === self::LOG_LEVEL_NONE) {
