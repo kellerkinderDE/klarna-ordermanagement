@@ -143,12 +143,9 @@
             <factory class="BestitKlarnaOrderManagement\Components\Logging\Handler\RotatingFileHandlerFactory"
                      method="create"/>
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
-            <argument type="string">%kernel.logs_dir%/bestit_klarna_%kernel.environment%.log</argument>
+            <argument type="string">%kernel.logs_dir%/%bestit_klarna.plugin_log_prefix%_%kernel.environment%.log</argument>
             <argument>0</argument>
             <argument>100</argument>
-            <call method="setFormatter">
-                <argument type="service" id="bestit_klarna_order_management.logging.formatter.json_formatter"/>
-            </call>
         </service>
 
         <service
