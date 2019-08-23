@@ -4,6 +4,11 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [0.2.20] - 2019-08-22
+### Removed
+- Changed the log file name so KP and KCO have their own log files 
+- Changed the logger format to support shopware standard.
+
 ## [0.2.19] - 2019-08-22
 ### Removed
 - Removed the downloadLogs action so it can't be used/called anymore. 
