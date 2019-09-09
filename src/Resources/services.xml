@@ -33,6 +33,7 @@
             <factory class="BestitKlarnaOrderManagement\Components\Factory\HttpClient" method="create"/>
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
             <argument type="string">%bestit_klarna.plugin_name%</argument>
             <argument type="string">%bestit_klarna.plugin_version%</argument>
         </service>
@@ -43,6 +44,7 @@
             <factory class="BestitKlarnaOrderManagement\Components\Factory\HttpClient" method="create"/>
             <argument type="service" id="bestit_klarna_order_management.components.shop_aware.config_reader"/>
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
             <argument type="string">%bestit_klarna.plugin_name%</argument>
             <argument type="string">%bestit_klarna.plugin_version%</argument>
         </service>
@@ -473,6 +475,12 @@
                 id="bestit_klarna_order_management.components.shared.authorization_helper">
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
             <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
+        </service>
+
+        <service
+                class="BestitKlarnaOrderManagement\Components\Shared\ShopwareVersionHelper"
+                id="bestit_klarna_order_management.components.shared.shopware_version_helper">
+                <argument type="service" id="service_container"/>
         </service>
 
         <service
