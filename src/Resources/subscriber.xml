@@ -20,6 +20,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
             <argument type="string">%bestit_order_management.controllers_dir%</argument>
             <argument type="string">%bestit_order_management.template_dir%</argument>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
             <tag name="shopware.event_subscriber"/>
         </service>
 

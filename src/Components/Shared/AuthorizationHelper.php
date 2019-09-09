@@ -4,6 +4,7 @@ namespace BestitKlarnaOrderManagement\Components\Shared;
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\ConfigReader;
+use BestitKlarnaOrderManagement\Components\Constants;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 
 /**
@@ -55,9 +56,11 @@ class AuthorizationHelper
         if ($liveMode) {
             $merchantId = $this->configReader->get('live_merchant_id');
             $merchantPassword = $this->configReader->get('live_merchant_password');
+            $request->setBaseUrl(Constants::LIVE_API);
         } else {
             $merchantId = $this->configReader->get('test_merchant_id');
             $merchantPassword = $this->configReader->get('test_merchant_password');
+            $request->setBaseUrl(Constants::TEST_API);
         }
 
         $request->addHeader(
