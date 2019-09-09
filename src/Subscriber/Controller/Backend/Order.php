@@ -13,6 +13,7 @@ use BestitKlarnaOrderManagement\Components\Trigger\LineItemDeleted as LineItemDe
 use BestitKlarnaOrderManagement\Components\Trigger\OrderDeleted as OrderDeletedTrigger;
 use BestitKlarnaOrderManagement\Components\Trigger\OrderTrackingCodeChanged as OrderTrackingCodeChangedTrigger;
 use BestitKlarnaOrderManagement\Components\Trigger\PaymentStatusChanged as PaymentStatusChangedTrigger;
+use BestitKlarnaOrderManagement\Components\Shared\ShopwareVersionHelper;
 use Enlight\Event\SubscriberInterface;
 use Enlight_Controller_Action;
 use Enlight_Controller_ActionEventArgs;
@@ -52,6 +53,8 @@ class Order implements SubscriberInterface
     protected $controllersDir;
     /** @var string */
     protected $templateDir;
+    /** @var ShopwareVersionHelper */
+    protected $swVersionHelper;
 
     /**
      * @param AddressChangedTrigger $addressChangedTrigger
@@ -66,6 +69,7 @@ class Order implements SubscriberInterface
      * @param ConfigReader $configReader
      * @param string $controllersDir
      * @param string $templateDir
+     * @param ShopwareVersionHelper $swVersionHelper
      */
     public function __construct(
         AddressChangedTrigger $addressChangedTrigger,
@@ -79,7 +83,8 @@ class Order implements SubscriberInterface
         DataProvider $dataProvider,
         ConfigReader $configReader,
         $controllersDir,
-        $templateDir
+        $templateDir,
+        ShopwareVersionHelper $swVersionHelper
     ) {
         $this->addressChangedTrigger = $addressChangedTrigger;
         $this->orderDeletedTrigger = $orderDeletedTrigger;
@@ -93,6 +98,7 @@ class Order implements SubscriberInterface
         $this->configReader = $configReader;
         $this->controllersDir = $controllersDir;
         $this->templateDir = $templateDir;
+        $this->swVersionHelper = $swVersionHelper;
     }
 
     /**
@@ -215,16 +221,18 @@ class Order implements SubscriberInterface
         $position = $controller->Request()->getParams();
         $orderId = $request->getParam('orderId');
 
-        if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
-            /*
-             * Shopware checks from SW 5.5.0 on for the request parameter 'changed'. The parameter is missing
-             * which leads to an error preventing of editing non klarna orders. So we have to add it.
-             */
-            if (version_compare(Shopware::VERSION, '5.5.0', '>=')) {
-                $changed = $this->paymentInsights->getOrderChanged($orderId);
-                $request->setParam('changed', $changed);
-            }
+        $shopVersion = $this->swVersionHelper->getVersion();
 
+        /*
+         * Shopware checks from SW 5.5.0 on for the request parameter 'changed'. The parameter is missing
+         * which leads to an error preventing of editing non klarna orders. So we have to add it.
+         */
+        if (version_compare($shopVersion, '5.5.0', '>=')) {
+            $changed = $this->paymentInsights->getOrderChanged($orderId);
+            $request->setParam('changed', $changed);
+        }
+
+        if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
             $args->setReturn($args->getSubject()->executeParent(
                 $args->getMethod(),
                 $args->getArgs()
@@ -280,16 +288,17 @@ class Order implements SubscriberInterface
         $positions = $controller->Request()->getParam('positions', [['id' => $controller->Request()->getParam('id')]]);
         $orderId = $controller->Request()->getParam('orderID');
 
-        if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
-            /*
-             * Shopware checks from SW 5.5.0 on for the request parameter 'changed'. The parameter is missing
-             * which leads to an error preventing of editing non klarna orders. So we have to add it.
-             */
-            if (version_compare(Shopware::VERSION, '5.5.0', '>=')) {
-                $changed = $this->paymentInsights->getOrderChanged($orderId);
-                $request->setParam('changed', $changed);
-            }
+        $shopVersion = $this->swVersionHelper->getVersion();
+        /*
+         * Shopware checks from SW 5.5.0 on for the request parameter 'changed'. The parameter is missing
+         * which leads to an error preventing of editing non klarna orders. So we have to add it.
+         */
+        if (version_compare($shopVersion, '5.5.0', '>=')) {
+            $changed = $this->paymentInsights->getOrderChanged($orderId);
+            $request->setParam('changed', $changed);
+        }
 
+        if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
             $args->setReturn($args->getSubject()->executeParent(
                 $args->getMethod(),
                 $args->getArgs()

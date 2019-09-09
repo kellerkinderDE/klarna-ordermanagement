@@ -5,6 +5,7 @@ namespace BestitKlarnaOrderManagement\Components\Factory;
 use BestitKlarnaOrderManagement\Components\ConfigReader;
 use BestitKlarnaOrderManagement\Components\Constants;
 use BestitKlarnaOrderManagement\Components\Api\Middleware\Logging as LoggingMiddleware;
+use BestitKlarnaOrderManagement\Components\Shared\ShopwareVersionHelper;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Shopware;
 
@@ -18,21 +19,23 @@ use Shopware;
 class HttpClient
 {
     /**
-     * @param ConfigReader      $configReader
-     * @param LoggingMiddleware $loggingMiddleware
-     * @param string            $pluginName
-     * @param string            $pluginVersion
+     * @param ConfigReader          $configReader
+     * @param LoggingMiddleware     $loggingMiddleware
+     * @param ShopwareVersionHelper $swVersionHelper
+     * @param string                $pluginName
+     * @param string                $pluginVersion
      *
      * @return GuzzleHttpClient
      */
     public static function create(
         ConfigReader $configReader,
         LoggingMiddleware $loggingMiddleware,
+        ShopwareVersionHelper $swVersionHelper,
         $pluginName,
         $pluginVersion
     ) {
         $liveMode = (bool) $configReader->get('live_mode');
-        $shopVersion = Shopware::VERSION;
+        $shopVersion = $swVersionHelper->getVersion();
 
         if ($liveMode) {
             $merchantId = $configReader->get('live_merchant_id');
