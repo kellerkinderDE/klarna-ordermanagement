@@ -85,7 +85,7 @@ class OrderUpdater
                 return $response;
             }
 
-            $shippingLineItems = $this->getShippingCostLineItem($response->getResponseObject());
+            $shippingLineItems = $this->getShippingCostLineItems($response->getResponseObject());
 
             if ($shippingLineItems !== null) {
                 $lineItems = array_merge($lineItems, $shippingLineItems);
@@ -110,7 +110,7 @@ class OrderUpdater
      *
      * @return LineItem[]|null
      */
-    protected function getShippingCostLineItem(KlarnaOrder $klarnaOrder)
+    protected function getShippingCostLineItems(KlarnaOrder $klarnaOrder)
     {
         $shippingLines = null;
 
