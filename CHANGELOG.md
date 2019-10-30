@@ -4,6 +4,10 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [0.2.22] - 2019-10-25
+### Changed
+- Changed SUpport more than 1 shipping line items for proportional taxes
+
 ## [0.2.21] - 2019-09-09
 ### Changed
 - Changed Replaced SHOPWARE::Version with ShopwareVersionHelper Service to find the right Verion

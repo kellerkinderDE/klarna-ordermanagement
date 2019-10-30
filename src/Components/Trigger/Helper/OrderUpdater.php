@@ -85,10 +85,10 @@ class OrderUpdater
                 return $response;
             }
 
-            $shippingLineItem = $this->getShippingCostLineItem($response->getResponseObject());
+            $shippingLineItems = $this->getShippingCostLineItems($response->getResponseObject());
 
-            if ($shippingLineItem !== null) {
-                $lineItems[] = $shippingLineItem;
+            if ($shippingLineItems !== null) {
+                $lineItems = array_merge($lineItems, $shippingLineItems);
             }
         }
 
@@ -108,17 +108,22 @@ class OrderUpdater
     /**
      * @param KlarnaOrder $klarnaOrder
      *
-     * @return LineItem|null
+     * @return LineItem[]|null
      */
-    protected function getShippingCostLineItem(KlarnaOrder $klarnaOrder)
+    protected function getShippingCostLineItems(KlarnaOrder $klarnaOrder)
     {
+        $shippingLines = null;
+
+        /*
+         * With proportional taxes we can have more than 1 Shipping Line Item
+         */
         foreach ($klarnaOrder->orderLines as $lineItem) {
             if ($lineItem->reference === Constants::SHIPPING_COSTS_REFERENCE) {
-                return $lineItem;
+                $shippingLines[] = $lineItem;
             }
         }
 
-        return null;
+        return $shippingLines;
     }
 
     /**
