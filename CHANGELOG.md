@@ -3,6 +3,10 @@
 All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+## [0.2.24] - 2019-10-25
+### Changed
+- Added Support for PayPalUnified
+
 ## [0.2.23] - 2019-10-25
 ### Changed
 - Changed Translate text snippets that was not translated.
