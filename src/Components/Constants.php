@@ -61,7 +61,7 @@ class Constants
     /**
      * Supported External Checkout by Klarna
      */
-    const SUPPORTED_EXTERNAL_CHECKOUT = ['SwagPaymentPaypal', 'BestitAmazonPay'];
+    const SUPPORTED_EXTERNAL_CHECKOUT = ['SwagPaymentPaypal', 'SwagPaymentPayPalUnified', 'BestitAmazonPay'];
 
     /**
      * List of shopware custom products plugin modes
