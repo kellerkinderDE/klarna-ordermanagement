@@ -25,5 +25,12 @@
             <factory class="BestitKlarnaOrderManagement\Components\Factory\ShopwareModules" method="createShopwareShop"/>
             <argument type="service" id="service_container"/>
         </service>
+
+        <service
+                class="sArticles"
+                id="bestit_klarna_order_management.sw_modules.s_articles">
+            <factory class="BestitKlarnaOrderManagement\Components\Factory\ShopwareModules" method="createArticlesModule"/>
+            <argument type="service" id="service_container"/>
+        </service>
     </services>
 </container>

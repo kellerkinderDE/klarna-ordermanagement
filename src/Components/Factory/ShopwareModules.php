@@ -2,6 +2,7 @@
 
 namespace BestitKlarnaOrderManagement\Components\Factory;
 
+use sArticles;
 use sBasket;
 use Shopware\Models\Shop\DetachedShop;
 use Shopware_Components_Modules;
@@ -53,5 +54,18 @@ class ShopwareModules
     public static function createShopwareShop(ContainerInterface $container)
     {
         return $container->get('shop');
+    }
+
+    /**
+     * @param ContainerInterface $container
+     *
+     * @return sArticles
+     */
+    public static function createArticlesModule(ContainerInterface $container)
+    {
+        /** @var Shopware_Components_Modules $swModules */
+        $swModules = $container->get('modules');
+
+        return $swModules->Articles();
     }
 }
