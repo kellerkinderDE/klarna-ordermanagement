@@ -3,6 +3,13 @@
 All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+## [0.2.26] - 2019-10-25
+### Changed
+- Allow changing payment method when no klarna transcation id exists
+- Allow deleting order when no klarna transcation id exists
+### Fixed
+- Fixed a small CSS Bug
+
 ## [0.2.25] - 2019-10-25
 ### Changed
 - Extended the ShopwareModules Factory to make sArticles available

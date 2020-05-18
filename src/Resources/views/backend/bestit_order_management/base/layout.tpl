@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{link file="backend/_resources/styles/index.css"}"/>
+    <link rel="stylesheet" type="text/css" href="{link file="backend/_resources/styles/indexom.css"}"/>
     <script src="{link file="backend/_resources/lib/jquery-3.3.1.min.js"}"></script>
     <link rel="stylesheet" href="{link file="backend/_resources/lib/bootstrap/css/bootstrap.css"}"/>
     <link rel="stylesheet" type="text/css" href="{link file="backend/_resources/styles/bootstrap-theme-shopware.css"}"/>
