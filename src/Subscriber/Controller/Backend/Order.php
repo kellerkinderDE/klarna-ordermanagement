@@ -139,6 +139,7 @@ class Order implements SubscriberInterface
         $args->setProcessed(true);
         $orderId = $controller->Request()->getParam('id');
         $paymentId = (int) $controller->Request()->getParam('paymentId');
+        $transactionId = $controller->Request()->getParam('transactionId');
         $params = $controller->Request()->getParams();
 
         if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
@@ -151,6 +152,15 @@ class Order implements SubscriberInterface
         }
 
         // region PaymentStatusChange
+
+        if(empty($transactionId)) {
+            $args->setReturn($args->getSubject()->executeParent(
+                $args->getMethod(),
+                $args->getArgs()
+            ));
+
+            return;
+        }
 
         $changePaymentResponse = $this->paymentStatusChangedTrigger->execute($orderId, $paymentId);
 
@@ -339,12 +349,22 @@ class Order implements SubscriberInterface
         $controller = $args->getSubject();
         $args->setProcessed(true);
         $orderId = $controller->Request()->getParam('id');
+        $transactionId = $controller->Request()->getParam('transactionId');
 
         if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
             $args->setReturn($args->getSubject()->executeParent(
                 $args->getMethod(),
                 $args->getArgs()
             ));
+            return;
+        }
+
+        if(empty($transactionId)) {
+            $args->setReturn($args->getSubject()->executeParent(
+                $args->getMethod(),
+                $args->getArgs()
+            ));
+
             return;
         }
 
