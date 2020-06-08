@@ -42,6 +42,8 @@ trait ResponseWrapperTrait
 
         $response->setRawResponse($rawResponse);
 
+        $response->setStatusCode($guzzleResponse->getStatusCode());
+
         return $response;
     }
 
@@ -79,6 +81,8 @@ trait ResponseWrapperTrait
 
         $response = Response::wrapError($this->serializer->deserialize($rawResponse, Error::class, 'json'));
         $response->setRawResponse($rawResponse);
+
+        $response->setStatusCode($guzzleResponse->getStatusCode());
 
         return $response;
     }
