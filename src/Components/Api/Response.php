@@ -21,6 +21,8 @@ class Response
     protected $responseObject;
     /** @var string */
     protected $rawResponse;
+    /** @var int */
+    protected $statusCode;
 
     /**
      * @param object $object
@@ -145,6 +147,26 @@ class Response
     public function setRawResponse($rawResponse)
     {
         $this->rawResponse = $rawResponse;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @param int $code
+     *
+     * @return Response
+     */
+    public function setStatusCode($code)
+    {
+        $this->statusCode = $code;
 
         return $this;
     }
