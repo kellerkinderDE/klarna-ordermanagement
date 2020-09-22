@@ -3,6 +3,10 @@
 All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+## [0.2.28] - 2020-09-22
+### Changed
+- Fixed a bug that could lead to wrong captures/refunds.
+
 ## [0.2.27] - 2019-10-25
 ### Changed
 - Extended the response resource to have the status code of the response.
