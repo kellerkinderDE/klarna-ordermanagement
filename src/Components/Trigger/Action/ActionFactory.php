@@ -52,8 +52,12 @@ class ActionFactory implements ActionFactoryInterface
      */
     public function create($orderStatusId)
     {
-        $captureOn = (int) $this->configReader->get('capture_on');
-        $refundOn = (int) $this->configReader->get('refund_on');
+        /*
+         * Since int casting of null,  " " or "" is 0 and the id 0 is the order status open we do a trim before
+         * and check it. Otherwise we might end up with captures/refunds when the order status open is set
+         */
+        $captureOn = trim($this->configReader->get('capture_on')) === '' ? '' : (int) $this->configReader->get('capture_on');
+        $refundOn = trim($this->configReader->get('refund_on')) === '' ? '' : (int) $this->configReader->get('refund_on');
 
         if ($orderStatusId === $captureOn) {
             return $this->captureAction;
@@ -73,8 +77,12 @@ class ActionFactory implements ActionFactoryInterface
      */
     public function createForDetailStatus($orderDetailStatusId)
     {
-        $partialCaptureOn = (int) $this->configReader->get('partial_capture_on_position_status');
-        $partialRefundOn = (int) $this->configReader->get('partial_refund_on_position_status');
+        /*
+         * Since int casting of null,  " " or "" is 0 and the id 0 is the order status open we do a trim before
+         * and check it. Otherwise we might end up with captures/refunds when the order status open is set
+         */
+        $partialCaptureOn = trim($this->configReader->get('partial_capture_on_position_status')) === '' ? '' : (int)  $this->configReader->get('partial_capture_on_position_status');
+        $partialRefundOn = trim($this->configReader->get('partial_refund_on_position_status')) === '' ? '' : (int) $this->configReader->get('partial_refund_on_position_status');
 
         if ($orderDetailStatusId === $partialCaptureOn) {
             return $this->partialCaptureAction;
