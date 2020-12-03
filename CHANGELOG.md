@@ -3,6 +3,10 @@
 All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+## [0.2.28] - 2020-12-03
+### Fixed
+- Partial refunds not working correctly from backend 
+
 ## [0.2.27] - 2019-10-25
 ### Changed
 - Extended the response resource to have the status code of the response.
