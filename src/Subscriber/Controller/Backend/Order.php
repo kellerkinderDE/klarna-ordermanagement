@@ -264,6 +264,22 @@ class Order implements SubscriberInterface
                 $request->getParam('mode')
             );
         } else {
+            $orderDetails = $this->dataProvider->getOrderDetails($orderId);
+
+            /*
+             * We got to check if just the order status has changed, so we can return here and don't call update
+             */
+            foreach ($orderDetails as $key => $orderDetail) {
+                if ($position['id'] == $orderDetail['id'] && $position['statusId'] != $orderDetail['status']) {
+                    $args->setReturn($args->getSubject()->executeParent(
+                        $args->getMethod(),
+                        $args->getArgs()
+                    ));
+
+                    return;
+                }
+            }
+
             $response = $this->lineItemChangedTrigger->execute($orderId, $position);
         }
 
