@@ -5,8 +5,11 @@ namespace BestitKlarnaOrderManagement\Components\Factory;
 use BestitKlarnaOrderManagement\Components\ConfigReader;
 use BestitKlarnaOrderManagement\Components\Constants;
 use BestitKlarnaOrderManagement\Components\Api\Middleware\Logging as LoggingMiddleware;
+use BestitKlarnaOrderManagement\Components\Api\Middleware\LoggingGuzzle7 as LoggingGuzzle7Middleware;
 use BestitKlarnaOrderManagement\Components\Shared\ShopwareVersionHelper;
 use GuzzleHttp\Client as GuzzleHttpClient;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use Shopware;
 
 /**
@@ -19,17 +22,19 @@ use Shopware;
 class HttpClient
 {
     /**
-     * @param ConfigReader          $configReader
-     * @param LoggingMiddleware     $loggingMiddleware
-     * @param ShopwareVersionHelper $swVersionHelper
-     * @param string                $pluginName
-     * @param string                $pluginVersion
+     * @param ConfigReader             $configReader
+     * @param LoggingMiddleware        $loggingMiddleware
+     * @param LoggingGuzzle7Middleware $loggingGuzzle7Middleware
+     * @param ShopwareVersionHelper    $swVersionHelper
+     * @param string                   $pluginName
+     * @param string                   $pluginVersion
      *
      * @return GuzzleHttpClient
      */
     public static function create(
         ConfigReader $configReader,
         LoggingMiddleware $loggingMiddleware,
+        LoggingGuzzle7Middleware $loggingGuzzle7Middleware,
         ShopwareVersionHelper $swVersionHelper,
         $pluginName,
         $pluginVersion
@@ -45,20 +50,45 @@ class HttpClient
             $merchantPassword = $configReader->get('test_merchant_password');
         }
 
-        $config = [
-            'base_url' => $liveMode ? Constants::LIVE_API : Constants::TEST_API,
-            'defaults' => [
+        /*
+         * Check Version to make compatibility to older Guzzle clients which
+         * had an events system. In Guzzle version 6.0.0 the event system had been removed.
+         */
+        if ((defined('GuzzleHttp\Client::VERSION') && version_compare(GuzzleHttpClient::VERSION, '6.0.0', '>='))
+            || (defined('GuzzleHttp\Client::MAJOR_VERSION') && version_compare(GuzzleHttpClient::MAJOR_VERSION, '7', '>='))
+        ) {
+            $handler = HandlerStack::create();
+            $handler->push($loggingGuzzle7Middleware);
+
+            $config = [
+                'base_uri' => $liveMode ? Constants::LIVE_API : Constants::TEST_API,
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'User-Agent' => "Shopware {$shopVersion}/{$pluginName} {$pluginVersion}",
                 ],
-                'auth' => [$merchantId, $merchantPassword]
-            ]
-        ];
+                'auth' => [$merchantId, $merchantPassword],
+                'handler' => $handler
+            ];
 
-        $client = new GuzzleHttpClient($config);
-        $client->getEmitter()->attach($loggingMiddleware);
+            $client = new GuzzleHttpClient($config);
+        } else {
+            $config = [
+                'base_url' => $liveMode ? Constants::LIVE_API : Constants::TEST_API,
+                'defaults' => [
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/json',
+                        'User-Agent' => "Shopware {$shopVersion}/{$pluginName} {$pluginVersion}",
+                    ],
+                    'auth' => [$merchantId, $merchantPassword],
+
+                ]
+            ];
+
+            $client = new GuzzleHttpClient($config);
+            $client->getEmitter()->attach($loggingMiddleware);
+        }
 
         return $client;
     }

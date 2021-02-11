@@ -11,6 +11,7 @@
     </imports>
 
     <services>
+        <defaults public="true" />
         <!--
         /////////////////
         /   Serializer
@@ -33,6 +34,7 @@
             <factory class="BestitKlarnaOrderManagement\Components\Factory\HttpClient" method="create"/>
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
+            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
             <argument type="string">%bestit_klarna.plugin_name%</argument>
             <argument type="string">%bestit_klarna.plugin_version%</argument>
@@ -44,6 +46,7 @@
             <factory class="BestitKlarnaOrderManagement\Components\Factory\HttpClient" method="create"/>
             <argument type="service" id="bestit_klarna_order_management.components.shop_aware.config_reader"/>
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
+            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
             <argument type="string">%bestit_klarna.plugin_name%</argument>
             <argument type="string">%bestit_klarna.plugin_version%</argument>
@@ -432,6 +435,11 @@
         -->
         <service class="BestitKlarnaOrderManagement\Components\Api\Middleware\Logging"
                  id="bestit_klarna_order_management.components.api.middleware.logging">
+            <argument type="service" id="bestit_klarna_order_management.logger"/>
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
+        </service>
+        <service class="BestitKlarnaOrderManagement\Components\Api\Middleware\LoggingGuzzle7"
+                 id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging">
             <argument type="service" id="bestit_klarna_order_management.logger"/>
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
         </service>
