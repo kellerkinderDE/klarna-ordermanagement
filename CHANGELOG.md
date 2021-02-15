@@ -3,6 +3,11 @@
 All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+## [0.3.00] - 2021-02-11
+### Fixed
+- Compatibility for Shopware 5.7
+- Updated Symfony/Property-Info to v5.1.0
+- Updated phpdocumentor/reflection-docblock to v5.1.0    
 
 ## [0.2.29] - 2020-12-03
 ### Fixed

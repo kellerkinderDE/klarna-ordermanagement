@@ -21,12 +21,15 @@ trait ResponseWrapperTrait
     protected $serializer;
 
     /**
-     * @param ResponseInterface|null    $guzzleResponse
-     * @param string|null               $modelClass
+     * Since we can have 2 types of $guzzleResponse depending on the guzzle client version
+     * we change the parameter typehint to mixed.
+     * 
+     * @param mixed|null  $guzzleResponse
+     * @param string|null $modelClass
      *
      * @return Response
      */
-    protected function wrapGuzzleResponse(ResponseInterface $guzzleResponse = null, $modelClass = null)
+    protected function wrapGuzzleResponse($guzzleResponse = null, $modelClass = null)
     {
         if ($guzzleResponse === null) {
             return Response::wrapEmptySuccessResponse();
