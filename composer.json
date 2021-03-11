@@ -6,6 +6,9 @@
     "type": "library",
     "require": {
         "php": "^7.2",
+        "symfony/polyfill-mbstring": "1.18.1",
+        "symfony/polyfill-intl-normalizer": "1.18.1",
+        "symfony/polyfill-intl-grapheme": "1.18.1",
         "symfony/property-info": "v5.1.0",
         "phpdocumentor/reflection-docblock": "v5.1.0"
     },
