@@ -4,13 +4,12 @@
 [![Software License][ico-license]](LICENSE.md)
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This is a package for [shopware](https://en.shopware.com/) plugins.
+This is a package for [Shopware 5](https://en.shopware.com/) plugins.
 It adds support for the [Klarna OrderManagement API](https://developers.klarna.com/api/#order-management-api) and also includes a UI in the shopware backend.
 If using this package, you will need to implement Klarna Payments order Klarna Checkout yourself.
 
-// TODO: Add Klarna Checkout link once its ready
-
 * [Klarna Payments Docs][link-kp-docs]
+* [Klarna Checkout Docs][link-kco-docs]
 * [Order Management Docs][link-om-docs]
 
 ## Install
@@ -18,7 +17,7 @@ If using this package, you will need to implement Klarna Payments order Klarna C
 Via Composer
 
 ``` bash
-$ composer require bestit/klarna-ordermanagement
+$ composer require k10r/klarna-ordermanagement
 ```
 
 ### Registering dependencies
@@ -117,23 +116,16 @@ See the [docs][link-om-docs] for more information.
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
-
-## Security
-
-If you discover any security related issues, please email [best it](mailto:support@bestit-online.de).
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/bestit/klarna-ordermanagement.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/k10r/klarna-ordermanagement.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/bestit/klarna-ordermanagement.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/k10r/klarna-ordermanagement.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/bestit/klarna-ordermanagement
-[link-downloads]: https://packagist.org/packages/bestit/klarna-ordermanagement
-[link-om-docs]: https://klarna.bestit-online.de/de/om/master/uebersicht
-[link-kp-docs]: https://klarna.bestit-online.de/de/kp/master/installation
+[link-packagist]: https://packagist.org/packages/k10r/klarna-ordermanagement
+[link-downloads]: https://packagist.org/packages/k10r/klarna-ordermanagement
+[link-om-docs]: https://klarna.kellerkinder.de/sw5/de/3-ko/index.html
+[link-kp-docs]: https://klarna.kellerkinder.de/sw5/de/1-kp/index.html
+[link-kco-docs]: https://klarna.kellerkinder.de/sw5/de/2-kc/index.html
