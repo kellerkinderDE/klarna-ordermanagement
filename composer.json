@@ -1,5 +1,5 @@
 {
-    "name": "bestit/klarna-ordermanagement",
+    "name": "k10r/klarna-ordermanagement",
     "description": "Klarna ordermanagement as a package for our Klarna plugins.",
     "keywords": ["klarna", "ordermanagement", "shopware", "sw"],
     "license": "MIT",
