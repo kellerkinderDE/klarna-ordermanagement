@@ -60,7 +60,13 @@ Ext.define('Shopware.apps.BestitExtendOrder.controller.Detail', {
     },
 
     refreshKlarnaTab: function () {
-        var componentEl = Ext.getCmp('bestitKlarnaOrderIFrame').getEl();
+        var component = Ext.getCmp('bestitKlarnaOrderIFrame');
+        if (typeof component === 'undefined') {
+            // The iFrame hasn't been loaded yet.
+            return;
+        }
+
+        var componentEl = component.getEl();
 
         if (typeof componentEl === 'undefined') {
             // The iFrame hasn't been loaded yet.
