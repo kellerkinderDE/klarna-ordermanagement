@@ -3,6 +3,12 @@
 All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+
+## Unreleased
+### Fixed
+- Fixed non-editable orders
+
+
 ## [0.3.00] - 2021-02-11
 ### Fixed
 - Compatibility for Shopware 5.7
