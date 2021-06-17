@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "library",
     "require": {
-        "php": ">=7.2 || <8.1",
+        "php": ">=7.2 || <=8.1",
         "phpdocumentor/reflection-docblock": "v5.1.0",
         "symfony/polyfill-intl-grapheme": "1.18.1",
         "symfony/polyfill-intl-normalizer": "1.18.1",
