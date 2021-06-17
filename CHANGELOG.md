@@ -5,8 +5,11 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+
+## [0.3.1] - 2021-06-17
 ### Fixed
 - Fixed non-editable orders
+### Changed
 - Added php8 compatibility
 
 
