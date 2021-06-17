@@ -42,7 +42,7 @@ class OrderDetailTransformer implements OrderDetailTransformerInterface
 
         $lineItem->type = $this->modeConverter->convert(
             (int) $detail->getMode(),
-            (int) $detail->getPrice()
+            (float) $detail->getPrice()
         );
         $lineItem->reference = substr($detail->getArticleNumber(), 0, 64);
         $lineItem->name = $detail->getArticleName();
