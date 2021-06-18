@@ -7,6 +7,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## Unreleased
 ### Fixed
 - Fixed non-editable orders
+- Changed int to float cast for ModeConverter
 
 
 ## [0.3.00] - 2021-02-11
