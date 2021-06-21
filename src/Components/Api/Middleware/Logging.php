@@ -1,5 +1,10 @@
 <?php
 
+if (!interface_exists('GuzzleHttp\Event\SubscriberInterface')) {
+    namespace GuzzleHttp\Event;
+    interface SubscriberInterface {}
+}
+
 namespace BestitKlarnaOrderManagement\Components\Api\Middleware;
 
 use BestitKlarnaOrderManagement\Components\ConfigReader;
