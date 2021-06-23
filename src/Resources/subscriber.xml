@@ -54,6 +54,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.pickware.refund_on_cancellation"/>
             <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
             <argument type="service" id="bestit_klarna_order_management.components.pickware.capture_on_shipped"/>
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
             <tag name="shopware.event_subscriber"/>
         </service>
     </services>
