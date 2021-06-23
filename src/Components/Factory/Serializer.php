@@ -4,7 +4,6 @@ namespace BestitKlarnaOrderManagement\Components\Factory;
 
 use BestitKlarnaOrderManagement\Components\Serializer\CustomObjectNormalizer;
 use BestitKlarnaOrderManagement\Components\Serializer\OptionsNormalizer;
-use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
@@ -28,9 +27,7 @@ class Serializer
     {
         $objectNormalizer = new ObjectNormalizer(
             null,
-            new CamelCaseToSnakeCaseNameConverter(),
-            null,
-            new PhpDocExtractor()
+            new CamelCaseToSnakeCaseNameConverter()
         );
 
         $customObjectNormalizer = new CustomObjectNormalizer($objectNormalizer);

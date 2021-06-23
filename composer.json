@@ -5,12 +5,7 @@
     "license": "MIT",
     "type": "library",
     "require": {
-        "php": ">=7.2 || <=8.1",
-        "phpdocumentor/reflection-docblock": "v5.2.2",
-        "symfony/polyfill-intl-grapheme": "1.23.0",
-        "symfony/polyfill-intl-normalizer": "1.23.0",
-        "symfony/polyfill-mbstring": "1.23.0",
-        "symfony/property-info": "v5.3.1"
+        "php": "^7.2"
     },
     "autoload": {
         "psr-4": {

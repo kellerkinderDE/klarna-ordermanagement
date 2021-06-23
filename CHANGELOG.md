@@ -9,9 +9,11 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## [0.3.1] - 2021-06-17
 ### Fixed
 - Fixed non-editable orders
-### Changed
+- Changed int to float cast for ModeConverter
+### Added
 - Added php8 compatibility
-
+- Added missing GuzzleHttp interface for compatibility with Shopware 5.7
+- Compatibility established to Shopware 5.7
 
 ## [0.3.00] - 2021-02-11
 ### Fixed
