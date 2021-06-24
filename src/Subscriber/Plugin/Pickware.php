@@ -2,6 +2,7 @@
 
 namespace BestitKlarnaOrderManagement\Subscriber\Plugin;
 
+use BestitKlarnaOrderManagement\Components\ConfigReader;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
 use BestitKlarnaOrderManagement\Components\Pickware\RefundOnCancellation;
 use BestitKlarnaOrderManagement\Components\Pickware\CaptureOnShipped;
@@ -28,6 +29,8 @@ class Pickware implements SubscriberInterface
     protected $captureOnShipped;
     /** @var DataProvider */
     protected $dataProvider;
+    /** @var ConfigReader */
+    protected $configReader;
 
     /**
      * @param PaymentInsights $paymentInsights
@@ -39,12 +42,14 @@ class Pickware implements SubscriberInterface
         PaymentInsights $paymentInsights,
         RefundOnCancellation $refundOnCancellation,
         DataProvider $dataProvider,
-        CaptureOnShipped $captureOnShipped
+        CaptureOnShipped $captureOnShipped,
+        ConfigReader $configReader
     ) {
         $this->paymentInsights = $paymentInsights;
         $this->refundOnCancellation = $refundOnCancellation;
         $this->dataProvider = $dataProvider;
         $this->captureOnShipped = $captureOnShipped;
+        $this->configReader = $configReader;
     }
 
     /**
@@ -145,6 +150,10 @@ class Pickware implements SubscriberInterface
         $subject = $args->getSubject();
         $request = $subject->Request();
 
-        $this->captureOnShipped->captureIfShipped($request->getParam('id'));
+        $pickwareCaptureAllowed = $this->configReader->get('pickware_enabled', false);
+
+        if($pickwareCaptureAllowed) {
+            $this->captureOnShipped->captureIfShipped($request->getParam('id'));
+        }
     }
 }
