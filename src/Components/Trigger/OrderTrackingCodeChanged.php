@@ -70,7 +70,7 @@ class OrderTrackingCodeChanged
         foreach ($klarnaOrder->captures as $capture) {
             $updateShippingInfoResponse = $this->captureFacade->updateShippingInfo(
                 $klarnaOrderId,
-                $capture->captureId,
+                $capture['capture_id'],
                 $trackingCode,
                 $dispatchName
             );
