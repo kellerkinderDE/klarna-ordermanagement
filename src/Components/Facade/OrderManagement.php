@@ -60,9 +60,19 @@ class OrderManagement
         $klarnaOrderId = $order->getTransactionId();
 
         $response = $this->orderFacade->get($klarnaOrderId);
+        $order = json_decode($response->getRawResponse(), true);
+
+        foreach($order['order_lines'] as &$orderLine) {
+            if (array_key_exists('product_identifiers', $orderLine)
+                && is_array($orderLine['product_identifiers'])
+                && count($orderLine['product_identifiers']) === 0)
+            {
+                unset($orderLine['product_identifiers']);
+            }
+        }
 
         $view->assign([
-            'order' => json_decode($response->getRawResponse(), true),
+            'order' => $order,
             'success' => $response->isSuccessful(),
             'klarna_id' => $klarnaOrderId,
             'error' => $response->getError(),
