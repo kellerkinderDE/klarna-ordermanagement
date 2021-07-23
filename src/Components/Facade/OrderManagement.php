@@ -71,6 +71,7 @@ class OrderManagement
                     unset($orderLine['product_identifiers']);
                 }
             }
+            unset($orderLine);
         }
 
         $view->assign([
