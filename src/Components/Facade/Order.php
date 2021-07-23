@@ -108,10 +108,11 @@ class Order
 
     /**
      * @param string $orderId
+     * @param bool   $updatePaymentStatus
      *
      * @return Response
      */
-    public function cancel($orderId)
+    public function cancel($orderId, $updatePaymentStatus = true)
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
@@ -121,13 +122,15 @@ class Order
 
         $this->transactionLogger->cancelOrder($request, $response);
 
-        if ($response->isError()) {
-            $this->dataWriter->updatePaymentStatus($orderId, Status::PAYMENT_STATE_REVIEW_NECESSARY);
+        if ($updatePaymentStatus) {
+            if ($response->isError()) {
+                $this->dataWriter->updatePaymentStatus($orderId, Status::PAYMENT_STATE_REVIEW_NECESSARY);
 
-            return $response;
+                return $response;
+            }
+
+            $this->dataWriter->updatePaymentStatus($orderId, Status::PAYMENT_STATE_THE_PROCESS_HAS_BEEN_CANCELLED);
         }
-
-        $this->dataWriter->updatePaymentStatus($orderId, Status::PAYMENT_STATE_THE_PROCESS_HAS_BEEN_CANCELLED);
 
         return $response;
     }
