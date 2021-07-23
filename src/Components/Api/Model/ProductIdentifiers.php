@@ -22,4 +22,9 @@ class ProductIdentifiers
 
     /** @var string|null */
     public $brand;
+
+    public function hasData(): bool
+    {
+        return !empty($this->categoryPath) || !empty($this->globalTradeItemNumber) || !empty($this->manufacturerPartNumber) || !empty($this->brand);
+    }
 }
