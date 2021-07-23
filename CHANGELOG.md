@@ -6,6 +6,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 - Added method to ProductIdentifiers to check for existing values
+- Fixed an error when saving a trackingnumber
 
 ## [0.3.1] - 2021-06-25
 ### Fixed
