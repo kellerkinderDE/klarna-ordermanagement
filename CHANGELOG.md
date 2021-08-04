@@ -5,7 +5,11 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+
+## [0.3.2] - 2021-08-04
+### Added
 - Added method to ProductIdentifiers to check for existing values
+### Fixed
 - Fixed an error when saving a trackingnumber
 - Updated Order::cancel signature
 
