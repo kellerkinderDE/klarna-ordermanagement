@@ -6,6 +6,9 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.3.3] - 2021-08-18
+### Fixed 
+- Snipped caused error 500 in Shopware backend
 ## [0.3.2] - 2021-08-04
 ### Added
 - Added method to ProductIdentifiers to check for existing values
