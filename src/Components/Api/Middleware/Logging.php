@@ -70,11 +70,11 @@ class Logging implements SubscriberInterface
 
         $logLevel = $this->configReader->get('log_level', self::LOG_LEVEL_ERRORS);
 
-        if ($logLevel === self::LOG_LEVEL_NONE) {
+        if ($logLevel == self::LOG_LEVEL_NONE) {
             return;
         }
 
-        if ($logLevel === self::LOG_LEVEL_ERRORS) {
+        if ($logLevel == self::LOG_LEVEL_ERRORS) {
             if ($this->isErrorStatusCode($response->getStatusCode())) {
                 return;
             }
