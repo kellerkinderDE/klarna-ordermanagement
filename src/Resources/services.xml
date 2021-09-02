@@ -36,8 +36,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
-            <argument type="string">%bestit_klarna.plugin_name%</argument>
-            <argument type="string">%bestit_klarna.plugin_version%</argument>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.plugin_helper" />
         </service>
 
         <service
@@ -48,8 +47,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
-            <argument type="string">%bestit_klarna.plugin_name%</argument>
-            <argument type="string">%bestit_klarna.plugin_version%</argument>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.plugin_helper" />
         </service>
 
         <!--
@@ -494,6 +492,13 @@
         <service
                 class="BestitKlarnaOrderManagement\Components\Shared\TaxHelper"
                 id="bestit_klarna_order_management.components.shared.tax_helper">
+        </service>
+
+        <service
+            class="BestitKlarnaOrderManagement\Components\Shared\PluginHelper"
+            id="bestit_klarna_order_management.components.shared.plugin_helper">
+            <argument type="service" id="shopware_plugininstaller.plugin_manager" />
+            <argument type="string">%bestit_klarna.plugin_name%</argument>
         </service>
 
         <service
