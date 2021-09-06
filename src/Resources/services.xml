@@ -76,6 +76,13 @@
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
+        <service
+            class="BestitKlarnaOrderManagement\Components\Api\Resource\CustomerToken"
+            id="bestit_klarna_order_management.components.api.resource.customer_token">
+            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+        </service>
+
         <!--
         /////////////////
         /   Facades
@@ -124,6 +131,15 @@
             <argument type="service" id="bestit_klarna_order_management.components.facade.refund"/>
             <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
             <argument type="service" id="snippets"/>
+        </service>
+
+        <service
+            class="BestitKlarnaOrderManagement\Components\Facade\CustomerToken"
+            id="bestit_klarna_order_management.components.facade.customer_token">
+            <argument type="service" id="bestit_klarna_order_management.components.api.resource.customer_token"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.customer_token_transformer"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.authorization_helper"/>
         </service>
 
         <!--
@@ -363,6 +379,28 @@
                 id="bestit_klarna_order_management.components.transformer.order_detail_transformer">
             <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
             <argument type="service" id="bestit_klarna_order_management.components.converter.mode_converter"/>
+        </service>
+
+        <service
+            class="BestitKlarnaOrderManagement\Components\Transformer\CustomerTokenTransformer"
+            id="bestit_klarna_order_management.components.transformer.customer_token_transformer">
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.customer_transformer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.billing_address_transformer"/>
+        </service>
+
+        <service
+            class="BestitKlarnaOrderManagement\Components\Transformer\CustomerTransformer"
+            id="bestit_klarna_order_management.components.transformer.customer_transformer">
+        </service>
+
+        <service
+            class="BestitKlarnaOrderManagement\Components\Transformer\BillingAddressTransformer"
+            id="bestit_klarna_order_management.components.transformer.billing_address_transformer">
+        </service>
+
+        <service
+            class="BestitKlarnaOrderManagement\Components\Transformer\ShippingAddressTransformer"
+            id="bestit_klarna_order_management.components.transformer.shipping_address_transformer">
         </service>
 
         <!--
