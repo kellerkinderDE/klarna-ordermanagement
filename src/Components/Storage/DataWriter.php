@@ -4,6 +4,7 @@ namespace BestitKlarnaOrderManagement\Components\Storage;
 
 use DateTime;
 use Doctrine\DBAL\Connection;
+use RuntimeException;
 
 /**
  *  Changes several data that is related to an order.
@@ -46,9 +47,19 @@ class DataWriter
             ->execute()
             ->fetch();
 
+        if (
+            !\is_array($order) ||
+            !\array_key_exists('status', $order) ||
+            !\array_key_exists('id', $order) ||
+            !\array_key_exists('cleared', $order)
+        ) {
+            throw new RuntimeException(sprintf('No order with the transactionId %s could not be found.', $transactionId));
+        }
+
         $orderStatus = $order['status'];
 
         $this->connection->update('s_order', ['cleared' => $statusId], ['transactionID' => $transactionId]);
+
         return $this->connection->insert(
             's_order_history',
             [
