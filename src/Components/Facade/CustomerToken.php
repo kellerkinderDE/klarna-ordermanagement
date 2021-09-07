@@ -6,7 +6,8 @@ namespace BestitKlarnaOrderManagement\Components\Facade;
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\CustomerToken as CustomerTokenResource;
-use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
+use BestitKlarnaOrderManagement\Components\Api\Response;
+use BestitKlarnaOrderManagement\Components\Shared\Localizer;
 use BestitKlarnaOrderManagement\Components\Transformer\CustomerTokenTransformerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -21,38 +22,39 @@ class CustomerToken
     /** @var Serializer */
     private $serializer;
 
-    /** @var AuthorizationHelper */
-    private $authorizationHelper;
+    /** @var Localizer */
+    private $localizer;
 
     public function __construct(
         CustomerTokenResource $customerTokenResource,
         CustomerTokenTransformerInterface $customerTokenTransformer,
         Serializer $serializer,
-        AuthorizationHelper $authorizationHelper
+        Localizer $localizer
     )
     {
         $this->customerTokenResource = $customerTokenResource;
         $this->customerTokenTransformer = $customerTokenTransformer;
         $this->serializer = $serializer;
-        $this->authorizationHelper = $authorizationHelper;
+        $this->localizer = $localizer;
     }
 
-    public function create($klarnaAuthToken, array $userData, $currency, $confirmationUrl)
+    public function create(string $klarnaAuthToken, array $userData, array $orderBasket, string $confirmationUrl): Response
     {
         $additional = $userData['additional'];
         $country    = $additional['country'];
         $iso        = $country['countryiso'];
+        $currency = $orderBasket['sCurrencyName'];
 
         $customerTokenModel = $this->customerTokenTransformer
             ->withUserData($userData)
             ->withMerchantUrls($confirmationUrl)
-            ->toKlarnaModel($iso, $currency, 'de-DE', 'test', 'SUBSCRIPTION');
+            ->toKlarnaModel($iso, $currency, $this->localizer->localize());
 
         /** @var array $normalizedOrder */
         $normalizedCustomerToken = $this->serializer->normalize($customerTokenModel);
         $request         = Request::createFromPayload($normalizedCustomerToken);
         $request->addQueryParameter('authorizationToken', $klarnaAuthToken);
 
-        $this->customerTokenResource->create($request);
+        return $this->customerTokenResource->create($request);
     }
 }

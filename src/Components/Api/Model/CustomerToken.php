@@ -21,11 +21,11 @@ class CustomerToken
     /** @var BillingAddress */
     public $billingAddress;
 
-    /** @var string|null */
-    public $description;
+    /** @var string */
+    public $description = 'AboComerce Order';
 
-    /** @var string|null */
-    public $intendedUse;
+    /** @var string */
+    public $intendedUse = 'SUBSCRIPTION';
 
     /** @var array|null */
     public $merchantUrls;

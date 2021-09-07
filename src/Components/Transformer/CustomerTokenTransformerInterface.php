@@ -8,14 +8,7 @@ use BestitKlarnaOrderManagement\Components\Api\Model\CustomerToken as CustomerTo
 
 interface CustomerTokenTransformerInterface
 {
-    /**
-     * @param string $purchaseCountry
-     * @param string $locale
-     * @param string $description
-     * @param string $intendedUse
-     * @return CustomerTokenModel
-     */
-    public function toKlarnaModel($purchaseCountry, $currency, $locale, $description, $intendedUse): CustomerTokenModel;
+    public function toKlarnaModel(string $purchaseCountry, string $currency, string $locale): CustomerTokenModel;
 
     public function withUserData(array $userData): CustomerTokenTransformerInterface;
 

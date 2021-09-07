@@ -18,22 +18,13 @@ class CustomerToken
     /** @var HttpClient */
     protected $httpClient;
 
-    /**
-     * @param HttpClient $client
-     * @param SerializerInterface $serializer
-     */
     public function __construct(HttpClient $client, SerializerInterface $serializer)
     {
         $this->httpClient = $client;
         $this->serializer = $serializer;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         $baseUrl   = $request->getBaseUrl();
         $authToken = $request->getQueryParameter('authorizationToken');
@@ -46,7 +37,6 @@ class CustomerToken
                     'headers' => $request->getHeaders()
                 ]
             );
-            $body = (string) $response->getBody();
         } catch (RequestException $e) {
             return $this->wrapGuzzleException($e);
         }

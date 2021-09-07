@@ -26,22 +26,13 @@ class CustomerTokenTransformer implements CustomerTokenTransformerInterface
         $this->billingAddressTransformer = $billingAddressTransformer;
     }
 
-    /**
-     * @param string $purchaseCountry
-     * @param string $locale
-     * @param string $description
-     * @param string $intendedUse
-     * @return CustomerTokenModel
-     */
-    public function toKlarnaModel($purchaseCountry, $currency, $locale, $description, $intendedUse): CustomerTokenModel
+    public function toKlarnaModel(string $purchaseCountry, string $currency, string $locale): CustomerTokenModel
     {
         $customerTokenModel = new CustomerTokenModel();
 
         $customerTokenModel->purchaseCountry = $purchaseCountry;
         $customerTokenModel->purchaseCurrency = $currency;
         $customerTokenModel->locale = $locale;
-        $customerTokenModel->description = $description;
-        $customerTokenModel->intendedUse = $intendedUse;
 
         $customerTokenModel->merchantUrls = $this->merchantUrls;
 
