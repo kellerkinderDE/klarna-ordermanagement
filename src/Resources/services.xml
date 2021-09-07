@@ -140,6 +140,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.transformer.customer_token_transformer"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.localizer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.authorization_helper"/>
         </service>
 
         <!--

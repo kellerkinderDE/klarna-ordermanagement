@@ -2,6 +2,7 @@
 
 namespace BestitKlarnaOrderManagement\Components\Storage;
 
+use BestitKlarnaPayments\Components\AttributeInstaller\AttributeInstaller;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -36,5 +37,26 @@ class DataWriter
             return 0;
         }
         return $this->connection->update('s_order', ['cleared' => $statusId], ['transactionID' => $transactionId]);
+    }
+
+    public function saveKlarnaCustomerToken(string $orderNumber, ?string $customerToken): void
+    {
+        if ($customerToken === null) {
+            return;
+        }
+
+        $orderId = $this->connection->createQueryBuilder()
+            ->select('id')
+            ->from('s_order')
+            ->where('ordernumber = :orderNumber')
+            ->setParameter('orderNumber', $orderNumber)
+            ->execute()
+            ->fetchColumn();
+
+        if ($orderId === null) {
+            return;
+        }
+
+        $this->connection->update('s_order_attributes', [AttributeInstaller::KLARNA_CUSTOMER_TOKEN => $customerToken], ['orderID' => $orderId]);
     }
 }

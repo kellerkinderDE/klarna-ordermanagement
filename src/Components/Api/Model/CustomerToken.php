@@ -22,7 +22,7 @@ class CustomerToken
     public $billingAddress;
 
     /** @var string */
-    public $description = 'AboComerce Order';
+    public $description = 'AboCommerce Order';
 
     /** @var string */
     public $intendedUse = 'SUBSCRIPTION';
