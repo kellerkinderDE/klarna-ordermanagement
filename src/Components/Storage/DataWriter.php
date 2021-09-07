@@ -53,7 +53,7 @@ class DataWriter
             !\array_key_exists('id', $order) ||
             !\array_key_exists('cleared', $order)
         ) {
-            throw new RuntimeException(sprintf('No order with the transactionId %s could not be found.', $transactionId));
+            throw new RuntimeException(sprintf('No order with the transactionId %s could be found.', $transactionId));
         }
 
         $orderStatus = $order['status'];
