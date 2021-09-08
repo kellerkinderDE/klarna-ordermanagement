@@ -83,6 +83,13 @@
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
+        <service
+            class="BestitKlarnaOrderManagement\Components\Api\Resource\RecurringOrder"
+            id="bestit_klarna_order_management.components.api.resource.recurring_order">
+            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+        </service>
+
         <!--
         /////////////////
         /   Facades
@@ -138,6 +145,16 @@
             id="bestit_klarna_order_management.components.facade.customer_token">
             <argument type="service" id="bestit_klarna_order_management.components.api.resource.customer_token"/>
             <argument type="service" id="bestit_klarna_order_management.components.transformer.customer_token_transformer"/>
+            <argument type="service" id="symfony.component.serializer.serializer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.localizer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.authorization_helper"/>
+        </service>
+
+        <service
+            class="BestitKlarnaOrderManagement\Components\Facade\RecurringOrder"
+            id="bestit_klarna_order_management.components.facade.recurring_order">
+            <argument type="service" id="bestit_klarna_order_management.components.api.resource.recurring_order"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.recurring_order_transformer"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.localizer"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.authorization_helper"/>
@@ -383,10 +400,30 @@
         </service>
 
         <service
+            class="BestitKlarnaOrderManagement\Components\Transformer\LineItemTransformer"
+            id="bestit_klarna_order_management.components.transformer.line_item_transformer">
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.converter.mode_converter"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_formatter.breadcrumb_builder"/>
+            <argument type="service" id="bestit_klarna_order_management.components.data_formatter.product_url_builder"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.product_identifiers_transformer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
+            <argument type="service" id="bestit_klarna_order_management.components.shared.tax_helper"/>
+        </service>
+
+        <service
             class="BestitKlarnaOrderManagement\Components\Transformer\CustomerTokenTransformer"
             id="bestit_klarna_order_management.components.transformer.customer_token_transformer">
             <argument type="service" id="bestit_klarna_order_management.components.transformer.customer_transformer"/>
             <argument type="service" id="bestit_klarna_order_management.components.transformer.billing_address_transformer"/>
+        </service>
+
+        <service
+            class="BestitKlarnaOrderManagement\Components\Transformer\RecurringOrderTransformer"
+            id="bestit_klarna_order_management.components.transformer.recurring_order_transformer">
+            <argument type="service" id="bestit_klarna_order_management.components.shared.tax_helper"/>
+            <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.line_item_transformer"/>
         </service>
 
         <service
