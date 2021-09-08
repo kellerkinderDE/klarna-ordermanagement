@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BestitKlarnaOrderManagement\Components\Api\Resource;
 
-use BestitKlarnaOrderManagement\Components\Api\Model\CustomerTokenResponse;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
