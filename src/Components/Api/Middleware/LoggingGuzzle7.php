@@ -82,7 +82,7 @@ class LoggingGuzzle7
             $requestMessage = $request !== null ? $this->getMessage($request) : '';
             $responseMessage = $response !== null ? $this->getMessage($response) : '';
 
-            $logLevel = $this->configReader->get('log_level', self::LOG_LEVEL_ERRORS);
+            $logLevel = (int) $this->configReader->get('log_level', self::LOG_LEVEL_ERRORS);
 
             if ($logLevel === self::LOG_LEVEL_NONE) {
                 return $response;
