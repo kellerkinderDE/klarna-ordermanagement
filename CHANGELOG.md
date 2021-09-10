@@ -5,6 +5,8 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+
+## [0.3.3] - 2021-08-04
 #### Fixed 
 - Version constraint in composer.json (PHP 5.3 was still supported; now from 7.2 to 8.0)
 - Fixed ignoring log level setting. 
