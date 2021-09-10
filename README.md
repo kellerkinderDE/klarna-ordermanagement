@@ -25,7 +25,6 @@ $ composer require k10r/klarna-ordermanagement
 In your Shopware plugin entry file, you need to specify the following container parameters:
 
 * Plugin name
-* Plugin version
 
 ```php
 public function build(ContainerBuilder $containerBuilder)
@@ -33,7 +32,6 @@ public function build(ContainerBuilder $containerBuilder)
     parent::build($containerBuilder);
 
     $containerBuilder->setParameter('bestit_klarna.plugin_name', 'ExamplePluginName');
-    $containerBuilder->setParameter('bestit_klarna.plugin_version', '1.0.0');
 }
 ```
 

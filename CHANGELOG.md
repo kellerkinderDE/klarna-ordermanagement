@@ -5,6 +5,8 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+###
+- Changed source of plugin version in logger
 
 ## [0.3.3] - 2021-08-04
 #### Fixed 
