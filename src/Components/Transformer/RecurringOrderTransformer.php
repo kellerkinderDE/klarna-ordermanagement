@@ -19,14 +19,18 @@ class RecurringOrderTransformer implements RecurringOrderTransformerInterface
     /** @var LineItemTransformerInterface */
     private $lineItemTransformer;
 
-    public function __construct(TaxHelper $taxHelper, CalculatorInterface $calculator, LineItemTransformerInterface $lineItemTransformer)
+    /** @var ShippingAddressTransformerInterface */
+    private $shippingAddressTransformer;
+
+    public function __construct(TaxHelper $taxHelper, CalculatorInterface $calculator, LineItemTransformerInterface $lineItemTransformer, ShippingAddressTransformerInterface $shippingAddressTransformer)
     {
         $this->taxHelper = $taxHelper;
         $this->calculator = $calculator;
         $this->lineItemTransformer = $lineItemTransformer;
+        $this->shippingAddressTransformer = $shippingAddressTransformer;
     }
 
-    public function toKlarnaOrder(array $basketData, array $userData, string $currency, $locale): RecurringOrder
+    public function toKlarnaOrder(array $basketData, array $userData, string $currency, $locale, ?string $shippingTaxRate): RecurringOrder
     {
         $orderModel = new RecurringOrder();
 
@@ -46,16 +50,19 @@ class RecurringOrderTransformer implements RecurringOrderTransformerInterface
 
         if (isset($basketData['sShippingcostsWithTax']) && $basketData['sShippingcostsWithTax'] > 0) {
             $proportional = $basketData['sShippingcostsTaxProportional'] ?? null;
+            $shippingTaxRate = $shippingTaxRate !== null ? (float) $shippingTaxRate : null;
 
             $this->lineItemTransformer->withShippingCosts(
                 $basketData['sShippingcostsWithTax'],
                 $basketData['sShippingcostsNet'],
-                $basketData['sShippingcostsTax'],
+                $shippingTaxRate, //abocommerce doesn't provide this value to the ordervariables
                 $proportional
             );
         }
 
         $orderModel->orderLines = $this->lineItemTransformer->toKlarnaModelList($basketData['content']);
+
+        $orderModel->shippingAddress = $this->shippingAddressTransformer->toKlarnaModel($userData);
 
         return $orderModel;
     }

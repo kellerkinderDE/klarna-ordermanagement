@@ -22,7 +22,7 @@ class ShippingAddressTransformer implements ShippingAddressTransformerInterface
 
         $shippingAddress->phone      = $userData['shippingaddress']['phone'];
         $shippingAddress->email      = $userData['additional']['user']['email'];
-        $shippingAddress->country    = $userData['additional']['country']['countryiso'];
+        $shippingAddress->country    = $this->getShippingCountryCode($userData);
         $shippingAddress->postalCode = $userData['shippingaddress']['zipcode'];
 
         if (isset($userData['additional']['stateShipping'])) {
@@ -41,5 +41,19 @@ class ShippingAddressTransformer implements ShippingAddressTransformerInterface
         }
 
         return $shippingAddress;
+    }
+
+    private function getShippingCountryCode(array $userData): string
+    {
+        if (isset($userData['additional']['country']['countryiso'])) {
+            return $userData['additional']['country']['countryiso'];
+        }
+
+        //abocommerce fallback
+        if (isset($userData['additional']['countryShipping']['countryiso'])) {
+            return $userData['additional']['countryShipping']['countryiso'];
+        }
+
+        return '';
     }
 }

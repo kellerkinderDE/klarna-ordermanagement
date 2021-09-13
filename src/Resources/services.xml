@@ -424,6 +424,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.shared.tax_helper"/>
             <argument type="service" id="bestit_klarna_order_management.components.calculator.calculator"/>
             <argument type="service" id="bestit_klarna_order_management.components.transformer.line_item_transformer"/>
+            <argument type="service" id="bestit_klarna_order_management.components.transformer.shipping_address_transformer"/>
         </service>
 
         <service

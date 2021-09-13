@@ -29,4 +29,7 @@ class RecurringOrder
 
     /** @var LineItem[] */
     public $orderLines;
+
+    /** @var ShippingAddress|null */
+    public $shippingAddress;
 }

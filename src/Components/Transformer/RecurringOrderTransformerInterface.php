@@ -8,5 +8,5 @@ use BestitKlarnaOrderManagement\Components\Api\Model\RecurringOrder;
 
 interface RecurringOrderTransformerInterface
 {
-    public function toKlarnaOrder(array $basketData, array $userData,string $currency, $locale): RecurringOrder;
+    public function toKlarnaOrder(array $basketData, array $userData, string $currency, $locale, ?string $shippingTaxRate): RecurringOrder;
 }

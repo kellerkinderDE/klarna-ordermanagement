@@ -10,6 +10,7 @@ use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
 use BestitKlarnaOrderManagement\Components\Shared\Localizer;
 use BestitKlarnaOrderManagement\Components\Transformer\RecurringOrderTransformerInterface;
+use Shopware\Models\Order\Order as SwOrder;
 use Symfony\Component\Serializer\Serializer;
 
 class RecurringOrder
@@ -44,9 +45,9 @@ class RecurringOrder
         $this->authorizationHelper = $authorizationHelper;
     }
 
-    public function create(string $customerToken, array $orderBasket, array $userData, string $currency): Response
+    public function create(SwOrder $previousOrder, string $customerToken, array $orderBasket, array $userData, string $currency): Response
     {
-        $recurringOrder = $this->recurringOrderTransformer->toKlarnaOrder($orderBasket, $userData, $currency, $this->localizer->localize());
+        $recurringOrder = $this->recurringOrderTransformer->toKlarnaOrder($orderBasket, $userData, $currency, $this->localizer->localize(), $previousOrder->getInvoiceShippingTaxRate());
 
         $normalizedRecurringOrder = $this->serializer->normalize($recurringOrder);
         $request         = Request::createFromPayload($normalizedRecurringOrder);
