@@ -30,7 +30,7 @@ class RecurringOrderTransformer implements RecurringOrderTransformerInterface
         $this->shippingAddressTransformer = $shippingAddressTransformer;
     }
 
-    public function toKlarnaOrder(array $basketData, array $userData, string $currency, $locale, ?string $shippingTaxRate): RecurringOrder
+    public function toKlarnaOrder(array $basketData, array $userData, string $currency, $locale): RecurringOrder
     {
         $orderModel = new RecurringOrder();
 
@@ -50,7 +50,7 @@ class RecurringOrderTransformer implements RecurringOrderTransformerInterface
 
         if (isset($basketData['sShippingcostsWithTax']) && $basketData['sShippingcostsWithTax'] > 0) {
             $proportional = $basketData['sShippingcostsTaxProportional'] ?? null;
-            $shippingTaxRate = $shippingTaxRate !== null ? (float) $shippingTaxRate : null;
+            $shippingTaxRate = $this->calculateApproximateShippingCostTaxRate($basketData['sShippingcostsWithTax'], $basketData['sShippingcostsNet']);
 
             $this->lineItemTransformer->withShippingCosts(
                 $basketData['sShippingcostsWithTax'],
@@ -65,5 +65,10 @@ class RecurringOrderTransformer implements RecurringOrderTransformerInterface
         $orderModel->shippingAddress = $this->shippingAddressTransformer->toKlarnaModel($userData);
 
         return $orderModel;
+    }
+
+    private function calculateApproximateShippingCostTaxRate(float $shippingCostBrut, float $shippingcostNet): float
+    {
+        return $shippingCostBrut / $shippingcostNet * 100 - 100;
     }
 }

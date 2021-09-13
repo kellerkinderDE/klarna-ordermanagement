@@ -7,10 +7,10 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
 class RecurringOrder
 {
     /** @var string|null */
-    public $merchantReference1 = 'lorem';
+    public $merchantReference1;
 
     /** @var string|null */
-    public $merchantData = 'test';
+    public $merchantData;
 
     /** @var string|null */
     public $locale;
