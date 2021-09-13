@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BestitKlarnaOrderManagement\Components\Api\Resource;
 
+use BestitKlarnaOrderManagement\Components\Api\Model\RecurringOrderResponse;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
@@ -41,6 +42,6 @@ class RecurringOrder
             return $this->wrapGuzzleException($e);
         }
 
-        return $this->wrapGuzzleResponse($response);
+        return $this->wrapGuzzleResponse($response, RecurringOrderResponse::class);
     }
 }
