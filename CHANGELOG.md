@@ -7,6 +7,8 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## Unreleased
 ###
 - Changed source of plugin version in logger
+- Moved services form KlarnaPayments to OrderMangement
+- Added service classes for recurring orders and customer token
 
 ## [0.3.2] - 2021-08-04
 ### Added
