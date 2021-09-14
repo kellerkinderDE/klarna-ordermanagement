@@ -38,7 +38,7 @@ class DataProvider
     /**
      * @param int $id
      *
-     * @return Order
+     * @return Order|null
      */
     public function getSwOrder($id)
     {
