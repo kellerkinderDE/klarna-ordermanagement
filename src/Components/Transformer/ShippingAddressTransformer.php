@@ -45,11 +45,6 @@ class ShippingAddressTransformer implements ShippingAddressTransformerInterface
 
     private function getShippingCountryCode(array $userData): string
     {
-        if (isset($userData['additional']['country']['countryiso'])) {
-            return $userData['additional']['country']['countryiso'];
-        }
-
-        //abocommerce fallback
         if (isset($userData['additional']['countryShipping']['countryiso'])) {
             return $userData['additional']['countryShipping']['countryiso'];
         }
