@@ -37,19 +37,17 @@ class CustomerToken
         AuthorizationHelper $authorizationHelper
     )
     {
-        $this->customerTokenResource = $customerTokenResource;
+        $this->customerTokenResource    = $customerTokenResource;
         $this->customerTokenTransformer = $customerTokenTransformer;
-        $this->serializer = $serializer;
-        $this->localizer = $localizer;
-        $this->authorizationHelper = $authorizationHelper;
+        $this->serializer               = $serializer;
+        $this->localizer                = $localizer;
+        $this->authorizationHelper      = $authorizationHelper;
     }
 
     public function create(string $klarnaAuthToken, array $userData, array $orderBasket, string $confirmationUrl): Response
     {
-        $additional = $userData['additional'];
-        $country    = $additional['country'];
-        $iso        = $country['countryiso'];
-        $currency = $orderBasket['sCurrencyName'];
+        $iso        = $userData['additional']['country']['countryiso'] ?? '';
+        $currency   = $orderBasket['sCurrencyName'];
 
         $customerTokenModel = $this->customerTokenTransformer
             ->withUserData($userData)
@@ -58,7 +56,8 @@ class CustomerToken
 
         /** @var array $normalizedOrder */
         $normalizedCustomerToken = $this->serializer->normalize($customerTokenModel);
-        $request         = Request::createFromPayload($normalizedCustomerToken);
+        $request                 = Request::createFromPayload($normalizedCustomerToken);
+
         $request->addQueryParameter('authorizationToken', $klarnaAuthToken);
 
         return $this->customerTokenResource->create($request);
