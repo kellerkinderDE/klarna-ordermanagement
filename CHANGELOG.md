@@ -10,7 +10,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [0.3.3] - 2021-08-04
 #### Fixed 
-- Version constraint in composer.json (PHP 5.3 was still supported; now from 7.2 to 8.0)
+- Version constraint in composer.json does not allow PHP Version smaller than 7.2 anymore
 - Fixed ignoring log level setting. 
 
 ## [0.3.2] - 2021-08-04
