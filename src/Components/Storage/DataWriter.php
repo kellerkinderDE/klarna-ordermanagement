@@ -59,7 +59,7 @@ class DataWriter
 
         if ($orderId === false) {
             $this->logger->error(
-                'OrderId for order could not be found, to save customer token',
+                'Save customer token failed. OrderId for orderNumber could not be found.',
                 [
                     'orderNumber' => $orderNumber,
                 ]
