@@ -3,6 +3,7 @@
 namespace BestitKlarnaOrderManagement\Components\Storage;
 
 use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 
 /**
  *  Changes several data that is related to an order.
@@ -16,12 +17,16 @@ class DataWriter
     /** @var Connection */
     protected $connection;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     /**
      * @param Connection $connection
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, LoggerInterface $logger)
     {
         $this->connection = $connection;
+        $this->logger     = $logger;
     }
 
     /**
@@ -52,7 +57,13 @@ class DataWriter
             ->execute()
             ->fetchColumn();
 
-        if ($orderId === null) {
+        if ($orderId === false) {
+            $this->logger->error(
+                'OrderId for order could not be found, to save customer token',
+                [
+                    'orderNumber' => $orderNumber,
+                ]
+            );
             return;
         }
 

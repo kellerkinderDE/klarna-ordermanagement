@@ -370,6 +370,7 @@
                 class="BestitKlarnaOrderManagement\Components\Storage\DataWriter"
                 id="bestit_klarna_order_management.components.storage.data_writer">
             <argument type="service" id="dbal_connection"/>
+            <argument type="service" id="bestit_klarna_order_management.logger"/>
         </service>
 
         <!--
