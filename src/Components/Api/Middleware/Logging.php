@@ -68,7 +68,7 @@ class Logging implements SubscriberInterface
             $request->setHeader('Authorization', 'REMOVED');
         }
 
-        $logLevel = $this->configReader->get('log_level', self::LOG_LEVEL_ERRORS);
+        $logLevel = (int) $this->configReader->get('log_level', self::LOG_LEVEL_ERRORS);
 
         if ($logLevel === self::LOG_LEVEL_NONE) {
             return;
