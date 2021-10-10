@@ -8,10 +8,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [0.3.3] - 2021-10-10
 ### Fixed 
-- Snipped caused error 500 in Shopware backend
+- Snippet caused error 500 in Shopware backend
 - Changed source of plugin version in logger
 - Version constraint in composer.json does not allow PHP Version smaller than 7.2 anymore
-- Fixed ignoring log level setting. 
+- Fixed ignoring log level setting
 
 ## [0.3.2] - 2021-08-04
 ### Added
