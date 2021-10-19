@@ -6,6 +6,8 @@ use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\ConfigReader;
 use BestitKlarnaOrderManagement\Components\Constants;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Builds the authorization header.
@@ -14,21 +16,18 @@ use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
  * The BestitKlarnaOrderManagement\Components\Api\Resource classes still had the wrong configreader.
  * It seems they get build to early.
  *
- * @package BestitKlarnaOrderManagement\Components\Shared
- *
  * @author Ralf Nitzer <ralf.nitzer@bestit-online.de>
  */
-class AuthorizationHelper
+class AuthorizationHelper implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /** @var ConfigReader */
     protected $configReader;
+
     /** @var DataProvider */
     protected $dataProvider;
 
-    /**
-     * @param ConfigReader $configReader
-     * @param DataProvider $dataProvider
-     */
     public function __construct(ConfigReader $configReader, DataProvider $dataProvider)
     {
         $this->configReader = $configReader;
@@ -37,7 +36,6 @@ class AuthorizationHelper
 
     /**
      * Needed for setting the right authorization and using sub shop credetials where necessary
-     * @param Request $request
      *
      * @return string
      */
@@ -45,11 +43,13 @@ class AuthorizationHelper
     {
         $orderId = $request->getQueryParameter('order_id');
 
-        if (empty($orderId)) {
-            return $request;
+        if ($this->container->has('shop')) {
+            $this->configReader->setShop($this->container->get('shop'));
         }
 
-        $this->setShopForConfigReader($orderId);
+        if (!empty($orderId)) {
+            $this->setShopForConfigReader($orderId);
+        }
 
         $liveMode = (bool) $this->configReader->get('live_mode');
 
@@ -73,6 +73,7 @@ class AuthorizationHelper
 
     /**
      * Sets the right shop in the Config Reader
+     *
      * @param int $orderId Klarna Order Id
      *
      * @return void
