@@ -50,12 +50,14 @@ class RecurringOrderTransformer implements RecurringOrderTransformerInterface
 
         if (isset($basketData['sShippingcostsWithTax']) && $basketData['sShippingcostsWithTax'] > 0) {
             $proportional = $basketData['sShippingcostsTaxProportional'] ?? null;
-            $shippingTaxRate = $this->calculateApproximateShippingCostTaxRate($basketData['sShippingcostsWithTax'], $basketData['sShippingcostsNet']);
+
+            // AboCommerce plugin version lower 7.1.2 doesn't provide the tax rate
+            $shippingTaxRate = $basketData['sShippingcostsTax'] ?? $this->calculateApproximateShippingCostTaxRate($basketData['sShippingcostsWithTax'], $basketData['sShippingcostsNet']);
 
             $this->lineItemTransformer->withShippingCosts(
                 $basketData['sShippingcostsWithTax'],
                 $basketData['sShippingcostsNet'],
-                $shippingTaxRate, //abocommerce doesn't provide this value to the ordervariables
+                $shippingTaxRate,
                 $proportional
             );
         }
