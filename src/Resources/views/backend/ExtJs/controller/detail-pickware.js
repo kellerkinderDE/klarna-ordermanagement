@@ -48,12 +48,12 @@ Ext.define('Shopware.apps.BestitExtendOrder.controller.Detail', {
         var oldPaymentId = record.raw.paymentId;
         var newPaymentId = record.get('paymentId');
         var parentArguments = arguments;
-        var title = '{s name=messagebox_change_payment/title}Change Payment{/s}';
+        var title = '{s name="messagebox_change_payment/title"}Change Payment{/s}';
 
         if (!BestitKlarna.controller.Order.isKlarnaPaymentId(oldPaymentId) && BestitKlarna.controller.Order.isKlarnaPaymentId(newPaymentId)) {
             Ext.MessageBox.alert(
                 title,
-                '{s name=messagebox_change_payment/to_klarna_payment_method_not_possible}Changing the payment method from a non Klarna payment method to a Klarna payment method is not possible.{/s}'
+                '{s name="messagebox_change_payment/to_klarna_payment_method_not_possible"}Changing the payment method from a non Klarna payment method to a Klarna payment method is not possible.{/s}'
             );
 
             return;
@@ -66,7 +66,7 @@ Ext.define('Shopware.apps.BestitExtendOrder.controller.Detail', {
             return;
         }
 
-        var message = '{s name=messagebox_change_payment/change_confirmation_message}Do you really want to change the payment method? Changing the payment method will cancel this order towards Klarna.{/s}';
+        var message = '{s name="messagebox_change_payment/change_confirmation_message"}Do you really want to change the payment method? Changing the payment method will cancel this order towards Klarna.{/s}';
 
         Ext.MessageBox.confirm(title, message, function (response) {
             if (response !== 'yes') {

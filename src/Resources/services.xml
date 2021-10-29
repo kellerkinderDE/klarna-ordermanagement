@@ -559,6 +559,9 @@
                 id="bestit_klarna_order_management.components.shared.authorization_helper">
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
             <argument type="service" id="bestit_klarna_order_management.components.storage.data_provider"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
 
         <service
