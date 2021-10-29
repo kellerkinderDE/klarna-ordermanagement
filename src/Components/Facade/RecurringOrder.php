@@ -11,6 +11,7 @@ use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
 use BestitKlarnaOrderManagement\Components\Shared\Localizer;
 use BestitKlarnaOrderManagement\Components\Transformer\RecurringOrderTransformerInterface;
 use Symfony\Component\Serializer\Serializer;
+use Shopware\Models\Shop\Shop;
 
 class RecurringOrder
 {
@@ -29,12 +30,16 @@ class RecurringOrder
     /** @var AuthorizationHelper */
     private $authorizationHelper;
 
+    /** @var Shop */
+    private $shop;
+
     public function __construct(
         RecurringOrderResource $recurringOrderResource,
         RecurringOrderTransformerInterface $recurringOrderTransformer,
         Serializer $serializer,
         Localizer $localizer,
-        AuthorizationHelper $authorizationHelper
+        AuthorizationHelper $authorizationHelper,
+        Shop $shop
     )
     {
         $this->recurringOrderResource = $recurringOrderResource;
@@ -42,11 +47,17 @@ class RecurringOrder
         $this->serializer = $serializer;
         $this->localizer = $localizer;
         $this->authorizationHelper = $authorizationHelper;
+        $this->shop = $shop;
     }
 
-    public function create(string $customerToken, array $orderBasket, array $userData, string $currency): Response
+    public function create(string $customerToken, array $orderBasket, array $userData): Response
     {
-        $recurringOrder = $this->recurringOrderTransformer->toKlarnaOrder($orderBasket, $userData, $currency, $this->localizer->localize());
+        $recurringOrder = $this->recurringOrderTransformer->toKlarnaOrder(
+            $orderBasket,
+            $userData,
+            $this->shop->getCurrency()->getCurrency(),
+            $this->localizer->localize()
+        );
 
         $normalizedRecurringOrder = $this->serializer->normalize($recurringOrder);
         $request         = Request::createFromPayload($normalizedRecurringOrder);
