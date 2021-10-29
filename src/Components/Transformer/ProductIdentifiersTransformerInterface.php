@@ -13,10 +13,5 @@ use BestitKlarnaOrderManagement\Components\Api\Model\ProductIdentifiers;
  */
 interface ProductIdentifiersTransformerInterface
 {
-    /**
-     * @param array $lineItem
-     *
-     * @return ProductIdentifiers
-     */
-    public function toKlarnaModel(array $lineItem);
+    public function toKlarnaModel(array $lineItem): ProductIdentifiers;
 }

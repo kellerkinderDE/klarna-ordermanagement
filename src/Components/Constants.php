@@ -69,4 +69,7 @@ class Constants
     const CUSTOM_PRODUCT_PRODUCT = '1';
     const CUSTOM_PRODUCT_OPTION = '2';
     const CUSTOM_PRODUCT_VALUE = '3';
+
+    public const CUSTOMER_ORGANIZATION_TYPE = 'organization';
+    public const CUSTOMER_PRIVATE_TYPE      = 'person';
 }
