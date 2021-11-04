@@ -5,6 +5,8 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+
+## [0.4.0] - 2021-11-04
 ### Added
 - Moved services from Klarna Payments to order management
 - Added service classes for recurring orders and customer token
