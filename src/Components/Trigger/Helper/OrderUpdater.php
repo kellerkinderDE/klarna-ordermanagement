@@ -24,6 +24,9 @@ use Shopware_Components_Config;
  */
 class OrderUpdater
 {
+    private const CUSTOM_PRODUCT_MODE_OPTION = 2;
+    private const CUSTOM_PRODUCT_MODE_VALUE = 3;
+
     /** @var OrderFacade */
     protected $orderFacade;
     /** @var OrderTransformer */
@@ -118,7 +121,7 @@ class OrderUpdater
          * With proportional taxes we can have more than 1 Shipping Line Item
          */
         foreach ($klarnaOrder->orderLines as $lineItem) {
-            if ($lineItem->reference === Constants::SHIPPING_COSTS_REFERENCE) {
+            if ($lineItem['reference'] === Constants::SHIPPING_COSTS_REFERENCE) {
                 $shippingLines[] = $lineItem;
             }
         }
@@ -136,7 +139,14 @@ class OrderUpdater
         $totalAmount = 0.00;
 
         foreach ($lineItems as $lineItem) {
-            $totalAmount += $lineItem->totalAmount;
+            if ($lineItem instanceof LineItem) {
+                // LineItem is newly created by $this->orderTransformer->createLineItems()
+                $totalAmount += $lineItem->totalAmount;
+            } else {
+                // LineItem is fetched from API response (= shipping costs)
+                $totalAmount += $lineItem['total_amount'];
+            }
+
         }
 
         return $totalAmount;
@@ -152,32 +162,45 @@ class OrderUpdater
         $baseFile = $this->config->get('baseFile');
 
         foreach ($orderDetails as $key => $orderDetail) {
-            $articleId = (int) $orderDetail['articleID'];
-            $variantId = (int) $orderDetail['variantId'];
-            $orderNumber = $orderDetail['articleordernumber'];
-
-            if ($articleId === 0) {
+            if ((int) $orderDetail['articleID'] === 0) {
                 continue;
             }
 
-            $linkDetails = null;
-            $image = null;
-
-            if ($articleId !== 0) {
-                $linkDetails = "{$baseFile}?sViewport=detail&module=frontend&sArticle={$articleId}";
-
-                $media = $this->mediaService->getCover(
-                    new BaseProduct($articleId, $variantId, $orderNumber),
-                    $this->contextService->getShopContext()
-                );
-
-                $image = $media === null ? null : $media->getFile();
-            }
-
-            $orderDetails[$key]['linkDetails'] = $linkDetails;
-            $orderDetails[$key]['image'] = $image;
+            $orderDetails[$key]['linkDetails'] = "{$baseFile}?sViewport=detail&module=frontend&sArticle={$orderDetail['articleID']}";
+            $orderDetails[$key]['image']       = $this->getMediaFile($orderDetail);
         }
 
         return $orderDetails;
+    }
+
+    private function isProduct(array $detail): bool
+    {
+        return !array_key_exists('swag_custom_products_mode', $detail)
+            || (
+                array_key_exists('swag_custom_products_mode', $detail)
+                && !in_array((int) $detail['swag_custom_products_mode'], [self::CUSTOM_PRODUCT_MODE_OPTION, self::CUSTOM_PRODUCT_MODE_VALUE], true)
+            );
+    }
+
+    private function getMediaFile(array $detail): ?string
+    {
+        if (!$this->isProduct($detail)) {
+            return null;
+        }
+
+        $articleId   = (int)$detail['articleID'];
+        $variantId   = (int)$detail['variantId'];
+        $orderNumber = $detail['articleordernumber'];
+
+        $media = $this->mediaService->getCover(
+            new BaseProduct($articleId, $variantId, $orderNumber),
+            $this->contextService->getShopContext()
+        );
+
+        if ($media === null) {
+            return null;
+        }
+
+        return $media->getFile();
     }
 }

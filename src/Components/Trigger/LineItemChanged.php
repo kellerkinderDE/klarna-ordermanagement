@@ -46,8 +46,10 @@ class LineItemChanged
                 continue;
             }
 
-            $orderDetails[$key]['quantity'] = $position['quantity'];
-            $orderDetails[$key]['price'] = $position['price'];
+            $orderDetails[$key]['quantity']           = $position['quantity'];
+            $orderDetails[$key]['price']              = $position['price'];
+            $orderDetails[$key]['name']               = $position['articleName'];
+            $orderDetails[$key]['articleordernumber'] = $position['articleNumber'];
         }
 
         return $this->orderUpdater->execute($orderId, $orderDetails);
