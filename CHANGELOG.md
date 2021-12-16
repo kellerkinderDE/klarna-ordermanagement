@@ -7,6 +7,8 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## Unreleased
 ### Fixed
 - Fixed the update of order positions 
+### Added
+- Added possibility to save multiple tracking codes
 
 ## [0.4.0] - 2021-11-04
 ### Added
