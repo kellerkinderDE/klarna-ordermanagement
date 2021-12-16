@@ -177,7 +177,6 @@ class Capture
         $delimitedTrackingNumber = $this->splitShipmentNumbers($trackingNumber);
         $shippingInfoModels = [];
 
-
         foreach ($delimitedTrackingNumber as $value) {
             $shippingInfoModel = new ShippingInfo();
             $shippingInfoModel->trackingNumber = $value;
