@@ -9,6 +9,7 @@ use BestitKlarnaOrderManagement\Components\Api\Model\ShippingInfo;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Capture as CaptureResource;
 use BestitKlarnaOrderManagement\Components\Api\Response;
+use BestitKlarnaOrderManagement\Components\ConfigReader;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Logging\TransactionLoggerInterface;
 use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
@@ -41,6 +42,8 @@ class Capture
     protected $transactionLogger;
     /** @var AuthorizationHelper */
     protected $authorizationHelper;
+    /** @var $configReader */
+    protected $configReader;
 
     /**
      * @param Order                      $orderFacade
@@ -50,6 +53,7 @@ class Capture
      * @param DataWriter                 $dataWriter
      * @param TransactionLoggerInterface $transactionLogger
      * @param AuthorizationHelper        $authorizationHelper
+     * @param ConfigReader               $configReader
      */
     public function __construct(
         OrderFacade $orderFacade,
@@ -58,7 +62,8 @@ class Capture
         DataProvider $dataProvider,
         DataWriter $dataWriter,
         TransactionLoggerInterface $transactionLogger,
-        AuthorizationHelper $authorizationHelper
+        AuthorizationHelper $authorizationHelper,
+        ConfigReader $configReader
     ) {
         $this->orderFacade = $orderFacade;
         $this->captureResource = $captureResource;
@@ -67,6 +72,7 @@ class Capture
         $this->dataWriter = $dataWriter;
         $this->transactionLogger = $transactionLogger;
         $this->authorizationHelper = $authorizationHelper;
+        $this->configReader = $configReader;
     }
 
     /**
@@ -168,15 +174,35 @@ class Capture
      */
     public function updateShippingInfo($orderId, $captureId, $trackingNumber, $shippingCompany)
     {
+        $delimitedTrackingNumber = $this->splitShipmentNumbers($trackingNumber);
         $shippingInfoModel = new ShippingInfo();
-        $shippingInfoModel->trackingNumber = $trackingNumber;
-        $shippingInfoModel->shippingCompany = $shippingCompany;
+
+        foreach ($delimitedTrackingNumber as $value) {
+            $shippingInfoModel->trackingNumber = $value;
+            $shippingInfoModel->shippingCompany = $shippingCompany;
+        }
 
         $request = Request::createFromPayload([
             'shipping_info' => $this->serializer->normalize([$shippingInfoModel])
         ])->addQueryParameter('order_id', $orderId)->addQueryParameter('capture_id', $captureId);
+
         $this->authorizationHelper->setAuthHeader($request);
 
         return $this->captureResource->updateShippingInfo($request);
+    }
+
+    /**
+     * @param string $trackingCodes
+     *
+     * @return array
+     */
+    private function splitShipmentNumbers(string $trackingCodes):array
+    {
+        // get config from Shop
+        $delimiter = (string) $this->configReader->get('trackingnumber_delimiter');
+
+        $arrayTrackingNumbers = explode($delimiter, $trackingCodes);
+
+        return $arrayTrackingNumbers;
     }
 }
