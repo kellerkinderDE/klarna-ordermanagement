@@ -175,15 +175,18 @@ class Capture
     public function updateShippingInfo($orderId, $captureId, $trackingNumber, $shippingCompany)
     {
         $delimitedTrackingNumber = $this->splitShipmentNumbers($trackingNumber);
-        $shippingInfoModel = new ShippingInfo();
+        $shippingInfoModels = [];
+
 
         foreach ($delimitedTrackingNumber as $value) {
+            $shippingInfoModel = new ShippingInfo();
             $shippingInfoModel->trackingNumber = $value;
             $shippingInfoModel->shippingCompany = $shippingCompany;
+            $shippingInfoModels[] = $shippingInfoModel;
         }
 
         $request = Request::createFromPayload([
-            'shipping_info' => $this->serializer->normalize([$shippingInfoModel])
+            'shipping_info' => $this->serializer->normalize($shippingInfoModels)
         ])->addQueryParameter('order_id', $orderId)->addQueryParameter('capture_id', $captureId);
 
         $this->authorizationHelper->setAuthHeader($request);
