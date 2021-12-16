@@ -42,7 +42,7 @@ class Capture
     protected $transactionLogger;
     /** @var AuthorizationHelper */
     protected $authorizationHelper;
-    /** @var $configReader */
+    /** @var configReader */
     protected $configReader;
 
     /**

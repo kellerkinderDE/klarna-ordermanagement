@@ -107,6 +107,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.storage.data_writer"/>
             <argument type="service" id="bestit_klarna_order_management.components.logging.transaction_logger"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.authorization_helper"/>
+            <argument type="service" id="bestit_klarna_order_management.components.config_reader" />
         </service>
 
         <service
