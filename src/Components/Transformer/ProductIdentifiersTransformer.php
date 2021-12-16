@@ -13,21 +13,16 @@ use BestitKlarnaOrderManagement\Components\Api\Model\ProductIdentifiers;
  */
 class ProductIdentifiersTransformer implements ProductIdentifiersTransformerInterface
 {
-    /**
-     * @param array $lineItem
-     *
-     * @return ProductIdentifiers
-     */
-    public function toKlarnaModel(array $lineItem)
+    public function toKlarnaModel(array $lineItem): ProductIdentifiers
     {
         $productIdentifiers = new ProductIdentifiers();
 
-        $breadcrumb = isset($lineItem['breadcrumb']) ? $lineItem['breadcrumb'] : null;
-        $ean = isset($lineItem['ean']) ? $lineItem['ean'] : null;
-        $manufacturerNumber = isset($lineItem['suppliernumber']) ? $lineItem['suppliernumber'] : null;
+        $breadcrumb         = $lineItem['breadcrumb'] ?? null;
+        $ean                = $lineItem['ean'] ?? null;
+        $manufacturerNumber = $lineItem['suppliernumber'] ?? null;
 
-        $productIdentifiers->categoryPath = $breadcrumb ?: null;
-        $productIdentifiers->globalTradeItemNumber = $ean ?: null;
+        $productIdentifiers->categoryPath           = $breadcrumb ?: null;
+        $productIdentifiers->globalTradeItemNumber  = $ean ?: null;
         $productIdentifiers->manufacturerPartNumber = $manufacturerNumber ?: null;
 
         return $productIdentifiers;

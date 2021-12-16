@@ -4,6 +4,7 @@ namespace BestitKlarnaOrderManagement\Components\Storage;
 
 use DateTime;
 use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
@@ -18,12 +19,16 @@ class DataWriter
     /** @var Connection */
     protected $connection;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     /**
      * @param Connection $connection
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, LoggerInterface $logger)
     {
         $this->connection = $connection;
+        $this->logger     = $logger;
     }
 
     /**
@@ -71,5 +76,32 @@ class DataWriter
                 'change_date' => (new DateTime())->format('Y-m-d H:i:s')
             ]
         );
+    }
+
+    public function saveKlarnaCustomerToken(string $orderNumber, ?string $customerToken): void
+    {
+        if ($customerToken === null) {
+            return;
+        }
+
+        $orderId = $this->connection->createQueryBuilder()
+            ->select('id')
+            ->from('s_order')
+            ->where('ordernumber = :orderNumber')
+            ->setParameter('orderNumber', $orderNumber)
+            ->execute()
+            ->fetchColumn();
+
+        if ($orderId === false) {
+            $this->logger->error(
+                'Save customer token failed. OrderId for orderNumber could not be found.',
+                [
+                    'orderNumber' => $orderNumber,
+                ]
+            );
+            return;
+        }
+
+        $this->connection->update('s_order_attributes', ['klarna_customer_token' => $customerToken], ['orderID' => $orderId]);
     }
 }

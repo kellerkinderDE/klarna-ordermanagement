@@ -67,7 +67,6 @@ class HttpClient
                     'Content-Type' => 'application/json',
                     'User-Agent' => "Shopware {$shopVersion}/{$pluginName} {$pluginVersion}",
                 ],
-                'auth' => [$merchantId, $merchantPassword],
                 'handler' => $handler
             ];
 
@@ -80,9 +79,7 @@ class HttpClient
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
                         'User-Agent' => "Shopware {$shopVersion}/{$pluginName} {$pluginVersion}",
-                    ],
-                    'auth' => [$merchantId, $merchantPassword],
-
+                    ]
                 ]
             ];
 

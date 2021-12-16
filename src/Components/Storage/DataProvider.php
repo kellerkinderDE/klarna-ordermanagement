@@ -38,7 +38,7 @@ class DataProvider
     /**
      * @param int $id
      *
-     * @return Order
+     * @return Order|null
      */
     public function getSwOrder($id)
     {
@@ -91,9 +91,10 @@ class DataProvider
     public function getOrderDetails($orderId)
     {
         return $this->connection->createQueryBuilder()
-            ->select('sod.*, sad.id as variantId')
+            ->select('soda.*, sod.*, sad.id as variantId')
             ->from('s_order_details', 'sod')
             ->leftJoin('sod', 's_articles_details', 'sad', 'sod.articleordernumber = sad.ordernumber')
+            ->leftJoin('sod', 's_order_details_attributes', 'soda', 'sod.id = soda.detailID')
             ->where('sod.orderID = :orderId')
             ->setParameter('orderId', $orderId)
             ->execute()
