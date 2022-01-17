@@ -193,18 +193,10 @@ class Capture
         return $this->captureResource->updateShippingInfo($request);
     }
 
-    /**
-     * @param string $trackingCodes
-     *
-     * @return array
-     */
-    private function splitShipmentNumbers(string $trackingCodes):array
+    private function splitShipmentNumbers(string $trackingCodes): array
     {
-        // get config from Shop
         $delimiter = (string) $this->configReader->get('trackingnumber_delimiter');
 
-        $arrayTrackingNumbers = explode($delimiter, $trackingCodes);
-
-        return $arrayTrackingNumbers;
+        return explode($delimiter, $trackingCodes);
     }
 }
