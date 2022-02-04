@@ -7,6 +7,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## Unreleased
 ### Fixed
 - Fixed the update of order positions 
+- Fixed the handling of multiple opened orders in the backend at the same time
 ### Added
 - Added possibility to save multiple tracking codes
 
