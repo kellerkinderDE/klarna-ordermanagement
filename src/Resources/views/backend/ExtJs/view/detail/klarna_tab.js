@@ -12,7 +12,7 @@ Ext.define('Shopware.apps.BestitExtendOrder.view.detail.KlarnaTab', {
         me.src = '{url controller="BestitOrderManagement" action=index}?orderId=' + me.record.get('id');
 
         me.items = [Ext.create('Ext.Component', {
-            id: 'bestitKlarnaOrderIFrame',
+            id: 'bestitKlarnaOrderIFrame-' + me.record.get('id'),
             autoEl: {
                 tag: 'iframe',
                 src: me.src,
