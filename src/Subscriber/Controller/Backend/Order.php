@@ -261,7 +261,8 @@ class Order implements SubscriberInterface
                 $request->getParam('quantity'),
                 $request->getParam('price'),
                 $request->getParam('taxId'),
-                $request->getParam('mode')
+                $request->getParam('mode'),
+                $request->getParam('articleName')
             );
         } else {
             $orderDetails = $this->dataProvider->getOrderDetails($orderId);

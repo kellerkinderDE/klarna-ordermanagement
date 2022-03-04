@@ -1,16 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace BestitKlarnaOrderManagement\Components\Trigger;
 
-use BestitKlarnaOrderManagement\Components\Api\Model\Error;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Trigger\Helper\OrderUpdater;
+use Shopware\Models\Article\Detail;
 
 /**
  * Synchronizes the line item changes with Klarna.
- *
- * @package BestitKlarnaOrderManagement\Components\Trigger
  *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
@@ -19,53 +18,41 @@ class LineItemAdded
 {
     /** @var OrderUpdater */
     protected $orderUpdater;
-    /** @var DataProvider $dataProvider */
+
+    /** @var DataProvider */
     protected $dataProvider;
 
-    /**
-     * @param OrderUpdater $orderUpdater
-     * @param DataProvider $dataProvider
-     */
     public function __construct(OrderUpdater $orderUpdater, DataProvider $dataProvider)
     {
         $this->orderUpdater = $orderUpdater;
         $this->dataProvider = $dataProvider;
     }
 
-    /**
-     * @param int    $orderId
-     * @param string $articleNumber
-     * @param int    $quantity
-     * @param float  $price
-     * @param int    $taxId
-     * @param int    $mode
-     *
-     * @return Response
-     */
-    public function execute($orderId, $articleNumber, $quantity, $price, $taxId, $mode)
+    public function execute(int $orderId, string $articleNumber, int $quantity, float $price, int $taxId, int $mode, string $articleName): Response
     {
-        $orderDetails = $this->dataProvider->getOrderDetails($orderId);
+        $orderDetails  = $this->dataProvider->getOrderDetails($orderId);
         $articleDetail = $this->dataProvider->getArticleDetail($articleNumber);
+        $tax           = $this->dataProvider->getTax($taxId);
 
-        if ($articleDetail === null) {
-            $error = new Error();
-            $error->errorMessages = ["The article {$articleNumber} could not be found"];
-            return Response::wrapError($error);
+        $variantId = $articleId = $unit = null;
+
+        if ($articleDetail instanceof Detail) {
+            $variantId   = $articleDetail->getId();
+            $articleId   = $articleDetail->getArticleId();
+            $articleName = empty($articleName) ? $articleDetail->getArticle()->getName() : $articleName;
+            $unit        = $articleDetail->getUnit() === null ? null : $articleDetail->getUnit()->getUnit();
         }
 
-        $unit = $articleDetail->getUnit() ? $articleDetail->getUnit()->getUnit() : null;
-        $tax = $this->dataProvider->getTax($taxId);
-
         $newDetail = [
-            'variantId' => $articleDetail->getId(),
-            'articleID' => $articleDetail->getArticleId(),
-            'modus' => $mode,
-            'price' => $price,
+            'variantId'          => $variantId,
+            'articleID'          => $articleId,
+            'modus'              => $mode,
+            'price'              => $price,
             'articleordernumber' => $articleNumber,
-            'name' => $articleDetail->getArticle()->getName(),
-            'quantity' => $quantity,
-            'unit' => $unit,
-            'tax_rate' => $tax->getTax()
+            'name'               => $articleName,
+            'quantity'           => $quantity,
+            'unit'               => $unit,
+            'tax_rate'           => $tax->getTax(),
         ];
 
         $orderDetails[] = $newDetail;
