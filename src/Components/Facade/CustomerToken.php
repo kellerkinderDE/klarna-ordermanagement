@@ -59,6 +59,7 @@ class CustomerToken
         $request                 = Request::createFromPayload($normalizedCustomerToken);
 
         $request->addQueryParameter('authorizationToken', $klarnaAuthToken);
+        $this->authorizationHelper->setAuthHeader($request);
 
         return $this->customerTokenResource->create($request);
     }

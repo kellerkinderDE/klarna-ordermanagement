@@ -79,6 +79,6 @@ class ConfigReader
             return $defaultReturn;
         }
 
-        return $this->data[$key][$name] ?: null;
+        return $this->data[$key][$name];
     }
 }
