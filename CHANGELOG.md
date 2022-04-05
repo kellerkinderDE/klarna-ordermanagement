@@ -8,6 +8,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Fixed
 - Fixed a missing auth header during customer token generation
 - Fixed the config reader to return the correct value when falsy values are configured (e.g. 0, 'false')
+- Fixed compatibility to PHP 8.0
 ### Added
 - Allowed manual and individual adding of positions which are not related to an article
 

@@ -292,10 +292,14 @@ class LineItemTransformer implements LineItemTransformerInterface
      */
     public function getUnitPriceWithTax(array $lineItem): float
     {
-        $netPriceIsShown = isset($lineItem['amountWithTax']) ? true : false;
+        $netPrice = $lineItem['amountWithTax'] ?? null;
 
-        if ($netPriceIsShown) {
-            return round(str_replace(',', '.', $lineItem['amountWithTax']) / $lineItem['quantity'], 2);
+        if ($netPrice !== null) {
+            if (is_string($netPrice)) {
+                $netPrice = (float) str_replace(',', '.', $lineItem['amountWithTax']);
+            }
+
+            return round($netPrice / $lineItem['quantity'], 2);
         }
 
         return (float) $lineItem['priceNumeric'];
