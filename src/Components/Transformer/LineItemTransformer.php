@@ -294,7 +294,7 @@ class LineItemTransformer implements LineItemTransformerInterface
     {
         $netPrice = $lineItem['amountWithTax'] ?? null;
 
-        if ($netPrice) {
+        if ($netPrice !== null) {
             if (is_string($netPrice)) {
                 $netPrice = (float) str_replace(',', '.', $lineItem['amountWithTax']);
             }
