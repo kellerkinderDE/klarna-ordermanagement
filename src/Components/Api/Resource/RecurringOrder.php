@@ -8,6 +8,7 @@ use BestitKlarnaOrderManagement\Components\Api\Model\RecurringOrderResponse;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
+use BestitKlarnaOrderManagement\Components\Curl\Client;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -16,10 +17,10 @@ class RecurringOrder
 {
     use ResponseWrapperTrait;
 
-    /** @var HttpClient */
+    /** @var Client */
     protected $httpClient;
 
-    public function __construct(HttpClient $client, SerializerInterface $serializer)
+    public function __construct(Client $client, SerializerInterface $serializer)
     {
         $this->httpClient = $client;
         $this->serializer = $serializer;

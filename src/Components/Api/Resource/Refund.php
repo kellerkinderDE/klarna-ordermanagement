@@ -5,6 +5,7 @@ namespace BestitKlarnaOrderManagement\Components\Api\Resource;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
+use BestitKlarnaOrderManagement\Components\Curl\Client;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -20,14 +21,14 @@ class Refund
 {
     use ResponseWrapperTrait;
 
-    /** @var HttpClient */
+    /** @var Client */
     protected $httpClient;
 
     /**
-     * @param HttpClient          $client
+     * @param Client          $client
      * @param SerializerInterface $serializer
      */
-    public function __construct(HttpClient $client, SerializerInterface $serializer)
+    public function __construct(Client $client, SerializerInterface $serializer)
     {
         $this->httpClient = $client;
         $this->serializer = $serializer;
