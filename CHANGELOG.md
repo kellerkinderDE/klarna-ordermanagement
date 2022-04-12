@@ -5,6 +5,8 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+
+## [0.5.1] - 2022-04-12
 ### Fixed
 - Fixed a missing auth header during customer token generation
 - Fixed the config reader to return the correct value when falsy values are configured (e.g. 0, 'false')
