@@ -3,10 +3,11 @@
 namespace BestitKlarnaOrderManagement\Components\Api;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Message\ResponseInterface;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
+use BestitKlarnaOrderManagement\Components\Curl\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use BestitKlarnaOrderManagement\Components\Api\Response as ApiResponse;
 
 /**
  * Creates a {@link Response} object from the given input.
@@ -23,24 +24,24 @@ trait ResponseWrapperTrait
     /**
      * Since we can have 2 types of $guzzleResponse depending on the guzzle client version
      * we change the parameter typehint to mixed.
-     * 
-     * @param mixed|null  $guzzleResponse
+     *
+     * @param Response|null  $guzzleResponse
      * @param string|null $modelClass
      *
-     * @return Response
+     * @return ApiResponse
      */
     protected function wrapGuzzleResponse($guzzleResponse = null, $modelClass = null)
     {
         if ($guzzleResponse === null) {
-            return Response::wrapEmptySuccessResponse();
+            return ApiResponse::wrapEmptySuccessResponse();
         }
 
         $rawResponse = (string) $guzzleResponse->getBody();
 
         if ($modelClass !== null && !empty($rawResponse)) {
-            $response = Response::wrapObject($this->serializer->deserialize($rawResponse, $modelClass, 'json'));
+            $response = ApiResponse::wrapObject($this->serializer->deserialize($rawResponse, $modelClass, 'json'));
         } else {
-            $response = Response::wrapEmptySuccessResponse();
+            $response = ApiResponse::wrapEmptySuccessResponse();
         }
 
         $response->setRawResponse($rawResponse);
@@ -53,7 +54,7 @@ trait ResponseWrapperTrait
     /**
      * @param RequestException $e
      *
-     * @return Response
+     * @return ApiResponse
      */
     protected function wrapGuzzleException(RequestException $e)
     {
@@ -64,7 +65,7 @@ trait ResponseWrapperTrait
             $error->errorCode = $e->getCode();
             $error->errorMessages[] = $e->getMessage();
 
-            return Response::wrapError($error);
+            return ApiResponse::wrapError($error);
         }
 
         $rawResponse = (string) $guzzleResponse->getBody();
@@ -79,10 +80,10 @@ trait ResponseWrapperTrait
             $error->errorMessages[] = $guzzleResponse->getReasonPhrase();
             $error->errorMessages[] = $e->getMessage();
 
-            return Response::wrapError($error);
+            return ApiResponse::wrapError($error);
         }
 
-        $response = Response::wrapError($this->serializer->deserialize($rawResponse, Error::class, 'json'));
+        $response = ApiResponse::wrapError($this->serializer->deserialize($rawResponse, Error::class, 'json'));
         $response->setRawResponse($rawResponse);
 
         $response->setStatusCode($guzzleResponse->getStatusCode());

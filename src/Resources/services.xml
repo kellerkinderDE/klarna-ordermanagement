@@ -37,17 +37,7 @@
             <argument type="service" id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.plugin_helper" />
-        </service>
-
-        <service
-                class="BestitKlarnaOrderManagement\Components\Curl\Client"
-                id="bestit_klarna_order_management.guzzle_shop_aware.http.client">
-            <factory class="BestitKlarnaOrderManagement\Components\Factory\CurlClient" method="create"/>
-            <argument type="service" id="bestit_klarna_order_management.components.shop_aware.config_reader"/>
-            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
-            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging"/>
-            <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
-            <argument type="service" id="bestit_klarna_order_management.components.shared.plugin_helper" />
+            <argument type="service" id="bestit_klarna_order_management.logger" />
         </service>
 
         <!--

@@ -2,18 +2,31 @@
 
 namespace BestitKlarnaOrderManagement\Components\Curl;
 
+use BestitKlarnaOrderManagement\Components\Api\Model\Error;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
+use Psr\Log\LoggerInterface;
+use BestitKlarnaOrderManagement\Components\Api\Response as ApiResponse;
+
 class Client
 {
+    public const UNALLOWED_STATUS_CODES = [400, 401, 403, 404, 405];
+
     public const METHOD_GET = 'GET';
     public const METHOD_POST = 'POST';
     public const METHOD_PATCH = 'PATCH';
+
+    /** @var LoggerInterface */
+    private $logger;
+    /** @var string */
     private $baseUri;
+    /** @var array */
     private $options;
 
-    public function __construct(string $baseUri, array $options)
+    public function __construct(string $baseUri, array $options, LoggerInterface $logger)
     {
         $this->baseUri = $baseUri;
         $this->options = $options;
+        $this->logger = $logger;
     }
 
     public function get(string $uri, ?array $options = []): Response
@@ -31,11 +44,16 @@ class Client
         return $this->request($uri, self::METHOD_POST, $options);
     }
 
+    /**
+     * @throws RequestException
+     */
     private function request(string $uri, string $method, ?array $options = []): Response
     {
         $body        = $this->getBody($options);
         $headers     = $this->getHeaders($options['headers'] ?? []);
         $handle      = $this->getCurlHandle($uri, $headers, $method, $body);
+        $this->logger->debug(sprintf('ClientRequest request[body]: %s \n [headers]: %s', $body, json_encode($headers)));
+
         $response    = curl_exec($handle);
         $errorNumber = curl_errno($handle);
         $error       = curl_error($handle);
@@ -43,9 +61,12 @@ class Client
 
         curl_close($handle);
 
-        if ($errorNumber !== 0 || $response === false) {
-            // TODO: Introduce exceptions
-            throw new \Exception(sprintf('Request error "%s" (%s)', $error, $errorNumber));
+        $this->logger->debug(sprintf('ClientRequest response: %s', $response));
+
+        if ($errorNumber !== 0 || $response === false || (in_array($statusCode, self::UNALLOWED_STATUS_CODES) && empty($response))) {
+            $this->logger->error(sprintf('ClientRequest error %s (%s)', $error, $errorNumber), ['trace' => (new \RuntimeException())->getTraceAsString()]);
+
+            throw new RequestException(null, sprintf('Request error "%s" (%s)', $error, $errorNumber));
         };
 
         return new Response($statusCode, $response);
@@ -66,7 +87,6 @@ class Client
 
         return $options['body'] ?? null;
     }
-
 
     /**
      * @param array|string[] $headerData

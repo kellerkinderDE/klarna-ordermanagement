@@ -12,6 +12,7 @@ use BestitKlarnaOrderManagement\Components\Shared\ShopwareVersionHelper;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use Psr\Log\LoggerInterface;
 
 /**
  * Factory responsible for creating a HttpClient.
@@ -36,7 +37,8 @@ class CurlClient
         LoggingMiddleware $loggingMiddleware,
         LoggingGuzzle7Middleware $loggingGuzzle7Middleware,
         ShopwareVersionHelper $swVersionHelper,
-        PluginHelper $pluginHelper
+        PluginHelper $pluginHelper,
+        LoggerInterface $logger
     ) {
         $liveMode = (bool) $configReader->get('live_mode');
         $shopVersion = $swVersionHelper->getVersion();
@@ -53,7 +55,8 @@ class CurlClient
 
         $client = new Client(
             $liveMode ? Constants::LIVE_API : Constants::TEST_API,
-            $config
+            $config,
+            $logger
         );
 
         return $client;
