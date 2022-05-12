@@ -32,8 +32,8 @@ class Response
     public static function wrapObject($object)
     {
         $responseWrapper = new static();
-
-        $responseWrapper->setResponseObject($object);
+        $responseWrapper
+            ->setResponseObject($object);
 
         return $responseWrapper;
     }
@@ -56,8 +56,7 @@ class Response
         $responseWrapper = new static();
         $responseWrapper
             ->setIsError(true)
-            ->setError($error)
-        ;
+            ->setError($error);
 
         return $responseWrapper;
     }

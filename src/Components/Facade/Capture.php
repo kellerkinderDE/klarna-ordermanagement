@@ -139,7 +139,7 @@ class Capture
         /** @var KlarnaOrder $order */
         $order = $orderResponse->getResponseObject();
 
-        $paymentStatus = $order->remainingAuthorizedAmount == 0 ?
+        $paymentStatus = $order->remainingAuthorizedAmount === 0 ?
             Status::PAYMENT_STATE_COMPLETELY_PAID :
             Status::PAYMENT_STATE_PARTIALLY_PAID;
 

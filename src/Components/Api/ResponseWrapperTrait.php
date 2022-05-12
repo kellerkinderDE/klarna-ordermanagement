@@ -9,13 +9,6 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use BestitKlarnaOrderManagement\Components\Api\Response as ApiResponse;
 
-/**
- * Creates a {@link Response} object from the given input.
- *
- * @package BestitKlarnaOrderManagement\Components\Api
- *
- * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
- */
 trait ResponseWrapperTrait
 {
     /** @var SerializerInterface */
@@ -30,7 +23,7 @@ trait ResponseWrapperTrait
      *
      * @return ApiResponse
      */
-    protected function wrapGuzzleResponse($guzzleResponse = null, $modelClass = null)
+    protected function wrapResponse($guzzleResponse = null, $modelClass = null)
     {
         if ($guzzleResponse === null) {
             return ApiResponse::wrapEmptySuccessResponse();
@@ -56,38 +49,31 @@ trait ResponseWrapperTrait
      *
      * @return ApiResponse
      */
-    protected function wrapGuzzleException(RequestException $e)
+    protected function wrapException(RequestException $e)
     {
-        $guzzleResponse = $e->getResponse();
+        $response = $e->getResponse();
+        $error = $response->getError();
 
-        if ($guzzleResponse === null) {
-            $error = new Error();
-            $error->errorCode = $e->getCode();
-            $error->errorMessages[] = $e->getMessage();
+        if($error !== null) {
+            $response = ApiResponse::wrapError($error);
+            $response->setRawResponse($response->getRawResponse());
+            $response->setStatusCode($response->getStatusCode());
 
-            return ApiResponse::wrapError($error);
+            return $response;
         }
 
-        $rawResponse = (string) $guzzleResponse->getBody();
+        $error = new Error();
+        $rawResponse = (string) $response->getBody();
 
         /*
          * The 401 check is needed because in that case the body contains raw HTML.
          * So we cannot parse that response.
          */
-        if (empty($rawResponse) || $guzzleResponse->getStatusCode() === SymfonyResponse::HTTP_UNAUTHORIZED) {
-            $error = new Error();
-            $error->errorCode = $guzzleResponse->getStatusCode();
-            $error->errorMessages[] = $guzzleResponse->getReasonPhrase();
+        if (empty($rawResponse) || $e->getCode() === SymfonyResponse::HTTP_UNAUTHORIZED) {
+            $error->errorCode = $e->getCode();
             $error->errorMessages[] = $e->getMessage();
-
-            return ApiResponse::wrapError($error);
         }
 
-        $response = ApiResponse::wrapError($this->serializer->deserialize($rawResponse, Error::class, 'json'));
-        $response->setRawResponse($rawResponse);
-
-        $response->setStatusCode($guzzleResponse->getStatusCode());
-
-        return $response;
+        return ApiResponse::wrapError($error);
     }
 }

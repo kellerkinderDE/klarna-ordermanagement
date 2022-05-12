@@ -496,22 +496,6 @@
                 class="BestitKlarnaOrderManagement\Components\Converter\DefaultMode"
                 id="bestit_klarna_order_management.components.converter.default_mode"/>
 
-        <!--
-        /////////////////
-        /   Api Middleware
-        /////////////////
-        -->
-        <service class="BestitKlarnaOrderManagement\Components\Api\Middleware\Logging"
-                 id="bestit_klarna_order_management.components.api.middleware.logging">
-            <argument type="service" id="bestit_klarna_order_management.logger"/>
-            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
-        </service>
-        <service class="BestitKlarnaOrderManagement\Components\Api\Middleware\LoggingGuzzle7"
-                 id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging">
-            <argument type="service" id="bestit_klarna_order_management.logger"/>
-            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
-        </service>
-
         <service
                 class="BestitKlarnaOrderManagement\Components\Logging\TransactionLogger"
                 id="bestit_klarna_order_management.components.logging.transaction_logger">

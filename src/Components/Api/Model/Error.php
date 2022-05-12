@@ -12,10 +12,10 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
 class Error
 {
     /** @var string|int */
-    public $errorCode;
+    public $errorCode = 0;
 
     /** @var string[] */
-    public $errorMessages;
+    public $errorMessages = ['Could not parse error'];
 
     /** @var string|null */
     public $correlationId;

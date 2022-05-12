@@ -45,7 +45,7 @@ class Client
     }
 
     /**
-     * @throws RequestException
+     * @throws \BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException
      */
     private function request(string $uri, string $method, ?array $options = []): Response
     {
@@ -63,11 +63,46 @@ class Client
 
         $this->logger->debug(sprintf('ClientRequest response: %s', $response));
 
-        if ($errorNumber !== 0 || $response === false || (in_array($statusCode, self::UNALLOWED_STATUS_CODES) && empty($response))) {
-            $this->logger->error(sprintf('ClientRequest error %s (%s)', $error, $errorNumber), ['trace' => (new \RuntimeException())->getTraceAsString()]);
+        if ($errorNumber !== 0 || $response === false) {
+            throw new RequestException(new Response($statusCode, $body));
+        }
 
-            throw new RequestException(null, sprintf('Request error "%s" (%s)', $error, $errorNumber));
-        };
+        if(!empty($response)) {
+            $decodedJsonResponse = null;
+
+            try {
+                $decodedJsonResponse = json_decode($response, true);
+            }catch(\Throwable $t) {
+//                silent fail -> could be no json
+            }
+
+            if($decodedJsonResponse !== null) {
+                if(!array_key_exists('error_code', $decodedJsonResponse)
+                && !array_key_exists('error_messages', $decodedJsonResponse)) {
+                    return new Response($statusCode, $response);
+                }
+
+                $error = new Error();
+
+                if(array_key_exists('error_code', $decodedJsonResponse)) {
+                    $error->errorCode = $decodedJsonResponse['error_code'];
+                }
+
+                if(array_key_exists('error_messages', $decodedJsonResponse)) {
+                    $error->errorMessages = $decodedJsonResponse['error_messages'];
+                }
+
+                if(array_key_exists('correlation_id', $decodedJsonResponse)) {
+                    $error->correlationId = $decodedJsonResponse['correlation_id'];
+                }
+
+                if($error->errorCode !== null || $error->errorMessages !== null) {
+                    $this->logger->error(sprintf('ClientRequest error %s (%s)', $error->errorCode, json_encode($error->errorMessages)), ['trace' => (new \RuntimeException())->getTraceAsString()]);
+
+                    throw new RequestException(new Response($statusCode, $body, $error));
+                }
+            }
+        }
 
         return new Response($statusCode, $response);
     }

@@ -9,8 +9,7 @@ use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
 use BestitKlarnaOrderManagement\Components\Curl\Client;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\RequestException;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class RecurringOrder
@@ -40,9 +39,9 @@ class RecurringOrder
                 ]
             );
         } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response, RecurringOrderResponse::class);
+        return $this->wrapResponse($response, RecurringOrderResponse::class);
     }
 }

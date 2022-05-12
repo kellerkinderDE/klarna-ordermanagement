@@ -81,15 +81,13 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
         $lineItemsAsJson = $this->Request()->getParam('selectedLines');
         $description = $this->Request()->getParam('description', '');
 
-        $errorMessage = $this->nameSpace->get(
-            'CaptureFailed',
-            'Capture was not successful'
-        );
-
         if (empty($klarnaOrderId)) {
             return [
                 'success' => false,
-                'errorMessage' => $errorMessage
+                'errorMessage' => $this->nameSpace->get(
+                    'CaptureFailed',
+                    'Capture was not successful'
+                )
             ];
         }
 
