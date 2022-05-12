@@ -34,8 +34,6 @@ class CurlClient
      */
     public static function create(
         ConfigReader $configReader,
-        LoggingMiddleware $loggingMiddleware,
-        LoggingGuzzle7Middleware $loggingGuzzle7Middleware,
         ShopwareVersionHelper $swVersionHelper,
         PluginHelper $pluginHelper,
         LoggerInterface $logger
