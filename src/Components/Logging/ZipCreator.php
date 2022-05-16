@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Logging;
 
 use Symfony\Component\Finder\Finder;

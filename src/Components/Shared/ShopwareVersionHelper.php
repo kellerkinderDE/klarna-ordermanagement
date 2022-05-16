@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Shared;
 
 use Shopware;
@@ -23,10 +21,12 @@ class ShopwareVersionHelper
      */
     public function getVersion(): string
     {
+        $version = 'UNKNOWN';
+
         if ($this->container->hasParameter('shopware.release.version')) {
             // Get version from the shopware dic
             $version = $this->container->getParameter('shopware.release.version');
-        } else {
+        } elseif (defined('Shopware::VERSION')) {
             // Get the version by the old const
             $version = Shopware::VERSION;
         }

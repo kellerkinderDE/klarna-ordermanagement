@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Factory;
 
+use sAdmin;
 use sArticles;
 use sBasket;
 use Shopware\Models\Shop\DetachedShop;
@@ -20,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ShopwareModules
 {
-    public static function createAdminModule(ContainerInterface $container): sBasket
+    public static function createAdminModule(ContainerInterface $container): sAdmin
     {
         /** @var Shopware_Components_Modules $swModules */
         $swModules = $container->get('modules');

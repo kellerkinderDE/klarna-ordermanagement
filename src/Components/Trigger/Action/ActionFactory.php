@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Trigger\Action;
 
 use BestitKlarnaOrderManagement\Components\ConfigReader;
@@ -45,7 +43,7 @@ class ActionFactory implements ActionFactoryInterface
     {
         /*
          * Since int casting of null,  " " or "" is 0 and the id 0 is the order status open we do a trim before
-         * and check it. Otherwise we might end up with captures/refunds when the order status open is set
+         * and check it. Otherwise, we might end up with captures/refunds when the order status open is set
          */
         $captureOn = trim($this->configReader->get('capture_on')) === '' ? '' : (int) $this->configReader->get('capture_on');
         $refundOn  = trim($this->configReader->get('refund_on')) === '' ? '' : (int) $this->configReader->get('refund_on');
@@ -68,7 +66,7 @@ class ActionFactory implements ActionFactoryInterface
     {
         /*
          * Since int casting of null,  " " or "" is 0 and the id 0 is the order status open we do a trim before
-         * and check it. Otherwise we might end up with captures/refunds when the order status open is set
+         * and check it. Otherwise, we might end up with captures/refunds when the order status open is set
          */
         $partialCaptureOn = trim($this->configReader->get('partial_capture_on_position_status')) === '' ? '' : (int) $this->configReader->get('partial_capture_on_position_status');
         $partialRefundOn  = trim($this->configReader->get('partial_refund_on_position_status')) === '' ? '' : (int) $this->configReader->get('partial_refund_on_position_status');

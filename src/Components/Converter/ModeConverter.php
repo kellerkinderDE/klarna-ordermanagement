@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Converter;
 
 /**
@@ -22,7 +20,7 @@ class ModeConverter
         $this->modeConverters = $modeConverters;
     }
 
-    public function convert($mode, $price = null)
+    public function convert($mode, $price = null): string
     {
         return $this->getConverter($mode)->convert($mode, $price);
     }

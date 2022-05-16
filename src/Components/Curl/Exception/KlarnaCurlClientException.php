@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Curl\Exception;
 
 use BestitKlarnaOrderManagement\Components\Curl\Response;
+use Exception;
 use Throwable;
 
-class KlarnaCurlClientException extends \Exception
+class KlarnaCurlClientException extends Exception
 {
     /** @var Response */
     private $response;
@@ -19,7 +18,7 @@ class KlarnaCurlClientException extends \Exception
         parent::__construct($message, $code, $previous);
     }
 
-    public function getResponse()
+    public function getResponse(): Response
     {
         return $this->response;
     }

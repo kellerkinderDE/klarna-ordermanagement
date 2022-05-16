@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Logging\Handler;
 
 use BestitKlarnaOrderManagement\Components\ConfigReader;

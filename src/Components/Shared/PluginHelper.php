@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Shared;
 
+use Exception;
 use Shopware\Bundle\PluginInstallerBundle\Service\InstallerService;
 
 class PluginHelper
@@ -27,14 +26,16 @@ class PluginHelper
 
     public function getPluginVersion(): string
     {
+        $pluginVersion = 'UNKNOWN';
+
         try {
             $plugin = $this->swInstallerService->getPluginByName($this->pluginName);
 
             if ($plugin !== null) {
                 $pluginVersion = $plugin->getVersion();
             }
-        } catch (\Exception $exception) {
-            $pluginVersion = 'UNKNOWN';
+        } catch (Exception $exception) {
+            // silentfail
         }
 
         return $pluginVersion;

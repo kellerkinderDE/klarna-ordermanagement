@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Facade;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Capture as CaptureModel;
@@ -45,9 +43,6 @@ class Capture
     /** @var configReader */
     protected $configReader;
 
-    /**
-     * @param Order $orderFacade
-     */
     public function __construct(
         OrderFacade $orderFacade,
         CaptureResource $captureResource,

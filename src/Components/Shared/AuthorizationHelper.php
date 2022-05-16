@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Shared;
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
@@ -37,9 +35,9 @@ class AuthorizationHelper implements ContainerAwareInterface
     }
 
     /**
-     * Needed for setting the right authorization and using sub shop credetials where necessary
+     * Needed for setting the right authorization and using sub shop credentials where necessary
      */
-    public function setAuthHeader(Request $request): string
+    public function setAuthHeader(Request $request): void
     {
         $orderId = $request->getQueryParameter('order_id');
 
@@ -67,8 +65,6 @@ class AuthorizationHelper implements ContainerAwareInterface
             'Authorization',
             'Basic ' . base64_encode("{$merchantId}:{$merchantPassword}")
         );
-
-        return $request;
     }
 
     /**

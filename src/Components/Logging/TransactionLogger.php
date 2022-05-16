@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Logging;
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
@@ -97,6 +95,9 @@ class TransactionLogger implements TransactionLoggerInterface
      * @param string   $klarnaOrderId
      * @param string   $action
      * @param null|int $cents
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\DBALException
      */
     protected function log(Response $response, $klarnaOrderId, $action, $cents = null): int
     {

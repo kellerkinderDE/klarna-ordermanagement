@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Subscriber\Controller\Backend;
 
 use BestitKlarnaOrderManagement\Components\ConfigReader;
@@ -20,7 +18,6 @@ use Enlight\Event\SubscriberInterface;
 use Enlight_Controller_Action;
 use Enlight_Controller_ActionEventArgs;
 use Enlight_Hook_HookArgs;
-use Shopware;
 
 /**
  * Subscribers for the backend order page(s).

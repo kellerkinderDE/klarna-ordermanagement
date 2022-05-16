@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Factory;
 
 use Symfony\Component\Finder\Finder as SymfonyFinder;

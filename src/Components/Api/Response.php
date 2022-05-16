@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Api;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
@@ -20,9 +18,9 @@ class Response
     /** @var null|object */
     protected $responseObject;
     /** @var string */
-    protected $rawResponse;
+    protected $rawResponse = '';
     /** @var int */
-    protected $statusCode;
+    protected $statusCode = 0;
 
     /**
      * @param object $object

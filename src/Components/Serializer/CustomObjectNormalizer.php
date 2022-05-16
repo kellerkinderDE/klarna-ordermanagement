@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -30,19 +28,19 @@ class CustomObjectNormalizer extends AbstractNormalizer
      * Denormalizes data back into an object of the given class.
      *
      * @param mixed  $data    data to restore
-     * @param string $class   the expected class to instantiate
+     * @param string $type    the expected class to instantiate
      * @param string $format  format the given data was extracted from
      * @param array  $context options available to the denormalizer
      */
-    public function denormalize($data, $class, $format = null, array $context = []): object
+    public function denormalize($data, $type, $format = null, array $context = []): object
     {
         if (!is_array($data)) {
-            return $this->objectNormalizer->denormalize($data, $class, $format, $context);
+            return $this->objectNormalizer->denormalize($data, $type, $format, $context);
         }
 
         return $this->objectNormalizer->denormalize(
             $this->transformEmptyStringsToNull($data),
-            $class,
+            $type,
             $format,
             $context
         );

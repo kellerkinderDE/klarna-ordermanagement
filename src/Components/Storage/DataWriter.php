@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Storage;
 
+use function array_key_exists;
 use DateTime;
 use Doctrine\DBAL\Connection;
+use function is_array;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -48,10 +48,10 @@ class DataWriter
             ->fetch();
 
         if (
-            !\is_array($order) ||
-            !\array_key_exists('status', $order) ||
-            !\array_key_exists('id', $order) ||
-            !\array_key_exists('cleared', $order)
+            !is_array($order) ||
+            !array_key_exists('status', $order) ||
+            !array_key_exists('id', $order) ||
+            !array_key_exists('cleared', $order)
         ) {
             throw new RuntimeException(sprintf('No order with the transactionId %s could be found.', $transactionId));
         }

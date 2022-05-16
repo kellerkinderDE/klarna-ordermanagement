@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Calculator;
 
 /**
@@ -33,7 +31,7 @@ class BcMathCalculator implements CalculatorInterface
          */
         $amount = round($amount, 2);
 
-        return (int) bcmul($amount, 100);
+        return (int) bcmul((string) $amount, '100');
     }
 
     /**
@@ -43,6 +41,6 @@ class BcMathCalculator implements CalculatorInterface
      */
     public function toMajorUnit($amount): float
     {
-        return (float) bcdiv($amount, 100, 2);
+        return (float) bcdiv((string) $amount, '100', 2);
     }
 }

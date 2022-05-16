@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Storage;
 
 use BestitKlarnaOrderManagement\Components\Model\TransactionLog;
@@ -109,7 +107,7 @@ class DataProvider
      */
     public function getTrackingInfo($klarnaOrderId): array
     {
-        return $this->connection->createQueryBuilder()
+        $trackingInfo = $this->connection->createQueryBuilder()
             ->select('so.trackingcode as trackingCode, spd.name as dispatchName')
             ->from('s_order', 'so')
             ->join('so', 's_premium_dispatch', 'spd', 'so.dispatchID = spd.id')
@@ -117,12 +115,18 @@ class DataProvider
             ->setParameter('transactionId', $klarnaOrderId)
             ->execute()
             ->fetch();
+
+        if ($trackingInfo === false) {
+            return [];
+        }
+
+        return $trackingInfo;
     }
 
     /**
      * @param string $articleNumber
      */
-    public function getArticleDetail($articleNumber): ArticleDetail
+    public function getArticleDetail($articleNumber): ?ArticleDetail
     {
         return $this->em->getRepository(ArticleDetail::class)->findOneBy([
             'number' => $articleNumber,
@@ -140,7 +144,10 @@ class DataProvider
     /**
      * @param int $statusId
      *
-     * @return object|Status
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMException
+     *
+     * @return null|object|Status
      */
     public function getStatusReference($statusId)
     {

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Curl;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;

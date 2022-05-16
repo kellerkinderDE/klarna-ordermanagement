@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Order as OrderResource;
 use BestitKlarnaOrderManagement\Components\Constants;

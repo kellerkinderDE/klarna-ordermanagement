@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use BestitKlarnaOrderManagement\Components\Facade\OrderManagement as OrderManagementFacade;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
 use BestitKlarnaOrderManagement\Controllers\JsonableResponseTrait;

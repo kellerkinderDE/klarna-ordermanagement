@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components;
 
 use Doctrine\DBAL\Connection;
-use Shopware\Models\Order\Order;
 
 /**
  *  Changes several data that is related to an order.

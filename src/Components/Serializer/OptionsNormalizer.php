@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Serializer;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Options;
@@ -17,25 +15,25 @@ class OptionsNormalizer implements NormalizerInterface
     /**
      * Normalizes an object into a set of arrays/scalars.
      *
-     * @param Options $options object to normalize
+     * @param Options $object  object to normalize
      * @param string  $format  format the normalization result will be encoded as
      * @param array   $context Context options for the normalizer
      */
-    public function normalize($options, $format = null, array $context = []): array
+    public function normalize($object, $format = null, array $context = []): array
     {
         return [
-            'color_button'             => $this->normalizeValue($options->colorButton),
-            'color_button_text'        => $this->normalizeValue($options->colorButtonText),
-            'color_checkbox'           => $this->normalizeValue($options->colorCheckbox),
-            'color_checkbox_checkmark' => $this->normalizeValue($options->colorCheckboxCheckmark),
-            'color_header'             => $this->normalizeValue($options->colorHeader),
-            'color_link'               => $this->normalizeValue($options->colorLink),
-            'color_border'             => $this->normalizeValue($options->colorBorder),
-            'color_border_selected'    => $this->normalizeValue($options->colorBorderSelected),
-            'color_text'               => $this->normalizeValue($options->colorText),
-            'color_details'            => $this->normalizeValue($options->colorDetails),
-            'color_text_secondary'     => $this->normalizeValue($options->colorTextSecondary),
-            'radius_border'            => $this->normalizeValue($options->radiusBorder),
+            'color_button'             => $this->normalizeValue($object->colorButton),
+            'color_button_text'        => $this->normalizeValue($object->colorButtonText),
+            'color_checkbox'           => $this->normalizeValue($object->colorCheckbox),
+            'color_checkbox_checkmark' => $this->normalizeValue($object->colorCheckboxCheckmark),
+            'color_header'             => $this->normalizeValue($object->colorHeader),
+            'color_link'               => $this->normalizeValue($object->colorLink),
+            'color_border'             => $this->normalizeValue($object->colorBorder),
+            'color_border_selected'    => $this->normalizeValue($object->colorBorderSelected),
+            'color_text'               => $this->normalizeValue($object->colorText),
+            'color_details'            => $this->normalizeValue($object->colorDetails),
+            'color_text_secondary'     => $this->normalizeValue($object->colorTextSecondary),
+            'radius_border'            => $this->normalizeValue($object->radiusBorder),
         ];
     }
 

@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Logging;
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
-use BestitKlarnaOrderManagement\Components\Model\TransactionLog;
 
 /**
  * Logger for various Klarna transactions.
@@ -15,15 +12,15 @@ use BestitKlarnaOrderManagement\Components\Model\TransactionLog;
  */
 interface TransactionLoggerInterface
 {
-    public function updateOrder(Request $request, Response $response): TransactionLog;
+    public function updateOrder(Request $request, Response $response): int;
 
-    public function cancelOrder(Request $request, Response $response): TransactionLog;
+    public function cancelOrder(Request $request, Response $response): int;
 
-    public function extendAuthTime(Request $request, Response $response): TransactionLog;
+    public function extendAuthTime(Request $request, Response $response): int;
 
-    public function releaseRemainingAmount(Request $request, Response $response): TransactionLog;
+    public function releaseRemainingAmount(Request $request, Response $response): int;
 
-    public function createCapture(Request $request, Response $response): TransactionLog;
+    public function createCapture(Request $request, Response $response): int;
 
-    public function createRefund(Request $request, Response $response): TransactionLog;
+    public function createRefund(Request $request, Response $response): int;
 }

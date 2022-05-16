@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Curl;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
@@ -10,6 +8,8 @@ use BestitKlarnaOrderManagement\Components\Curl\Exception\JsonException;
 use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
+use Throwable;
 
 class Client
 {
@@ -90,7 +90,7 @@ class Client
 
             try {
                 $decodedJsonResponse = json_decode($response, true);
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
                 // silent fail -> could be no json
             }
 
@@ -115,7 +115,7 @@ class Client
                 }
 
                 if ($error->errorCode !== null || $error->errorMessages !== null) {
-                    $this->logger->error(sprintf('ClientRequest error %s (%s)', $error->errorCode, json_encode($error->errorMessages)), ['trace' => (new \RuntimeException())->getTraceAsString()]);
+                    $this->logger->error(sprintf('ClientRequest error %s (%s)', $error->errorCode, json_encode($error->errorMessages)), ['trace' => (new RuntimeException())->getTraceAsString()]);
 
                     throw new RequestException(new Response($statusCode, $body, $error));
                 }
@@ -154,7 +154,7 @@ class Client
     {
         $filterVarOptions = [];
 
-        if (defined(FILTER_FLAG_SCHEME_REQUIRED)) {
+        if (defined('FILTER_FLAG_SCHEME_REQUIRED')) {
             $filterVarOptions = FILTER_FLAG_SCHEME_REQUIRED;
         }
 

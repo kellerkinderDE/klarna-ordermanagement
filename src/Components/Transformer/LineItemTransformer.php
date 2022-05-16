@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Transformer;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\LineItem;
@@ -292,7 +290,7 @@ class LineItemTransformer implements LineItemTransformerInterface
      */
     public function getUnitPriceWithTax(array $lineItem): float
     {
-        $netPriceIsShown = isset($lineItem['amountWithTax']) ? true : false;
+        $netPriceIsShown = isset($lineItem['amountWithTax']);
 
         if ($netPriceIsShown) {
             return round(str_replace(',', '.', $lineItem['amountWithTax']) / $lineItem['quantity'], 2);

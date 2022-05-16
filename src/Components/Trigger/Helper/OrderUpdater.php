@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Trigger\Helper;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\LineItem;
@@ -96,9 +94,11 @@ class OrderUpdater
     }
 
     /**
+     * @param KlarnaOrder|object $klarnaOrder
+     *
      * @return null|LineItem[]
      */
-    protected function getShippingCostLineItems(KlarnaOrder $klarnaOrder): ?array
+    protected function getShippingCostLineItems($klarnaOrder): ?array
     {
         $shippingLines = null;
 
