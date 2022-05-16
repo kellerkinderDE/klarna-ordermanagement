@@ -69,6 +69,8 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
         $shopwareOrderId = (int) $this->Request()->getParam('orderId');
 
         $this->orderManagementFacade->showKlarnaOrder($this->View(), $shopwareOrderId);
+
+        $this->container->set('currency', new Zend_Currency($this->View()->getAssign('order')['purchase_currency']));
     }
 
     /**

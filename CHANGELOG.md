@@ -5,6 +5,8 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+### Fixed
+- The purchase currency of the order is now used for displaying the amounts
 
 ## [0.5.1] - 2022-04-12
 ### Fixed
