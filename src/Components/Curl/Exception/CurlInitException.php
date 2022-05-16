@@ -7,6 +7,6 @@ namespace BestitKlarnaOrderManagement\Components\Curl\Exception;
 use BestitKlarnaOrderManagement\Components\Curl\Response;
 use Throwable;
 
-class RequestException extends KlarnaCurlClientException
+class CurlInitException extends KlarnaCurlClientException
 {
 }

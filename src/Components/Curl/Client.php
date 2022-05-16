@@ -3,14 +3,14 @@
 namespace BestitKlarnaOrderManagement\Components\Curl;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\CurlInitException;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\JsonException;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
 use Psr\Log\LoggerInterface;
-use BestitKlarnaOrderManagement\Components\Api\Response as ApiResponse;
 
 class Client
 {
-    public const UNALLOWED_STATUS_CODES = [400, 401, 403, 404, 405];
-
     public const METHOD_GET = 'GET';
     public const METHOD_POST = 'POST';
     public const METHOD_PATCH = 'PATCH';
@@ -45,7 +45,10 @@ class Client
     }
 
     /**
-     * @throws \BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException
+     * @throws KlarnaCurlClientException
+     * @throws RequestException
+     * @throws JsonException
+     * @throws CurlInitException
      */
     private function request(string $uri, string $method, ?array $options = []): Response
     {
@@ -73,7 +76,7 @@ class Client
             try {
                 $decodedJsonResponse = json_decode($response, true);
             }catch(\Throwable $t) {
-//                silent fail -> could be no json
+                // silent fail -> could be no json
             }
 
             if($decodedJsonResponse !== null) {
@@ -107,14 +110,16 @@ class Client
         return new Response($statusCode, $response);
     }
 
+    /**
+     * @throws \BestitKlarnaOrderManagement\Components\Curl\Exception\JsonException
+     */
     private function getBody(?array $options): ?string
     {
         if (isset($options['json'])) {
             $encodedBody = json_encode($options['json']);
 
             if ($encodedBody === false) {
-                // TODO: Errorhandling, add custom exception
-                throw new \Exception('invalid json body');
+                throw new JsonException(null, 'could not encode json');
             }
 
             return $encodedBody;
@@ -127,6 +132,7 @@ class Client
      * @param array|string[] $headerData
      *
      * @return resource
+     * @throws \BestitKlarnaOrderManagement\Components\Curl\Exception\CurlInitException
      */
     private function getCurlHandle(string $uri, array $headerData, string $method, ?string $postData)
     {
@@ -141,8 +147,7 @@ class Client
         $curl = curl_init($uri);
 
         if (!$curl) {
-            // TODO: Errorhandling, add custom exception
-            throw new RuntimeException('curl init failed');
+            throw new CurlInitException(null, 'curl init failed');
         }
 
         curl_setopt($curl, CURLOPT_VERBOSE, false);

@@ -6,16 +6,9 @@ use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
 use BestitKlarnaOrderManagement\Components\Curl\Client;
-use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use Symfony\Component\Serializer\SerializerInterface;
 
-/**
- * Interface to interact with Klarna refund(s).
- *
- * @package BestitKlarnaOrderManagement\Components\Api\Resource
- *
- * @author Senan Sharhan <senan.sharhan@bestit-online.de>
- */
 class Refund
 {
     use ResponseWrapperTrait;
@@ -48,7 +41,7 @@ class Refund
                 'json' => $request->getPayload(),
                 'headers' => $request->getHeaders()
             ]);
-        } catch (RequestException $e) {
+        } catch (KlarnaCurlClientException $e) {
             return $this->wrapException($e);
         }
 

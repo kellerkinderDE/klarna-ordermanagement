@@ -6,16 +6,9 @@ use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
 use BestitKlarnaOrderManagement\Components\Curl\Client;
-use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use Symfony\Component\Serializer\SerializerInterface;
 
-/**
- * Interface to interact with Klarna capture(s).
- *
- * @package BestitKlarnaOrderManagement\Components\Api\Resource
- *
- * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
- */
 class Capture
 {
     use ResponseWrapperTrait;
@@ -51,7 +44,7 @@ class Capture
                     'headers' => $request->getHeaders()
                 ]
             );
-        } catch (RequestException $e) {
+        } catch (KlarnaCurlClientException $e) {
             return $this->wrapException($e);
         }
 
@@ -76,7 +69,7 @@ class Capture
                     'headers' => $request->getHeaders()
                 ]
             );
-        } catch (RequestException $e) {
+        } catch (KlarnaCurlClientException $e) {
             return $this->wrapException($e);
         }
 
@@ -102,7 +95,7 @@ class Capture
                     'headers' => $request->getHeaders()
                 ]
             );
-        } catch (RequestException $e) {
+        } catch (KlarnaCurlClientException $e) {
             return $this->wrapException($e);
         }
 

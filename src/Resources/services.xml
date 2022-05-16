@@ -30,7 +30,7 @@
         -->
         <service
                 class="BestitKlarnaOrderManagement\Components\Curl\Client"
-                id="bestit_klarna_order_management.guzzle_http.client">
+                id="bestit_klarna_order_management.curl.client">
             <factory class="BestitKlarnaOrderManagement\Components\Factory\CurlClient" method="create"/>
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
@@ -46,35 +46,35 @@
         <service
                 class="BestitKlarnaOrderManagement\Components\Api\Resource\Order"
                 id="bestit_klarna_order_management.components.api.resource.order">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
         <service
                 class="BestitKlarnaOrderManagement\Components\Api\Resource\Capture"
                 id="bestit_klarna_order_management.components.api.resource.capture">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
         <service
                 class="BestitKlarnaOrderManagement\Components\Api\Resource\Refund"
                 id="bestit_klarna_order_management.components.api.resource.refund">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
         <service
             class="BestitKlarnaOrderManagement\Components\Api\Resource\CustomerToken"
             id="bestit_klarna_order_management.components.api.resource.customer_token">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
         <service
             class="BestitKlarnaOrderManagement\Components\Api\Resource\RecurringOrder"
             id="bestit_klarna_order_management.components.api.resource.recurring_order">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 

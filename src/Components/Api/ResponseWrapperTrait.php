@@ -3,7 +3,7 @@
 namespace BestitKlarnaOrderManagement\Components\Api;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
-use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use BestitKlarnaOrderManagement\Components\Curl\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -45,11 +45,9 @@ trait ResponseWrapperTrait
     }
 
     /**
-     * @param RequestException $e
-     *
      * @return ApiResponse
      */
-    protected function wrapException(RequestException $e)
+    protected function wrapException(KlarnaCurlClientException $e)
     {
         $response = $e->getResponse();
         $error = $response->getError();

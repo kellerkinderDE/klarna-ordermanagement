@@ -9,7 +9,7 @@ use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
 use BestitKlarnaOrderManagement\Components\Curl\Client;
-use BestitKlarnaOrderManagement\Components\Curl\Exception\RequestException;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class CustomerToken
@@ -38,7 +38,7 @@ class CustomerToken
                     'headers' => $request->getHeaders()
                 ]
             );
-        } catch (RequestException $e) {
+        } catch (KlarnaCurlClientException $e) {
             return $this->wrapException($e);
         }
 
@@ -58,7 +58,7 @@ class CustomerToken
                     'headers' => $request->getHeaders()
                 ]
             );
-        } catch (RequestException $e) {
+        } catch (KlarnaCurlClientException $e) {
             return $this->wrapException($e);
         }
 
