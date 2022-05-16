@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use BestitKlarnaOrderManagement\Components\Facade\OrderManagement as OrderManagementFacade;
-use BestitKlarnaOrderManagement\Controllers\JsonableResponseTrait;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
+use BestitKlarnaOrderManagement\Controllers\JsonableResponseTrait;
 use Shopware\Components\CSRFWhitelistAware;
 
 /**
@@ -30,22 +32,19 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
      *
      * Add the Order Management Template dir
      */
-    public function preDispatch()
+    public function preDispatch(): void
     {
         $this->get('template')->addTemplateDir($this->container->getParameter('bestit_order_management.template_dir'));
         $this->viewRenderer = $this->Front()->Plugins()->get('ViewRenderer');
         $this->viewRenderer->setNoRender();
 
         $this->orderManagementFacade = $this->get('bestit_klarna_order_management.components.facade.order_management');
-        $this->paymentInsights = $this->get('bestit_klarna_order_management.components.payment_insights');
-        $this->snippetManager = $this->get('snippets');
-        $this->nameSpace = $this->snippetManager->getNamespace('backend/bestitOrderManagement');
+        $this->paymentInsights       = $this->get('bestit_klarna_order_management.components.payment_insights');
+        $this->snippetManager        = $this->get('snippets');
+        $this->nameSpace             = $this->snippetManager->getNamespace('backend/bestitOrderManagement');
     }
 
-    /**
-     * @return array
-     */
-    public function getWhitelistedCSRFActions()
+    public function getWhitelistedCSRFActions(): array
     {
         return [
             'index',
@@ -63,7 +62,7 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
     /**
      * Order Management overview
      */
-    public function indexAction()
+    public function indexAction(): void
     {
         $this->viewRenderer->setNoRender(false);
         $shopwareOrderId = (int) $this->Request()->getParam('orderId');
@@ -76,18 +75,18 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
      */
     public function createCaptureAction()
     {
-        $klarnaOrderId = $this->Request()->getParam('order_id');
-        $amount = $this->Request()->getParam('amount');
+        $klarnaOrderId   = $this->Request()->getParam('order_id');
+        $amount          = $this->Request()->getParam('amount');
         $lineItemsAsJson = $this->Request()->getParam('selectedLines');
-        $description = $this->Request()->getParam('description', '');
+        $description     = $this->Request()->getParam('description', '');
 
         if (empty($klarnaOrderId)) {
             return [
-                'success' => false,
+                'success'      => false,
                 'errorMessage' => $this->nameSpace->get(
                     'CaptureFailed',
                     'Capture was not successful'
-                )
+                ),
             ];
         }
 
@@ -101,10 +100,10 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
      */
     public function createRefundAction()
     {
-        $klarnaOrderId = $this->Request()->getParam('order_id');
-        $refundAmount = $this->Request()->getParam('amount');
+        $klarnaOrderId   = $this->Request()->getParam('order_id');
+        $refundAmount    = $this->Request()->getParam('amount');
         $lineItemsAsJson = $this->Request()->getParam('selectedLines');
-        $description = $this->Request()->getParam('description', '');
+        $description     = $this->Request()->getParam('description', '');
 
         $errorMessage = $this->nameSpace->get(
             'RefundFailed',
@@ -113,8 +112,8 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
 
         if (empty($klarnaOrderId)) {
             return [
-                'success' => false,
-                'errorMessage' => $errorMessage
+                'success'      => false,
+                'errorMessage' => $errorMessage,
             ];
         }
 
@@ -131,11 +130,11 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
     /**
      * Trigger resend of customer communication
      */
-    public function resendCustomerCommunicationAction()
+    public function resendCustomerCommunicationAction(): void
     {
         $klarnaOrderId = $this->Request()->getParam('order_id');
-        $captureId = $this->Request()->getParam('capture_id');
-        $response = $this->orderManagementFacade->resendCustomerCommunication($klarnaOrderId, $captureId);
+        $captureId     = $this->Request()->getParam('capture_id');
+        $response      = $this->orderManagementFacade->resendCustomerCommunication($klarnaOrderId, $captureId);
 
         $this->jsonResponse($response);
     }
@@ -143,10 +142,10 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
     /**
      * Extend authorization time
      */
-    public function extendAuthTimeAction()
+    public function extendAuthTimeAction(): void
     {
         $klarnaOrderId = $this->Request()->getParam('order_id');
-        $response = $this->orderManagementFacade->extendAuthTime($klarnaOrderId);
+        $response      = $this->orderManagementFacade->extendAuthTime($klarnaOrderId);
 
         $this->jsonResponse($response);
     }
@@ -154,10 +153,10 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
     /**
      * Release remaining authorization
      */
-    public function releaseAction()
+    public function releaseAction(): void
     {
         $klarnaOrderId = $this->Request()->getParam('order_id');
-        $response = $this->orderManagementFacade->releaseRemainingAmount($klarnaOrderId);
+        $response      = $this->orderManagementFacade->releaseRemainingAmount($klarnaOrderId);
 
         $this->jsonResponse($response);
     }
@@ -165,10 +164,10 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
     /**
      * Cancel Order
      */
-    public function cancelOrderAction()
+    public function cancelOrderAction(): void
     {
         $klarnaOrderId = $this->Request()->getParam('order_id');
-        $response = $this->orderManagementFacade->cancelOrder($klarnaOrderId);
+        $response      = $this->orderManagementFacade->cancelOrder($klarnaOrderId);
 
         $this->jsonResponse($response);
     }
@@ -176,12 +175,12 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
     /**
      * Check if the order is a klarna order or not
      */
-    public function isKlarnaOrderAction()
+    public function isKlarnaOrderAction(): void
     {
         $paymentId = (int) $this->Request()->getParam('paymentId');
 
         $this->jsonResponse([
-            'success' => $this->paymentInsights->isKlarnaPaymentMethodId($paymentId)
+            'success' => $this->paymentInsights->isKlarnaPaymentMethodId($paymentId),
         ]);
     }
 }

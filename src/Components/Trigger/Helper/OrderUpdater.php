@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Trigger\Helper;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\LineItem;
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrder;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Constants;
-use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Transformer\OrderTransformer;
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
 use Shopware\Bundle\StoreFrontBundle\Service\MediaServiceInterface;
@@ -17,15 +19,13 @@ use Shopware_Components_Config;
 /**
  * Updates the order with the given line items.
  *
- * @package BestitKlarnaOrderManagement\Components\Trigger\Helper
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class OrderUpdater
 {
     private const CUSTOM_PRODUCT_MODE_OPTION = 2;
-    private const CUSTOM_PRODUCT_MODE_VALUE = 3;
+    private const CUSTOM_PRODUCT_MODE_VALUE  = 3;
 
     /** @var OrderFacade */
     protected $orderFacade;
@@ -40,14 +40,6 @@ class OrderUpdater
     /** @var ContextServiceInterface */
     protected $contextService;
 
-    /**
-     * @param OrderFacade                $orderFacade
-     * @param OrderTransformer           $orderTransformer
-     * @param DataProvider               $dataProvider
-     * @param Shopware_Components_Config $config
-     * @param MediaServiceInterface      $mediaService
-     * @param ContextServiceInterface    $contextService
-     */
     public function __construct(
         OrderFacade $orderFacade,
         OrderTransformer $orderTransformer,
@@ -56,21 +48,18 @@ class OrderUpdater
         MediaServiceInterface $mediaService,
         ContextServiceInterface $contextService
     ) {
-        $this->orderFacade = $orderFacade;
+        $this->orderFacade      = $orderFacade;
         $this->orderTransformer = $orderTransformer;
-        $this->dataProvider = $dataProvider;
-        $this->config = $config;
-        $this->mediaService = $mediaService;
-        $this->contextService = $contextService;
+        $this->dataProvider     = $dataProvider;
+        $this->config           = $config;
+        $this->mediaService     = $mediaService;
+        $this->contextService   = $contextService;
     }
 
     /**
-     * @param int   $orderId
-     * @param array $orderDetails
-     *
-     * @return Response
+     * @param int $orderId
      */
-    public function execute($orderId, array $orderDetails)
+    public function execute($orderId, array $orderDetails): Response
     {
         $orderDetails = $this->addProductInformationToOrderDetails($orderDetails);
 
@@ -100,20 +89,16 @@ class OrderUpdater
 
     /**
      * @param float $shippingCosts
-     *
-     * @return bool
      */
-    protected function shippingCostsExist($shippingCosts)
+    protected function shippingCostsExist($shippingCosts): bool
     {
         return $shippingCosts >= 0;
     }
 
     /**
-     * @param KlarnaOrder $klarnaOrder
-     *
-     * @return LineItem[]|null
+     * @return null|LineItem[]
      */
-    protected function getShippingCostLineItems(KlarnaOrder $klarnaOrder)
+    protected function getShippingCostLineItems(KlarnaOrder $klarnaOrder): ?array
     {
         $shippingLines = null;
 
@@ -131,10 +116,8 @@ class OrderUpdater
 
     /**
      * @param LineItem[] $lineItems
-     *
-     * @return float
      */
-    protected function calculateTotalAmount(array $lineItems)
+    protected function calculateTotalAmount(array $lineItems): float
     {
         $totalAmount = 0.00;
 
@@ -146,18 +129,12 @@ class OrderUpdater
                 // LineItem is fetched from API response (= shipping costs)
                 $totalAmount += $lineItem['total_amount'];
             }
-
         }
 
         return $totalAmount;
     }
 
-    /**
-     * @param array $orderDetails
-     *
-     * @return array
-     */
-    protected function addProductInformationToOrderDetails(array $orderDetails)
+    protected function addProductInformationToOrderDetails(array $orderDetails): array
     {
         $baseFile = $this->config->get('baseFile');
 
@@ -188,8 +165,8 @@ class OrderUpdater
             return null;
         }
 
-        $articleId   = (int)$detail['articleID'];
-        $variantId   = (int)$detail['variantId'];
+        $articleId   = (int) $detail['articleID'];
+        $variantId   = (int) $detail['variantId'];
         $orderNumber = $detail['articleordernumber'];
 
         $media = $this->mediaService->getCover(

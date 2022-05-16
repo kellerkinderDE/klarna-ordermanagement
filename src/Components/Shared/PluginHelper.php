@@ -1,7 +1,8 @@
 <?php
 
-namespace BestitKlarnaOrderManagement\Components\Shared;
+declare(strict_types=1);
 
+namespace BestitKlarnaOrderManagement\Components\Shared;
 
 use Shopware\Bundle\PluginInstallerBundle\Service\InstallerService;
 
@@ -13,31 +14,22 @@ class PluginHelper
     /** @var string */
     private $pluginName;
 
-    /**
-     * @param InstallerService $swInstallerService
-     * @param string $pluginName
-     */
     public function __construct(InstallerService $swInstallerService, string $pluginName)
     {
         $this->swInstallerService = $swInstallerService;
-        $this->pluginName = $pluginName;
+        $this->pluginName         = $pluginName;
     }
 
-    /**
-     * @return string
-     */
-    public function getPluginName()
+    public function getPluginName(): string
     {
         return $this->pluginName;
     }
 
-    /**
-     * @return string
-     */
-    public function getPluginVersion()
+    public function getPluginVersion(): string
     {
         try {
             $plugin = $this->swInstallerService->getPluginByName($this->pluginName);
+
             if ($plugin !== null) {
                 $pluginVersion = $plugin->getVersion();
             }

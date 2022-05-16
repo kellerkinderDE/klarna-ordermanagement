@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Model;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity
  * @ORM\Table(name="bestit_klarna_transaction_log")
  */
 class TransactionLog
@@ -81,180 +83,135 @@ class TransactionLog
         $this->createdAt = new DateTime();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * @param int $id
-     *
-     * @return TransactionLog
      */
-    public function setId($id)
+    public function setId($id): TransactionLog
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getKlarnaOrderId()
+    public function getKlarnaOrderId(): string
     {
         return $this->klarnaOrderId;
     }
 
     /**
      * @param string $klarnaOrderId
-     *
-     * @return TransactionLog
      */
-    public function setKlarnaOrderId($klarnaOrderId)
+    public function setKlarnaOrderId($klarnaOrderId): TransactionLog
     {
         $this->klarnaOrderId = $klarnaOrderId;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
 
     /**
      * @param string $action
-     *
-     * @return TransactionLog
      */
-    public function setAction($action)
+    public function setAction($action): TransactionLog
     {
         $this->action = $action;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return $this->isSuccessful;
     }
 
     /**
      * @param bool $successful
-     *
-     * @return TransactionLog
      */
-    public function setIsSuccessful($successful)
+    public function setIsSuccessful($successful): TransactionLog
     {
         $this->isSuccessful = $successful;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getErrorCode()
+    public function getErrorCode(): string
     {
         return $this->errorCode;
     }
 
     /**
      * @param string $errorCode
-     *
-     * @return TransactionLog
      */
-    public function setErrorCode($errorCode)
+    public function setErrorCode($errorCode): TransactionLog
     {
         $this->errorCode = $errorCode;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getErrorMessages()
+    public function getErrorMessages(): array
     {
         return $this->errorMessages;
     }
 
     /**
      * @param array $errorMessages
-     *
-     * @return TransactionLog
      */
-    public function setErrorMessages($errorMessages)
+    public function setErrorMessages($errorMessages): TransactionLog
     {
         $this->errorMessages = $errorMessages;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCorrelationId()
+    public function getCorrelationId(): string
     {
         return $this->correlationId;
     }
 
     /**
      * @param string $correlationId
-     *
-     * @return TransactionLog
      */
-    public function setCorrelationId($correlationId)
+    public function setCorrelationId($correlationId): TransactionLog
     {
         $this->correlationId = $correlationId;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getCents()
+    public function getCents(): int
     {
         return $this->cents;
     }
 
     /**
      * @param int $cents
-     *
-     * @return TransactionLog
      */
-    public function setCents($cents)
+    public function setCents($cents): TransactionLog
     {
         $this->cents = $cents;
 
         return $this;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
     /**
      * @param DateTime $createdAt
-     *
-     * @return TransactionLog
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt($createdAt): TransactionLog
     {
         $this->createdAt = $createdAt;
 

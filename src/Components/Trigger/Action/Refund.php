@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Trigger\Action;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrder;
@@ -13,8 +15,6 @@ use Shopware\Models\Order\Status;
  * The refund action will refund the complete captured amount and release any remaining authorized amount.
  * If there is no capture for the order yet, it will be cancelled.
  *
- * @package BestitKlarnaOrderManagement\Components\Trigger\Action
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Refund implements ActionInterface
@@ -24,24 +24,16 @@ class Refund implements ActionInterface
     /** @var RefundFacade */
     protected $refundFacade;
 
-    /**
-     * @param OrderFacade  $orderFacade
-     * @param RefundFacade $refundFacade
-     */
     public function __construct(OrderFacade $orderFacade, RefundFacade $refundFacade)
     {
-        $this->orderFacade = $orderFacade;
+        $this->orderFacade  = $orderFacade;
         $this->refundFacade = $refundFacade;
     }
 
     /**
-     * @param SwOrder $swOrder
-     * @param KlarnaOrder $klarnaOrder
-     * @param SwOrderDetail|null $swOrderDetail
-     *
-     * @return int|null The payment status that should be set or null.
+     * @return null|int the payment status that should be set or null
      */
-    public function trigger(SwOrder $swOrder, KlarnaOrder $klarnaOrder, SwOrderDetail $swOrderDetail = null)
+    public function trigger(SwOrder $swOrder, KlarnaOrder $klarnaOrder, SwOrderDetail $swOrderDetail = null): ?int
     {
         $klarnaOrderId = $swOrder->getTransactionId();
 

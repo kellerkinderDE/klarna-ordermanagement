@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Api;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
+use BestitKlarnaOrderManagement\Components\Api\Response as ApiResponse;
 use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use BestitKlarnaOrderManagement\Components\Curl\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-use BestitKlarnaOrderManagement\Components\Api\Response as ApiResponse;
 
 trait ResponseWrapperTrait
 {
@@ -18,12 +20,10 @@ trait ResponseWrapperTrait
      * Since we can have 2 types of $guzzleResponse depending on the guzzle client version
      * we change the parameter typehint to mixed.
      *
-     * @param Response|null  $guzzleResponse
-     * @param string|null $modelClass
-     *
-     * @return ApiResponse
+     * @param null|Response $guzzleResponse
+     * @param null|string   $modelClass
      */
-    protected function wrapResponse($guzzleResponse = null, $modelClass = null)
+    protected function wrapResponse($guzzleResponse = null, $modelClass = null): ApiResponse
     {
         if ($guzzleResponse === null) {
             return ApiResponse::wrapEmptySuccessResponse();
@@ -44,15 +44,12 @@ trait ResponseWrapperTrait
         return $response;
     }
 
-    /**
-     * @return ApiResponse
-     */
-    protected function wrapException(KlarnaCurlClientException $e)
+    protected function wrapException(KlarnaCurlClientException $e): ApiResponse
     {
         $response = $e->getResponse();
-        $error = $response->getError();
+        $error    = $response->getError();
 
-        if($error !== null) {
+        if ($error !== null) {
             $response = ApiResponse::wrapError($error);
             $response->setRawResponse($response->getRawResponse());
             $response->setStatusCode($response->getStatusCode());
@@ -60,7 +57,7 @@ trait ResponseWrapperTrait
             return $response;
         }
 
-        $error = new Error();
+        $error       = new Error();
         $rawResponse = (string) $response->getBody();
 
         /*
@@ -68,7 +65,7 @@ trait ResponseWrapperTrait
          * So we cannot parse that response.
          */
         if (empty($rawResponse) || $e->getCode() === SymfonyResponse::HTTP_UNAUTHORIZED) {
-            $error->errorCode = $e->getCode();
+            $error->errorCode       = $e->getCode();
             $error->errorMessages[] = $e->getMessage();
         }
 

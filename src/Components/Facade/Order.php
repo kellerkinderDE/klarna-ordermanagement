@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Facade;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\BillingAddress;
@@ -16,10 +18,6 @@ use Shopware\Models\Order\Status;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Interface to interact with Klarna order(s).
- *
- * @package BestitKlarnaOrderManagement\Components\Facade
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class Order
@@ -35,13 +33,6 @@ class Order
     /** @var AuthorizationHelper */
     protected $authorizationHelper;
 
-    /**
-     * @param OrderResource              $orderResource
-     * @param Serializer                 $serializer
-     * @param DataWriter                 $dataWriter
-     * @param TransactionLoggerInterface $transactionLogger
-     * @param AuthorizationHelper        $authorizationHelper
-     */
     public function __construct(
         OrderResource $orderResource,
         Serializer $serializer,
@@ -49,19 +40,17 @@ class Order
         TransactionLoggerInterface $transactionLogger,
         AuthorizationHelper $authorizationHelper
     ) {
-        $this->orderResource = $orderResource;
-        $this->serializer = $serializer;
-        $this->dataWriter = $dataWriter;
-        $this->transactionLogger = $transactionLogger;
+        $this->orderResource       = $orderResource;
+        $this->serializer          = $serializer;
+        $this->dataWriter          = $dataWriter;
+        $this->transactionLogger   = $transactionLogger;
         $this->authorizationHelper = $authorizationHelper;
     }
 
     /**
      * @param string $orderId
-     *
-     * @return Response
      */
-    public function get($orderId)
+    public function get($orderId): Response
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
@@ -72,10 +61,8 @@ class Order
 
     /**
      * @param string $orderId
-     *
-     * @return Response
      */
-    public function extendAuthTime($orderId)
+    public function extendAuthTime($orderId): Response
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
@@ -90,10 +77,8 @@ class Order
 
     /**
      * @param string $orderId
-     *
-     * @return Response
      */
-    public function releaseRemainingAmount($orderId)
+    public function releaseRemainingAmount($orderId): Response
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
@@ -109,10 +94,8 @@ class Order
     /**
      * @param string $orderId
      * @param bool   $updatePaymentStatus
-     *
-     * @return Response
      */
-    public function cancel($orderId, $updatePaymentStatus = true)
+    public function cancel($orderId, $updatePaymentStatus = true): Response
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
@@ -136,17 +119,13 @@ class Order
     }
 
     /**
-     * @param string          $orderId
-     * @param ShippingAddress $shipping
-     * @param BillingAddress  $billing
-     *
-     * @return Response
+     * @param string $orderId
      */
-    public function updateAddresses($orderId, ShippingAddress $shipping, BillingAddress $billing)
+    public function updateAddresses($orderId, ShippingAddress $shipping, BillingAddress $billing): Response
     {
         $request = Request::createFromPayload([
             'shipping_address' => $this->serializer->normalize($shipping),
-            'billing_address' => $this->serializer->normalize($billing)
+            'billing_address'  => $this->serializer->normalize($billing),
         ])->addQueryParameter('order_id', $orderId);
         $this->authorizationHelper->setAuthHeader($request);
 
@@ -154,17 +133,15 @@ class Order
     }
 
     /**
-     * @param  string    $orderId
-     * @param  int       $orderAmount
+     * @param string     $orderId
+     * @param int        $orderAmount
      * @param LineItem[] $newLineItem
-     *
-     * @return Response
      */
-    public function updateOrder($orderId, $orderAmount, $newLineItem)
+    public function updateOrder($orderId, $orderAmount, $newLineItem): Response
     {
         $request = Request::createFromPayload([
             'order_amount' => $orderAmount,
-            'order_lines' => $this->serializer->normalize($newLineItem),
+            'order_lines'  => $this->serializer->normalize($newLineItem),
         ])->addQueryParameter('order_id', $orderId);
         $this->authorizationHelper->setAuthHeader($request);
 
@@ -177,10 +154,8 @@ class Order
 
     /**
      * @param string $orderId
-     *
-     * @return Response
      */
-    public function acknowledge($orderId)
+    public function acknowledge($orderId): Response
     {
         $request = new Request();
         $request->addQueryParameter('order_id', $orderId);
@@ -190,12 +165,9 @@ class Order
     }
 
     /**
-     * @param string             $orderId
-     * @param MerchantReferences $merchantReferences
-     *
-     * @return Response
+     * @param string $orderId
      */
-    public function updateMerchantReferences($orderId, MerchantReferences $merchantReferences)
+    public function updateMerchantReferences($orderId, MerchantReferences $merchantReferences): Response
     {
         $request = Request::createFromPayload(
             $this->serializer->normalize($merchantReferences)

@@ -27,15 +27,15 @@ class RecurringOrder
 
     public function create(Request $request): Response
     {
-        $baseUrl   = $request->getBaseUrl();
+        $baseUrl       = $request->getBaseUrl();
         $customerToken = $request->getQueryParameter('customerToken');
 
         try {
             $response = $this->httpClient->post(
                 "{$baseUrl}/customer-token/v1/tokens/{$customerToken}/order",
                 [
-                    'json' => $request->getPayload(),
-                    'headers' => $request->getHeaders()
+                    'json'    => $request->getPayload(),
+                    'headers' => $request->getHeaders(),
                 ]
             );
         } catch (KlarnaCurlClientException $e) {

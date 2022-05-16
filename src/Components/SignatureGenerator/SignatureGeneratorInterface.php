@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\SignatureGenerator;
 
 /**
  * Generates a signature/hash for specific types of data.
- *
- * @package BestitKlarnaOrderManagement\Components\SignatureGenerator
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -13,28 +13,16 @@ interface SignatureGeneratorInterface
 {
     /**
      * Generates a signature for the given basket data using only relevant fields (i.e. something that affects pricing).
-     *
-     * @param array $basketData
-     *
-     * @return string
      */
-    public function generateBasketSignature(array $basketData);
+    public function generateBasketSignature(array $basketData): string;
 
     /**
      * Generates a signature for the given billing address.
-     *
-     * @param array $billingAddress
-     *
-     * @return string
      */
-    public function generateBillingAddressSignature(array $billingAddress);
+    public function generateBillingAddressSignature(array $billingAddress): string;
 
     /**
      * Generates a signature for the given billing address.
-     *
-     * @param array $shippingAddress
-     *
-     * @return string
      */
-    public function generateShippingAddressSignature(array $shippingAddress);
+    public function generateShippingAddressSignature(array $shippingAddress): string;
 }

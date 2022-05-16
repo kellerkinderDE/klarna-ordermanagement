@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Api\Model;
 
 use DateTime;
 
 /**
  * Representation of a Klarna refund as an object.
- *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -19,7 +19,7 @@ class Refund
     /** @var DateTime */
     public $refundedAt;
 
-    /** @var string|null */
+    /** @var null|string */
     public $description;
 
     /** @var LineItem[] */

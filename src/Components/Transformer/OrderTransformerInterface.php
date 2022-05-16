@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Transformer;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\BillingAddress;
@@ -11,37 +13,21 @@ use Shopware\Models\Order\Shipping as SwOrderShippingModel;
 /**
  * Convert Shopware Order models to klarna models
  *
- * @package BestitKlarnaOrderManagement\Components\Transformer
- *
  * @author  Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 interface OrderTransformerInterface
 {
-    /**
-     * @param SwOrderShippingModel $shipping
-     *
-     * @return ShippingAddress
-     */
-    public function createShippingAddress(SwOrderShippingModel $shipping);
+    public function createShippingAddress(SwOrderShippingModel $shipping): ShippingAddress;
+
+    public function createBillingAddress(SwOrderBillingModel $billing): BillingAddress;
 
     /**
-     * @param SwOrderBillingModel $billing
-     *
-     * @return BillingAddress
-     */
-    public function createBillingAddress(SwOrderBillingModel $billing);
-
-    /**
-     * @param array $details
-     *
      * @return LineItem[]
      */
-    public function createLineItems(array $details);
+    public function createLineItems(array $details): array;
 
     /**
      * @param float $orderAmount
-     *
-     * @return int
      */
-    public function createOrderAmount($orderAmount);
+    public function createOrderAmount($orderAmount): int;
 }

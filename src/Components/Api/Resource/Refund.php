@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Api\Resource;
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
@@ -16,30 +18,21 @@ class Refund
     /** @var Client */
     protected $httpClient;
 
-    /**
-     * @param Client          $client
-     * @param SerializerInterface $serializer
-     */
     public function __construct(Client $client, SerializerInterface $serializer)
     {
         $this->httpClient = $client;
         $this->serializer = $serializer;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
 
         try {
             $response = $this->httpClient->post("{$baseUrl}/ordermanagement/v1/orders/{$orderId}/refunds", [
-                'json' => $request->getPayload(),
-                'headers' => $request->getHeaders()
+                'json'    => $request->getPayload(),
+                'headers' => $request->getHeaders(),
             ]);
         } catch (KlarnaCurlClientException $e) {
             return $this->wrapException($e);

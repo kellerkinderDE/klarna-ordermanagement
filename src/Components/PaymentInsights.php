@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components;
 
 use Doctrine\DBAL\Connection;
@@ -7,8 +9,6 @@ use PDO;
 
 /**
  * Collection of methods that aggregate data relating to payment means.
- *
- * @package BestitKlarnaOrderManagement\Components
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -20,21 +20,18 @@ class PaymentInsights
     protected $klarnaPluginName;
 
     /**
-     * @param Connection $connection
-     * @param string     $klarnaPluginName
+     * @param string $klarnaPluginName
      */
     public function __construct(Connection $connection, $klarnaPluginName)
     {
-        $this->connection = $connection;
+        $this->connection       = $connection;
         $this->klarnaPluginName = $klarnaPluginName;
     }
 
     /**
      * @param int $paymentId
-     *
-     * @return bool
      */
-    public function isKlarnaPaymentMethodId($paymentId)
+    public function isKlarnaPaymentMethodId($paymentId): bool
     {
         $count = $this->connection->createQueryBuilder()
             ->select('payment.id')
@@ -52,10 +49,8 @@ class PaymentInsights
 
     /**
      * @param int $orderId
-     *
-     * @return bool
      */
-    public function isKlarnaOrder($orderId)
+    public function isKlarnaOrder($orderId): bool
     {
         $count = $this->connection->createQueryBuilder()
             ->select('payment.id')
@@ -74,10 +69,8 @@ class PaymentInsights
 
     /**
      * @param int $orderId
-     *
-     * @return string
      */
-    public function getOrderChanged($orderId)
+    public function getOrderChanged($orderId): string
     {
         return $this->connection->createQueryBuilder()
             ->select('o.changed')
@@ -92,10 +85,8 @@ class PaymentInsights
      * Get payment using the ip
      *
      * @param int $paymentId
-     *
-     * @return array
      */
-    public function getPaymentById($paymentId)
+    public function getPaymentById($paymentId): array
     {
         return $this->connection->createQueryBuilder()
             ->select('payment.*')
@@ -108,10 +99,8 @@ class PaymentInsights
 
     /**
      * @param int $paymentId
-     *
-     * @return string
      */
-    public function getPluginNameById($paymentId)
+    public function getPluginNameById($paymentId): string
     {
         return $this->connection->createQueryBuilder()
             ->select('plugin.name')
@@ -123,10 +112,7 @@ class PaymentInsights
             ->fetchColumn();
     }
 
-    /**
-     * @return array
-     */
-    public function getSupportedExternalCheckoutIds()
+    public function getSupportedExternalCheckoutIds(): array
     {
         return $this->connection->createQueryBuilder()
             ->select('payment.id')

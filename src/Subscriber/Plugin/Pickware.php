@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Subscriber\Plugin;
 
 use BestitKlarnaOrderManagement\Components\ConfigReader;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
-use BestitKlarnaOrderManagement\Components\Pickware\RefundOnCancellation;
 use BestitKlarnaOrderManagement\Components\Pickware\CaptureOnShipped;
+use BestitKlarnaOrderManagement\Components\Pickware\RefundOnCancellation;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use Enlight\Event\SubscriberInterface;
 use Enlight_Hook_HookArgs;
@@ -13,8 +15,6 @@ use Shopware_Controllers_Backend_ViisonPickwareERPOrderCancelation;
 
 /**
  * Subscriber for the Pickware plugin.
- *
- * @package BestitKlarnaOrderManagement\Subscriber\Plugin
  *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
@@ -32,12 +32,6 @@ class Pickware implements SubscriberInterface
     /** @var ConfigReader */
     protected $configReader;
 
-    /**
-     * @param PaymentInsights $paymentInsights
-     * @param RefundOnCancellation $refundOnCancellation
-     * @param DataProvider $dataProvider
-     * @param CaptureOnShipped $captureOnShipped
-     */
     public function __construct(
         PaymentInsights $paymentInsights,
         RefundOnCancellation $refundOnCancellation,
@@ -45,31 +39,28 @@ class Pickware implements SubscriberInterface
         CaptureOnShipped $captureOnShipped,
         ConfigReader $configReader
     ) {
-        $this->paymentInsights = $paymentInsights;
+        $this->paymentInsights      = $paymentInsights;
         $this->refundOnCancellation = $refundOnCancellation;
-        $this->dataProvider = $dataProvider;
-        $this->captureOnShipped = $captureOnShipped;
-        $this->configReader = $configReader;
+        $this->dataProvider         = $dataProvider;
+        $this->captureOnShipped     = $captureOnShipped;
+        $this->configReader         = $configReader;
     }
 
-    /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'Shopware_Controllers_Backend_ViisonPickwareERPOrderCancelation::cancelPositionsAction::before' => [
-                'saveShippingCostsInMemory'
+                'saveShippingCostsInMemory',
             ],
             'Shopware_Controllers_Backend_ViisonPickwareERPOrderCancelation::cancelPositionsAction::after' => [
-                'refundCancelledPositions'
+                'refundCancelledPositions',
             ],
             'Shopware_Controllers_Backend_Order::savePositionAction::before' => [
-                ['saveShippedValue', 999]
+                ['saveShippedValue', 999],
             ],
             'Shopware_Controllers_Backend_Order::savePositionAction::after' => [
-                ['captureOnShippedChange', 999]
-            ]
+                ['captureOnShippedChange', 999],
+            ],
         ];
     }
 
@@ -78,12 +69,8 @@ class Pickware implements SubscriberInterface
      * amount somewhere, so we can refund it. The previous shipping costs isn't saved anywhere else so it'll
      * get lost. We just save it as an object property which will be used after the cancelling process is
      * done.
-     *
-     * @param Enlight_Hook_HookArgs $args
-     *
-     * @return void
      */
-    public function saveShippingCostsInMemory(Enlight_Hook_HookArgs $args)
+    public function saveShippingCostsInMemory(Enlight_Hook_HookArgs $args): void
     {
         /** @var Shopware_Controllers_Backend_ViisonPickwareERPOrderCancelation $subject */
         $subject = $args->getSubject();
@@ -101,12 +88,8 @@ class Pickware implements SubscriberInterface
 
     /**
      * Trigger an automatic refund for all items that have been cancelled.
-     *
-     * @param Enlight_Hook_HookArgs $args
-     *
-     * @return void
      */
-    public function refundCancelledPositions(Enlight_Hook_HookArgs $args)
+    public function refundCancelledPositions(Enlight_Hook_HookArgs $args): void
     {
         /** @var Shopware_Controllers_Backend_ViisonPickwareERPOrderCancelation $subject */
         $subject = $args->getSubject();
@@ -127,12 +110,9 @@ class Pickware implements SubscriberInterface
 
     /**
      * To find out if item has been really shipped and find out the difference we save the old value.
-     *
-     * @param Enlight_Hook_HookArgs $args
-     *
-     * @return void
      */
-    public function saveShippedValue(Enlight_Hook_HookArgs $args){
+    public function saveShippedValue(Enlight_Hook_HookArgs $args): void
+    {
         $subject = $args->getSubject();
         $request = $subject->Request();
 
@@ -141,18 +121,15 @@ class Pickware implements SubscriberInterface
 
     /**
      * Here we capture/refund items depends on the shipped value
-     *
-     * @param Enlight_Hook_HookArgs $args
-     *
-     * @return void
      */
-    public function captureOnShippedChange(Enlight_Hook_HookArgs $args){
+    public function captureOnShippedChange(Enlight_Hook_HookArgs $args): void
+    {
         $subject = $args->getSubject();
         $request = $subject->Request();
 
         $pickwareCaptureAllowed = $this->configReader->get('pickware_enabled', false);
 
-        if($pickwareCaptureAllowed) {
+        if ($pickwareCaptureAllowed) {
             $this->captureOnShipped->captureIfShipped($request->getParam('id'));
         }
     }

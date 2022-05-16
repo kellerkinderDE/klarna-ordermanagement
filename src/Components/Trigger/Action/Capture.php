@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Trigger\Action;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrder;
@@ -11,8 +13,6 @@ use Shopware\Models\Order\Status;
 /**
  * The capture action will capture the complete remaining authorized amount.
  *
- * @package BestitKlarnaOrderManagement\Components\Trigger\Action
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Capture implements ActionInterface
@@ -20,22 +20,15 @@ class Capture implements ActionInterface
     /** @var CaptureFacade */
     protected $captureFacade;
 
-    /**
-     * @param CaptureFacade $captureFacade
-     */
     public function __construct(CaptureFacade $captureFacade)
     {
         $this->captureFacade = $captureFacade;
     }
 
     /**
-     * @param SwOrder $swOrder
-     * @param KlarnaOrder $klarnaOrder
-     * @param SwOrderDetail|null $swOrderDetail
-     *
-     * @return int|null The payment status that should be set or null.
+     * @return null|int the payment status that should be set or null
      */
-    public function trigger(SwOrder $swOrder, KlarnaOrder $klarnaOrder, SwOrderDetail $swOrderDetail = null)
+    public function trigger(SwOrder $swOrder, KlarnaOrder $klarnaOrder, SwOrderDetail $swOrderDetail = null): ?int
     {
         if ($klarnaOrder->remainingAuthorizedAmount <= 0) {
             return null;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Pickware;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\LineItem;
@@ -10,23 +12,21 @@ use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Facade\Refund as RefundFacade;
 use BestitKlarnaOrderManagement\Components\Transformer\OrderDetailTransformer;
 use Doctrine\ORM\EntityManagerInterface;
-use Shopware\Models\Order\Detail as OrderDetail;
 use Shopware\Models\Order\Detail;
+use Shopware\Models\Order\Detail as OrderDetail;
 use Shopware\Models\Order\Order;
 
 /**
- * @package BestitKlarnaOrderManagement\Components\Pickware
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class RefundOnCancellation
 {
-    /** @var float|null */
+    /** @var null|float */
     protected $shippingCosts;
-    /** @var float|null */
+    /** @var null|float */
     protected $shippingCostsNet;
-    /** @var float|null */
+    /** @var null|float */
     protected $shippingCostsTax;
     /** @var EntityManagerInterface */
     protected $em;
@@ -39,13 +39,6 @@ class RefundOnCancellation
     /** @var RefundFacade */
     protected $refundFacade;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param OrderDetailTransformer $orderDetailTransformer
-     * @param OrderFacade $orderFacade
-     * @param CalculatorInterface $calculator
-     * @param RefundFacade $refundFacade
-     */
     public function __construct(
         EntityManagerInterface $em,
         OrderDetailTransformer $orderDetailTransformer,
@@ -53,36 +46,31 @@ class RefundOnCancellation
         CalculatorInterface $calculator,
         RefundFacade $refundFacade
     ) {
-        $this->em = $em;
+        $this->em                     = $em;
         $this->orderDetailTransformer = $orderDetailTransformer;
-        $this->orderFacade = $orderFacade;
-        $this->calculator = $calculator;
-        $this->refundFacade = $refundFacade;
+        $this->orderFacade            = $orderFacade;
+        $this->calculator             = $calculator;
+        $this->refundFacade           = $refundFacade;
     }
 
     /**
      * @param $shippingCosts
      * @param $shippingCostsNet
-     *
-     * @return void
      */
-    public function setShippingCosts($shippingCosts, $shippingCostsNet)
+    public function setShippingCosts($shippingCosts, $shippingCostsNet): void
     {
-        $this->shippingCosts = $shippingCosts;
+        $this->shippingCosts    = $shippingCosts;
         $this->shippingCostsNet = $shippingCostsNet;
     }
 
     /**
      * @param $orderId
-     * @param array $cancelledItems
-     *
-     * @return void
      */
-    public function refundFor($orderId, array $cancelledItems)
+    public function refundFor($orderId, array $cancelledItems): void
     {
         $order = $this->em->find(Order::class, $orderId);
 
-        $cancelledItemsAsOrderDetails = $this->transformPickwareItemsToShopwareDetails($cancelledItems);
+        $cancelledItemsAsOrderDetails    = $this->transformPickwareItemsToShopwareDetails($cancelledItems);
         $cancelledItemsAsKlarnaLineItems = $this->transformToKlarnaLineItems($cancelledItemsAsOrderDetails);
 
         $klarnaOrderId = $order->getTransactionId();
@@ -105,12 +93,7 @@ class RefundOnCancellation
         );
     }
 
-    /**
-     * @param array $cancelledItems
-     *
-     * @return array
-     */
-    protected function transformPickwareItemsToShopwareDetails(array $cancelledItems)
+    protected function transformPickwareItemsToShopwareDetails(array $cancelledItems): array
     {
         return array_map(function ($item) {
             $detail = $this->em->find(OrderDetail::class, $item['id']);
@@ -130,20 +113,20 @@ class RefundOnCancellation
      *
      * @return LineItem[]
      */
-    protected function transformToKlarnaLineItems(array $cancelledItems)
+    protected function transformToKlarnaLineItems(array $cancelledItems): array
     {
         return $this->orderDetailTransformer->createLineItems($cancelledItems);
     }
 
     /**
-     * @param string $orderTransactionId
+     * @param string     $orderTransactionId
      * @param LineItem[] $lineItems
      *
-     * @return LineItem[]
-     *
      * @throws NoOrderFoundException
+     *
+     * @return LineItem[]
      */
-    protected function appendShippingCostsLineItem($orderTransactionId, array $lineItems)
+    protected function appendShippingCostsLineItem($orderTransactionId, array $lineItems): array
     {
         $response = $this->orderFacade->get($orderTransactionId);
 
@@ -165,10 +148,8 @@ class RefundOnCancellation
 
     /**
      * @param OrderDetail[] $orderDetails
-     *
-     * @return int
      */
-    protected function calculateRefundAmount(array $orderDetails)
+    protected function calculateRefundAmount(array $orderDetails): int
     {
         $refundAmount = 0.00;
 

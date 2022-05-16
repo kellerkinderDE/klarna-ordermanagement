@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Calculator;
 
 /**
  * Calculator using the bcmath extension to reliably work with floats.
- *
- * @package BestitKlarnaOrderManagement\Components\Calculator
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -13,10 +13,8 @@ class BcMathCalculator implements CalculatorInterface
 {
     /**
      * Is the calculation method supported?
-     *
-     * @return bool
      */
-    public function isSupported()
+    public function isSupported(): bool
     {
         return extension_loaded('bcmath');
     }
@@ -25,10 +23,8 @@ class BcMathCalculator implements CalculatorInterface
      * Converts the amount which was given to the instance to cents.
      *
      * @param float $amount
-     *
-     * @return int
      */
-    public function toCents($amount)
+    public function toCents($amount): int
     {
         /**
          * We need to round here so that values like "-7.6475" get converted correctly.
@@ -44,10 +40,8 @@ class BcMathCalculator implements CalculatorInterface
      * Converts the amount which was given to the method to a float.
      *
      * @param int $amount
-     *
-     * @return float
      */
-    public function toMajorUnit($amount)
+    public function toMajorUnit($amount): float
     {
         return (float) bcdiv($amount, 100, 2);
     }

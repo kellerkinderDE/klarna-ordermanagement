@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Api\Model;
 
 use DateTime;
 
 /**
  * Representation of a Klarna capture as an object.
- *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -25,7 +25,7 @@ class Capture
     /** @var DateTime */
     public $capturedAt;
 
-    /** @var string|null */
+    /** @var null|string */
     public $description;
 
     /** @var LineItem[] */

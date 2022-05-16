@@ -10,8 +10,8 @@ use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
 use BestitKlarnaOrderManagement\Components\Shared\Localizer;
 use BestitKlarnaOrderManagement\Components\Transformer\RecurringOrderTransformerInterface;
-use Symfony\Component\Serializer\Serializer;
 use Shopware\Models\Shop\Shop;
+use Symfony\Component\Serializer\Serializer;
 
 class RecurringOrder
 {
@@ -40,14 +40,13 @@ class RecurringOrder
         Localizer $localizer,
         AuthorizationHelper $authorizationHelper,
         Shop $shop
-    )
-    {
-        $this->recurringOrderResource = $recurringOrderResource;
+    ) {
+        $this->recurringOrderResource    = $recurringOrderResource;
         $this->recurringOrderTransformer = $recurringOrderTransformer;
-        $this->serializer = $serializer;
-        $this->localizer = $localizer;
-        $this->authorizationHelper = $authorizationHelper;
-        $this->shop = $shop;
+        $this->serializer                = $serializer;
+        $this->localizer                 = $localizer;
+        $this->authorizationHelper       = $authorizationHelper;
+        $this->shop                      = $shop;
     }
 
     public function create(string $customerToken, array $orderBasket, array $userData): Response
@@ -60,7 +59,7 @@ class RecurringOrder
         );
 
         $normalizedRecurringOrder = $this->serializer->normalize($recurringOrder);
-        $request         = Request::createFromPayload($normalizedRecurringOrder);
+        $request                  = Request::createFromPayload($normalizedRecurringOrder);
         $request->addQueryParameter('customerToken', $customerToken);
         $this->authorizationHelper->setAuthHeader($request);
 

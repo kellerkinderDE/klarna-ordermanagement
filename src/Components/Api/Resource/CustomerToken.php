@@ -34,8 +34,8 @@ class CustomerToken
             $response = $this->httpClient->post(
                 "{$baseUrl}/payments/v1/authorizations/{$authToken}/customer-token",
                 [
-                    'json' => $request->getPayload(),
-                    'headers' => $request->getHeaders()
+                    'json'    => $request->getPayload(),
+                    'headers' => $request->getHeaders(),
                 ]
             );
         } catch (KlarnaCurlClientException $e) {
@@ -47,15 +47,15 @@ class CustomerToken
 
     public function cancel(Request $request): Response
     {
-        $baseUrl   = $request->getBaseUrl();
+        $baseUrl       = $request->getBaseUrl();
         $customerToken = $request->getQueryParameter('customerToken');
 
         try {
             $response = $this->httpClient->patch(
                 "{$baseUrl}/customer-token/v1/tokens/{$customerToken}/status",
                 [
-                    'json' => $request->getPayload(),
-                    'headers' => $request->getHeaders()
+                    'json'    => $request->getPayload(),
+                    'headers' => $request->getHeaders(),
                 ]
             );
         } catch (KlarnaCurlClientException $e) {

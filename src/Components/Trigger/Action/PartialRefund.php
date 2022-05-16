@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Trigger\Action;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrder;
@@ -14,8 +16,6 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * Triggers a refund for the given order detail item.
  *
- * @package BestitKlarnaOrderManagement\Components\Trigger\Action
- *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class PartialRefund implements ActionInterface
@@ -29,39 +29,29 @@ class PartialRefund implements ActionInterface
     /** @var Serializer */
     protected $serializer;
 
-    /**
-     * @param RefundFacade $refundFacade
-     * @param CalculatorInterface $calculator
-     * @param OrderDetailTransformerInterface $orderDetailTransformer
-     * @param Serializer $serializer
-     */
     public function __construct(
         RefundFacade $refundFacade,
         CalculatorInterface $calculator,
         OrderDetailTransformerInterface $orderDetailTransformer,
         Serializer $serializer
     ) {
-        $this->refundFacade = $refundFacade;
-        $this->calculator = $calculator;
+        $this->refundFacade           = $refundFacade;
+        $this->calculator             = $calculator;
         $this->orderDetailTransformer = $orderDetailTransformer;
-        $this->serializer = $serializer;
+        $this->serializer             = $serializer;
     }
 
     /**
-     * @param SwOrder $swOrder
-     * @param KlarnaOrder $klarnaOrder
-     * @param SwOrderDetail|null $swOrderDetail
-     *
-     * @return int|null The payment status that should be set or null.
+     * @return null|int the payment status that should be set or null
      */
-    public function trigger(SwOrder $swOrder, KlarnaOrder $klarnaOrder, SwOrderDetail $swOrderDetail = null)
+    public function trigger(SwOrder $swOrder, KlarnaOrder $klarnaOrder, SwOrderDetail $swOrderDetail = null): ?int
     {
         if ($swOrderDetail === null) {
             return null;
         }
 
         $refundableAmount = $klarnaOrder->capturedAmount - $klarnaOrder->refundedAmount;
-        $amountToRefund = $this->calculator->toCents($swOrderDetail->getQuantity() * $swOrderDetail->getPrice());
+        $amountToRefund   = $this->calculator->toCents($swOrderDetail->getQuantity() * $swOrderDetail->getPrice());
 
         // Can't refund the cancelled amount
         if ($amountToRefund > $refundableAmount) {
@@ -78,7 +68,7 @@ class PartialRefund implements ActionInterface
             $klarnaOrderId,
             $amountToRefund,
             [
-                $this->orderDetailTransformer->createLineItem($swOrderDetail)
+                $this->orderDetailTransformer->createLineItem($swOrderDetail),
             ],
             'Automatic change by @shopware'
         );

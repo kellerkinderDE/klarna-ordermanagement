@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -10,8 +12,6 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
  *
  * It transforms empty strings to `null` values as Klarna expects it that way.
  *
- * @package BestitKlarnaOrderManagement\Components\Serializer
- *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class CustomObjectNormalizer extends AbstractNormalizer
@@ -19,9 +19,6 @@ class CustomObjectNormalizer extends AbstractNormalizer
     /** @var ObjectNormalizer */
     protected $objectNormalizer;
 
-    /**
-     * @param ObjectNormalizer $objectNormalizer
-     */
     public function __construct(ObjectNormalizer $objectNormalizer)
     {
         parent::__construct();
@@ -36,10 +33,8 @@ class CustomObjectNormalizer extends AbstractNormalizer
      * @param string $class   the expected class to instantiate
      * @param string $format  format the given data was extracted from
      * @param array  $context options available to the denormalizer
-     *
-     * @return object
      */
-    public function denormalize($data, $class, $format = null, array $context = array())
+    public function denormalize($data, $class, $format = null, array $context = []): object
     {
         if (!is_array($data)) {
             return $this->objectNormalizer->denormalize($data, $class, $format, $context);
@@ -59,10 +54,8 @@ class CustomObjectNormalizer extends AbstractNormalizer
      * @param mixed  $data   Data to denormalize from
      * @param string $type   The class to which the data should be denormalized
      * @param string $format The format being deserialized from
-     *
-     * @return bool
      */
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization($data, $type, $format = null): bool
     {
         return $this->objectNormalizer->supportsDenormalization($data, $type, $format);
     }
@@ -76,7 +69,7 @@ class CustomObjectNormalizer extends AbstractNormalizer
      *
      * @return array|scalar
      */
-    public function normalize($object, $format = null, array $context = array())
+    public function normalize($object, $format = null, array $context = [])
     {
         $normalizedData = $this->objectNormalizer->normalize($object, $format, $context);
 
@@ -92,20 +85,13 @@ class CustomObjectNormalizer extends AbstractNormalizer
      *
      * @param mixed  $data   Data to normalize
      * @param string $format The format being (de-)serialized from or into
-     *
-     * @return bool
      */
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null): bool
     {
         return $this->objectNormalizer->supportsNormalization($data, $format);
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function transformEmptyStringsToNull(array $data)
+    protected function transformEmptyStringsToNull(array $data): array
     {
         /**
          * Make sure that all empty values are being sent as `NULL` to Klarna.

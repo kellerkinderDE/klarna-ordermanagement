@@ -6,16 +6,16 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
 
 class CustomerToken
 {
-    /** @var string|null */
+    /** @var null|string */
     public $purchaseCountry;
 
-    /** @var string|null */
+    /** @var null|string */
     public $purchaseCurrency;
 
-    /** @var string|null */
+    /** @var null|string */
     public $locale;
 
-    /** @var Customer|null */
+    /** @var null|Customer */
     public $customer;
 
     /** @var BillingAddress */
@@ -27,6 +27,6 @@ class CustomerToken
     /** @var string */
     public $intendedUse = 'SUBSCRIPTION';
 
-    /** @var array|null */
+    /** @var null|array */
     public $merchantUrls;
 }

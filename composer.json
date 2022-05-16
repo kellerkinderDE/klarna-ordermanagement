@@ -7,6 +7,9 @@
     "require": {
         "php": ">=7.2 <=8.1"
     },
+    "require-dev": {
+        "k10r/codestyle": "^2.0"
+    },
     "autoload": {
         "psr-4": {
             "BestitKlarnaOrderManagement\\": "src"
@@ -23,5 +26,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/php-cs-fixer fix"
     }
 }

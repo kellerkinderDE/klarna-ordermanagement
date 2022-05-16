@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Logging;
 
 use Symfony\Component\Finder\Finder;
@@ -7,8 +9,6 @@ use ZipArchive;
 
 /**
  * Zips our logs files.
- *
- * @package BestitKlarnaOrderManagement\Components\Logging
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -20,7 +20,6 @@ class ZipCreator
     protected $logDir;
 
     /**
-     * @param Finder $finder
      * @param string $logDir
      */
     public function __construct(Finder $finder, $logDir)
@@ -31,10 +30,8 @@ class ZipCreator
 
     /**
      * @param string $zipFileName
-     *
-     * @return string
      */
-    public function zipKlarnaLogFiles($zipFileName)
+    public function zipKlarnaLogFiles($zipFileName): string
     {
         $this->finder->in($this->logDir)->name('bestit_klarna_*');
 

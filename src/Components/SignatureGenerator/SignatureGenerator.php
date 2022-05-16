@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\SignatureGenerator;
 
 use InvalidArgumentException;
@@ -8,35 +10,29 @@ use JsonSerializable;
 /**
  * Generates a signature/hash for specific types of data.
  *
- * @package BestitKlarnaOrderManagement\Components\SignatureGenerator
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class SignatureGenerator implements SignatureGeneratorInterface
 {
     /**
      * Generates a signature for the given basket data using only relevant fields (i.e. something that affects pricing).
-     *
-     * @param array $basketData
-     *
-     * @return string
      */
-    public function generateBasketSignature(array $basketData)
+    public function generateBasketSignature(array $basketData): string
     {
-        $lineItems = $basketData['content'];
+        $lineItems          = $basketData['content'];
         $formattedLineItems = [];
 
         foreach ($lineItems as $lineItem) {
             $formattedLineItems[] = [
                 'ordernumber' => $lineItem['ordernumber'],
-                'price' => (float) $lineItem['price'],
-                'quantity' => (int) $lineItem['quantity'],
-                'tax_rate' => (int) $lineItem['tax_rate'],
+                'price'       => (float) $lineItem['price'],
+                'quantity'    => (int) $lineItem['quantity'],
+                'tax_rate'    => (int) $lineItem['tax_rate'],
             ];
         }
 
         return $this->createHash([
-            'amount' => (float) $basketData['sAmount'],
+            'amount'    => (float) $basketData['sAmount'],
             'lineItems' => $formattedLineItems,
             'taxAmount' => (float) $basketData['sAmountTax'],
         ]);
@@ -44,24 +40,16 @@ class SignatureGenerator implements SignatureGeneratorInterface
 
     /**
      * Generates a signature for the given billing address.
-     *
-     * @param array $billingAddress
-     *
-     * @return string
      */
-    public function generateBillingAddressSignature(array $billingAddress)
+    public function generateBillingAddressSignature(array $billingAddress): string
     {
         return $this->createHash($billingAddress);
     }
 
     /**
      * Generates a signature for the given billing address.
-     *
-     * @param array $shippingAddress
-     *
-     * @return string
      */
-    public function generateShippingAddressSignature(array $shippingAddress)
+    public function generateShippingAddressSignature(array $shippingAddress): string
     {
         return $this->createHash($shippingAddress);
     }
@@ -69,11 +57,9 @@ class SignatureGenerator implements SignatureGeneratorInterface
     /**
      * @param array|JsonSerializable $data
      *
-     * @return string
-     *
      * @throws InvalidArgumentException
      */
-    protected function createHash($data)
+    protected function createHash($data): string
     {
         if (!is_array($data) && !$data instanceof JsonSerializable) {
             throw new InvalidArgumentException('The given input can not be JSON serialized.');

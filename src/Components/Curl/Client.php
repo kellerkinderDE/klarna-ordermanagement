@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Curl;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
@@ -11,8 +13,8 @@ use Psr\Log\LoggerInterface;
 
 class Client
 {
-    public const METHOD_GET = 'GET';
-    public const METHOD_POST = 'POST';
+    public const METHOD_GET   = 'GET';
+    public const METHOD_POST  = 'POST';
     public const METHOD_PATCH = 'PATCH';
 
     /** @var LoggerInterface */
@@ -26,7 +28,7 @@ class Client
     {
         $this->baseUri = $baseUri;
         $this->options = $options;
-        $this->logger = $logger;
+        $this->logger  = $logger;
     }
 
     public function get(string $uri, ?array $options = []): Response
@@ -44,6 +46,19 @@ class Client
         return $this->request($uri, self::METHOD_POST, $options);
     }
 
+    protected function getHeaders(array $additionalHeaders): array
+    {
+        $headers = array_merge($this->options['headers'] ?? [], $additionalHeaders);
+
+        $headersAsStrings = [];
+
+        foreach ($headers as $headerName => $headerValue) {
+            $headersAsStrings[] = sprintf('%s: %s', $headerName, $headerValue);
+        }
+
+        return $headersAsStrings;
+    }
+
     /**
      * @throws KlarnaCurlClientException
      * @throws RequestException
@@ -52,9 +67,9 @@ class Client
      */
     private function request(string $uri, string $method, ?array $options = []): Response
     {
-        $body        = $this->getBody($options);
-        $headers     = $this->getHeaders($options['headers'] ?? []);
-        $handle      = $this->getCurlHandle($uri, $headers, $method, $body);
+        $body    = $this->getBody($options);
+        $headers = $this->getHeaders($options['headers'] ?? []);
+        $handle  = $this->getCurlHandle($uri, $headers, $method, $body);
         $this->logger->debug(sprintf('ClientRequest request[body]: %s \n [headers]: %s', $body, json_encode($headers)));
 
         $response    = curl_exec($handle);
@@ -70,36 +85,36 @@ class Client
             throw new RequestException(new Response($statusCode, $body));
         }
 
-        if(!empty($response)) {
+        if (!empty($response)) {
             $decodedJsonResponse = null;
 
             try {
                 $decodedJsonResponse = json_decode($response, true);
-            }catch(\Throwable $t) {
+            } catch (\Throwable $t) {
                 // silent fail -> could be no json
             }
 
-            if($decodedJsonResponse !== null) {
-                if(!array_key_exists('error_code', $decodedJsonResponse)
+            if ($decodedJsonResponse !== null) {
+                if (!array_key_exists('error_code', $decodedJsonResponse)
                 && !array_key_exists('error_messages', $decodedJsonResponse)) {
                     return new Response($statusCode, $response);
                 }
 
                 $error = new Error();
 
-                if(array_key_exists('error_code', $decodedJsonResponse)) {
+                if (array_key_exists('error_code', $decodedJsonResponse)) {
                     $error->errorCode = $decodedJsonResponse['error_code'];
                 }
 
-                if(array_key_exists('error_messages', $decodedJsonResponse)) {
+                if (array_key_exists('error_messages', $decodedJsonResponse)) {
                     $error->errorMessages = $decodedJsonResponse['error_messages'];
                 }
 
-                if(array_key_exists('correlation_id', $decodedJsonResponse)) {
+                if (array_key_exists('correlation_id', $decodedJsonResponse)) {
                     $error->correlationId = $decodedJsonResponse['correlation_id'];
                 }
 
-                if($error->errorCode !== null || $error->errorMessages !== null) {
+                if ($error->errorCode !== null || $error->errorMessages !== null) {
                     $this->logger->error(sprintf('ClientRequest error %s (%s)', $error->errorCode, json_encode($error->errorMessages)), ['trace' => (new \RuntimeException())->getTraceAsString()]);
 
                     throw new RequestException(new Response($statusCode, $body, $error));
@@ -131,15 +146,18 @@ class Client
     /**
      * @param array|string[] $headerData
      *
-     * @return resource
      * @throws \BestitKlarnaOrderManagement\Components\Curl\Exception\CurlInitException
+     *
+     * @return resource
      */
     private function getCurlHandle(string $uri, array $headerData, string $method, ?string $postData)
     {
         $filterVarOptions = [];
+
         if (defined(FILTER_FLAG_SCHEME_REQUIRED)) {
             $filterVarOptions = FILTER_FLAG_SCHEME_REQUIRED;
         }
+
         if (filter_var($uri, FILTER_VALIDATE_URL, $filterVarOptions) === false) {
             $uri = sprintf('%s/%s', rtrim($this->baseUri, '/'), ltrim($uri, '/'));
         }
@@ -169,18 +187,5 @@ class Client
         }
 
         return $curl;
-    }
-
-    protected function getHeaders(array $additionalHeaders): array
-    {
-        $headers = array_merge($this->options['headers'] ?? [], $additionalHeaders);
-
-        $headersAsStrings = [];
-
-        foreach ($headers as $headerName => $headerValue) {
-            $headersAsStrings[] = sprintf('%s: %s', $headerName, $headerValue);
-        }
-
-        return $headersAsStrings;
     }
 }

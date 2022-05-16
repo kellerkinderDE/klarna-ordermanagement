@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Trigger;
 
 use BestitKlarnaOrderManagement\Components\Api\Response;
@@ -8,8 +10,6 @@ use BestitKlarnaOrderManagement\Components\Trigger\Helper\OrderUpdater;
 
 /**
  * Synchronizes the line item changes with Klarna.
- *
- * @package BestitKlarnaOrderManagement\Components\Trigger
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
@@ -21,10 +21,6 @@ class LineItemChanged
     /** @var DataProvider $dataProvider */
     protected $dataProvider;
 
-    /**
-     * @param OrderUpdater $orderUpdater
-     * @param DataProvider $dataProvider
-     */
     public function __construct(OrderUpdater $orderUpdater, DataProvider $dataProvider)
     {
         $this->orderUpdater = $orderUpdater;
@@ -32,12 +28,9 @@ class LineItemChanged
     }
 
     /**
-     * @param int   $orderId
-     * @param array $position
-     *
-     * @return Response
+     * @param int $orderId
      */
-    public function execute($orderId, array $position)
+    public function execute($orderId, array $position): Response
     {
         $orderDetails = $this->dataProvider->getOrderDetails($orderId);
 

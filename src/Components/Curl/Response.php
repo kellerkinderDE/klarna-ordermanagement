@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Curl;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
@@ -10,13 +12,14 @@ class Response
     private $statusCode;
     /** @var null|string */
     private $body;
-    /** @var null|Error  */
+    /** @var null|Error */
     private $error;
 
-    public function __construct(int $statusCode, ?string $body, ?Error $error = null) {
+    public function __construct(int $statusCode, ?string $body, ?Error $error = null)
+    {
         $this->statusCode = $statusCode;
-        $this->body = $body;
-        $this->error = $error;
+        $this->body       = $body;
+        $this->error      = $error;
     }
 
     public function getStatusCode(): int

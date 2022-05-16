@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Api;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Error;
@@ -7,17 +9,15 @@ use BestitKlarnaOrderManagement\Components\Api\Model\Error;
 /**
  * Representation of any Klarna response.
  *
- * @package BestitKlarnaOrderManagement\Components\Api
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Response
 {
     /** @var bool */
     protected $isError = false;
-    /** @var Error|null */
+    /** @var null|Error */
     protected $error;
-    /** @var object|null */
+    /** @var null|object */
     protected $responseObject;
     /** @var string */
     protected $rawResponse;
@@ -26,10 +26,8 @@ class Response
 
     /**
      * @param object $object
-     *
-     * @return Response
      */
-    public static function wrapObject($object)
+    public static function wrapObject($object): Response
     {
         $responseWrapper = new static();
         $responseWrapper
@@ -38,20 +36,12 @@ class Response
         return $responseWrapper;
     }
 
-    /**
-     * @return Response
-     */
-    public static function wrapEmptySuccessResponse()
+    public static function wrapEmptySuccessResponse(): Response
     {
         return new static();
     }
 
-    /**
-     * @param Error $error
-     *
-     * @return Response
-     */
-    public static function wrapError(Error $error)
+    public static function wrapError(Error $error): Response
     {
         $responseWrapper = new static();
         $responseWrapper
@@ -61,109 +51,78 @@ class Response
         return $responseWrapper;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return !$this->isError;
     }
 
-    /**
-     * @return bool
-     */
-    public function isError()
+    public function isError(): bool
     {
         return $this->isError;
     }
 
     /**
      * @param bool $isError
-     *
-     * @return Response
      */
-    public function setIsError($isError)
+    public function setIsError($isError): Response
     {
         $this->isError = $isError;
 
         return $this;
     }
 
-    /**
-     * @return Error|null
-     */
-    public function getError()
+    public function getError(): ?Error
     {
         return $this->error;
     }
 
-    /**
-     * @param Error $error
-     *
-     * @return Response
-     */
-    public function setError(Error $error)
+    public function setError(Error $error): Response
     {
-        $this->error = $error;
+        $this->error   = $error;
         $this->isError = true;
 
         return $this;
     }
 
-    /**
-     * @return object
-     */
-    public function getResponseObject()
+    public function getResponseObject(): object
     {
         return $this->responseObject;
     }
 
     /**
      * @param object $responseObject
-     *
-     * @return Response
      */
-    public function setResponseObject($responseObject)
+    public function setResponseObject($responseObject): Response
     {
         $this->responseObject = $responseObject;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRawResponse()
+    public function getRawResponse(): string
     {
         return $this->rawResponse;
     }
 
     /**
      * @param string $rawResponse
-     *
-     * @return Response
      */
-    public function setRawResponse($rawResponse)
+    public function setRawResponse($rawResponse): Response
     {
         $this->rawResponse = $rawResponse;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
 
     /**
      * @param int $code
-     *
-     * @return Response
      */
-    public function setStatusCode($code)
+    public function setStatusCode($code): Response
     {
         $this->statusCode = $code;
 

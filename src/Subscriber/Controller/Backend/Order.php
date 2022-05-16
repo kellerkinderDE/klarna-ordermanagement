@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Subscriber\Controller\Backend;
 
 use BestitKlarnaOrderManagement\Components\ConfigReader;
 use BestitKlarnaOrderManagement\Components\Exception\NoOrderFoundException;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
+use BestitKlarnaOrderManagement\Components\Shared\ShopwareVersionHelper;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Trigger\AddressChanged as AddressChangedTrigger;
 use BestitKlarnaOrderManagement\Components\Trigger\LineItemAdded as LineItemAddedTrigger;
@@ -13,7 +16,6 @@ use BestitKlarnaOrderManagement\Components\Trigger\LineItemDeleted as LineItemDe
 use BestitKlarnaOrderManagement\Components\Trigger\OrderDeleted as OrderDeletedTrigger;
 use BestitKlarnaOrderManagement\Components\Trigger\OrderTrackingCodeChanged as OrderTrackingCodeChangedTrigger;
 use BestitKlarnaOrderManagement\Components\Trigger\PaymentStatusChanged as PaymentStatusChangedTrigger;
-use BestitKlarnaOrderManagement\Components\Shared\ShopwareVersionHelper;
 use Enlight\Event\SubscriberInterface;
 use Enlight_Controller_Action;
 use Enlight_Controller_ActionEventArgs;
@@ -22,8 +24,6 @@ use Shopware;
 
 /**
  * Subscribers for the backend order page(s).
- *
- * @package BestitKlarnaOrderManagement\Subscriber\Controller\Backend
  *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
@@ -57,19 +57,8 @@ class Order implements SubscriberInterface
     protected $swVersionHelper;
 
     /**
-     * @param AddressChangedTrigger $addressChangedTrigger
-     * @param OrderDeletedTrigger $orderDeletedTrigger
-     * @param PaymentStatusChangedTrigger $paymentStatusChangedTrigger
-     * @param OrderTrackingCodeChangedTrigger $orderTrackingCodeChangedTrigger
-     * @param LineItemAddedTrigger $lineItemAddedTrigger
-     * @param LineItemChangedTrigger $lineItemChangedTrigger
-     * @param LineItemDeletedTrigger $lineItemDeletedTrigger
-     * @param PaymentInsights $paymentInsights
-     * @param DataProvider $dataProvider
-     * @param ConfigReader $configReader
      * @param string $controllersDir
      * @param string $templateDir
-     * @param ShopwareVersionHelper $swVersionHelper
      */
     public function __construct(
         AddressChangedTrigger $addressChangedTrigger,
@@ -86,38 +75,35 @@ class Order implements SubscriberInterface
         $templateDir,
         ShopwareVersionHelper $swVersionHelper
     ) {
-        $this->addressChangedTrigger = $addressChangedTrigger;
-        $this->orderDeletedTrigger = $orderDeletedTrigger;
-        $this->paymentStatusChangedTrigger = $paymentStatusChangedTrigger;
+        $this->addressChangedTrigger           = $addressChangedTrigger;
+        $this->orderDeletedTrigger             = $orderDeletedTrigger;
+        $this->paymentStatusChangedTrigger     = $paymentStatusChangedTrigger;
         $this->orderTrackingCodeChangedTrigger = $orderTrackingCodeChangedTrigger;
-        $this->lineItemAddedTrigger = $lineItemAddedTrigger;
-        $this->lineItemChangedTrigger = $lineItemChangedTrigger;
-        $this->lineItemDeletedTrigger = $lineItemDeletedTrigger;
-        $this->paymentInsights = $paymentInsights;
-        $this->dataProvider = $dataProvider;
-        $this->configReader = $configReader;
-        $this->controllersDir = $controllersDir;
-        $this->templateDir = $templateDir;
-        $this->swVersionHelper = $swVersionHelper;
+        $this->lineItemAddedTrigger            = $lineItemAddedTrigger;
+        $this->lineItemChangedTrigger          = $lineItemChangedTrigger;
+        $this->lineItemDeletedTrigger          = $lineItemDeletedTrigger;
+        $this->paymentInsights                 = $paymentInsights;
+        $this->dataProvider                    = $dataProvider;
+        $this->configReader                    = $configReader;
+        $this->controllersDir                  = $controllersDir;
+        $this->templateDir                     = $templateDir;
+        $this->swVersionHelper                 = $swVersionHelper;
     }
 
-    /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'Shopware_Controllers_Backend_Order::saveAction::replace' => [
                 'onOrderChange',
             ],
             'Shopware_Controllers_Backend_Order::savePositionAction::replace' => [
-                'onLineItemChange'
+                'onLineItemChange',
             ],
             'Shopware_Controllers_Backend_Order::deletePositionAction::replace' => [
-                'onDeleteLineItem'
+                'onDeleteLineItem',
             ],
             'Shopware_Controllers_Backend_Order::deleteAction::replace' => [
-                'cancelKlarnaOrderOrFail'
+                'cancelKlarnaOrderOrFail',
             ],
             'Enlight_Controller_Action_PostDispatch_Backend_Order' => [
                 'loadExtJsKlarnaTab',
@@ -127,20 +113,16 @@ class Order implements SubscriberInterface
 
     /**
      * Checks if changing Klarna Order Address is possible
-     *
-     * @param Enlight_Hook_HookArgs $args
-     *
-     * @return void
      */
-    public function onOrderChange(Enlight_Hook_HookArgs $args)
+    public function onOrderChange(Enlight_Hook_HookArgs $args): void
     {
         /** @var Enlight_Controller_Action $controller */
         $controller = $args->getSubject();
         $args->setProcessed(true);
-        $orderId = $controller->Request()->getParam('id');
-        $paymentId = (int) $controller->Request()->getParam('paymentId');
+        $orderId       = $controller->Request()->getParam('id');
+        $paymentId     = (int) $controller->Request()->getParam('paymentId');
         $transactionId = $controller->Request()->getParam('transactionId');
-        $params = $controller->Request()->getParams();
+        $params        = $controller->Request()->getParams();
 
         if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
             $args->setReturn($args->getSubject()->executeParent(
@@ -153,7 +135,7 @@ class Order implements SubscriberInterface
 
         // region PaymentStatusChange
 
-        if(empty($transactionId)) {
+        if (empty($transactionId)) {
             $args->setReturn($args->getSubject()->executeParent(
                 $args->getMethod(),
                 $args->getArgs()
@@ -167,8 +149,9 @@ class Order implements SubscriberInterface
         if ($changePaymentResponse->isError()) {
             $controller->View()->assign([
                 'success' => false,
-                'message' => $changePaymentResponse->getError()->errorMessages
+                'message' => $changePaymentResponse->getError()->errorMessages,
             ]);
+
             return;
         }
 
@@ -185,8 +168,9 @@ class Order implements SubscriberInterface
         if ($updateCustomerAddressesResponse->isError()) {
             $controller->View()->assign([
                 'success' => false,
-                'message' => $updateCustomerAddressesResponse->getError()->errorMessages
+                'message' => $updateCustomerAddressesResponse->getError()->errorMessages,
             ]);
+
             return;
         }
 
@@ -202,8 +186,9 @@ class Order implements SubscriberInterface
         if ($updateTrackingCodeResponse->isError()) {
             $controller->View()->assign([
                 'success' => false,
-                'message' => $updateTrackingCodeResponse->getError()->errorMessages
+                'message' => $updateTrackingCodeResponse->getError()->errorMessages,
             ]);
+
             return;
         }
 
@@ -217,19 +202,15 @@ class Order implements SubscriberInterface
 
     /**
      * Synchronizes the line item changes with Klarna.
-     *
-     * @param Enlight_Hook_HookArgs $args
-     *
-     * @return void
      */
-    public function onLineItemChange(Enlight_Hook_HookArgs $args)
+    public function onLineItemChange(Enlight_Hook_HookArgs $args): void
     {
-        /** @var  Enlight_Controller_Action $controller */
+        /** @var Enlight_Controller_Action $controller */
         $controller = $args->getSubject();
-        $request = $controller->Request();
+        $request    = $controller->Request();
         $args->setProcessed(true);
         $position = $controller->Request()->getParams();
-        $orderId = $request->getParam('orderId');
+        $orderId  = $request->getParam('orderId');
 
         $shopVersion = $this->swVersionHelper->getVersion();
 
@@ -287,7 +268,7 @@ class Order implements SubscriberInterface
         if ($response->isError()) {
             $controller->View()->assign([
                 'success' => false,
-                'message' => $response->getError()->errorMessages
+                'message' => $response->getError()->errorMessages,
             ]);
 
             return;
@@ -301,19 +282,15 @@ class Order implements SubscriberInterface
 
     /**
      * Synchronizes the line item changes with Klarna.
-     *
-     * @param Enlight_Hook_HookArgs $args
-     *
-     * @return void
      */
-    public function onDeleteLineItem(Enlight_Hook_HookArgs $args)
+    public function onDeleteLineItem(Enlight_Hook_HookArgs $args): void
     {
-        /** @var  Enlight_Controller_Action $controller */
+        /** @var Enlight_Controller_Action $controller */
         $controller = $args->getSubject();
-        $request = $controller->Request();
+        $request    = $controller->Request();
         $args->setProcessed(true);
         $positions = $controller->Request()->getParam('positions', [['id' => $controller->Request()->getParam('id')]]);
-        $orderId = $controller->Request()->getParam('orderID');
+        $orderId   = $controller->Request()->getParam('orderID');
 
         $shopVersion = $this->swVersionHelper->getVersion();
         /*
@@ -341,7 +318,7 @@ class Order implements SubscriberInterface
         if ($response->isError()) {
             $controller->View()->assign([
                 'success' => false,
-                'message' => $response->getError()->errorMessages
+                'message' => $response->getError()->errorMessages,
             ]);
 
             return;
@@ -355,17 +332,13 @@ class Order implements SubscriberInterface
 
     /**
      * Cancels the order in Klarna.
-     *
-     * @param Enlight_Hook_HookArgs $args
-     *
-     * @return void
      */
-    public function cancelKlarnaOrderOrFail(Enlight_Hook_HookArgs $args)
+    public function cancelKlarnaOrderOrFail(Enlight_Hook_HookArgs $args): void
     {
-        /** @var  Enlight_Controller_Action $controller */
+        /** @var Enlight_Controller_Action $controller */
         $controller = $args->getSubject();
         $args->setProcessed(true);
-        $orderId = $controller->Request()->getParam('id');
+        $orderId       = $controller->Request()->getParam('id');
         $transactionId = $controller->Request()->getParam('transactionId');
 
         if (!$this->paymentInsights->isKlarnaOrder($orderId)) {
@@ -373,10 +346,11 @@ class Order implements SubscriberInterface
                 $args->getMethod(),
                 $args->getArgs()
             ));
+
             return;
         }
 
-        if(empty($transactionId)) {
+        if (empty($transactionId)) {
             $args->setReturn($args->getSubject()->executeParent(
                 $args->getMethod(),
                 $args->getArgs()
@@ -390,7 +364,7 @@ class Order implements SubscriberInterface
         if ($cancelResponse->isError()) {
             $controller->View()->assign([
                 'success' => false,
-                'message' => $cancelResponse->getError()->errorMessages
+                'message' => $cancelResponse->getError()->errorMessages,
             ]);
 
             return;
@@ -404,14 +378,10 @@ class Order implements SubscriberInterface
 
     /**
      * Load the ExtJs Tab for Klarna section
-     *
-     * @param Enlight_Controller_ActionEventArgs $args
-     *
-     * @return void
      */
-    public function loadExtJsKlarnaTab(Enlight_Controller_ActionEventArgs $args)
+    public function loadExtJsKlarnaTab(Enlight_Controller_ActionEventArgs $args): void
     {
-        $view = $args->getSubject()->View();
+        $view    = $args->getSubject()->View();
         $request = $args->getRequest();
 
         $view->addTemplateDir($this->templateDir);
@@ -435,11 +405,9 @@ class Order implements SubscriberInterface
     /**
      * @param int $orderId
      *
-     * @return void
-     *
      * @throws NoOrderFoundException
      */
-    protected function registerShopForOrder($orderId)
+    protected function registerShopForOrder($orderId): void
     {
         $swOrder = $this->dataProvider->getSwOrder($orderId);
 
@@ -456,10 +424,8 @@ class Order implements SubscriberInterface
 
     /**
      * If a PickWare is enabled, true will be returned.
-     *
-     * @return bool
      */
-    protected function pickwareEnabled()
+    protected function pickwareEnabled(): bool
     {
         $pickwareEnabled = (int) $this->configReader->get('pickware_enabled', 0);
 

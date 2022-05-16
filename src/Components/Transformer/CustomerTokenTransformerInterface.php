@@ -12,9 +12,5 @@ interface CustomerTokenTransformerInterface
 
     public function withUserData(array $userData): CustomerTokenTransformerInterface;
 
-    /**
-     * @param string $confirmationUrl
-     * @return CustomerTokenTransformerInterface
-     */
     public function withMerchantUrls(string $confirmationUrl): CustomerTokenTransformerInterface;
 }

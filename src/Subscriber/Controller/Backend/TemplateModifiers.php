@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Subscriber\Controller\Backend;
 
 use BestitKlarnaOrderManagement\Components\Calculator\CalculatorInterface;
@@ -10,8 +12,6 @@ use Smarty;
 /**
  * Add modifiers to the smarty template ... such as toCents or toFloat function.
  *
- * @package BestitKlarnaOrderManagement\Subscriber\Controller\Backend
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class TemplateModifiers implements SubscriberInterface
@@ -21,30 +21,20 @@ class TemplateModifiers implements SubscriberInterface
     /** @var CalculatorInterface */
     protected $calculator;
 
-    /**
-     * @param Enlight_Template_Manager $template
-     * @param CalculatorInterface      $calculator
-     */
     public function __construct(Enlight_Template_Manager $template, CalculatorInterface $calculator)
     {
-        $this->smarty = $template->smarty;
+        $this->smarty     = $template->smarty;
         $this->calculator = $calculator;
     }
 
-    /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
-            'Enlight_Controller_Action_PostDispatchSecure_Backend_BestitOrderManagement' => 'addTemplateModifiers'
+            'Enlight_Controller_Action_PostDispatchSecure_Backend_BestitOrderManagement' => 'addTemplateModifiers',
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function addTemplateModifiers()
+    public function addTemplateModifiers(): void
     {
         $this->smarty->registerPlugin('modifier', 'bestitToCents', [$this->calculator, 'toCents']);
         $this->smarty->registerPlugin('modifier', 'bestitToMajorUnit', [$this->calculator, 'toMajorUnit']);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Logging;
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
@@ -12,8 +14,6 @@ use Doctrine\DBAL\Types\Type;
 /**
  * Logger for various Klarna transactions.
  *
- * @package BestitKlarnaOrderManagement\Components\Logging
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class TransactionLogger implements TransactionLoggerInterface
@@ -21,21 +21,12 @@ class TransactionLogger implements TransactionLoggerInterface
     /** @var Connection */
     protected $connection;
 
-    /**
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return int
-     */
-    public function updateOrder(Request $request, Response $response)
+    public function updateOrder(Request $request, Response $response): int
     {
         $payload = $request->getPayload();
 
@@ -47,13 +38,7 @@ class TransactionLogger implements TransactionLoggerInterface
         );
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return int
-     */
-    public function cancelOrder(Request $request, Response $response)
+    public function cancelOrder(Request $request, Response $response): int
     {
         return $this->log(
             $response,
@@ -62,13 +47,7 @@ class TransactionLogger implements TransactionLoggerInterface
         );
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return int
-     */
-    public function extendAuthTime(Request $request, Response $response)
+    public function extendAuthTime(Request $request, Response $response): int
     {
         return $this->log(
             $response,
@@ -77,13 +56,7 @@ class TransactionLogger implements TransactionLoggerInterface
         );
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return int
-     */
-    public function releaseRemainingAmount(Request $request, Response $response)
+    public function releaseRemainingAmount(Request $request, Response $response): int
     {
         return $this->log(
             $response,
@@ -92,17 +65,11 @@ class TransactionLogger implements TransactionLoggerInterface
         );
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return int
-     */
-    public function createCapture(Request $request, Response $response)
+    public function createCapture(Request $request, Response $response): int
     {
         $payload = $request->getPayload();
         $orderId = $request->getQueryParameter('order_id');
-        $cents = $payload['captured_amount'];
+        $cents   = $payload['captured_amount'];
 
         return $this->log(
             $response,
@@ -112,13 +79,7 @@ class TransactionLogger implements TransactionLoggerInterface
         );
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     *
-     * @return int
-     */
-    public function createRefund(Request $request, Response $response)
+    public function createRefund(Request $request, Response $response): int
     {
         $payload = $request->getPayload();
 
@@ -133,14 +94,11 @@ class TransactionLogger implements TransactionLoggerInterface
     /**
      * Logs all the required parameters in the default format.
      *
-     * @param Response $response
      * @param string   $klarnaOrderId
      * @param string   $action
-     * @param int|null $cents
-     *
-     * @return int
+     * @param null|int $cents
      */
-    protected function log(Response $response, $klarnaOrderId, $action, $cents = null)
+    protected function log(Response $response, $klarnaOrderId, $action, $cents = null): int
     {
         /**
          * Do *NOT* use the Doctrine ORM here. This will be used in an Doctrine preUpdateEvent
@@ -151,10 +109,10 @@ class TransactionLogger implements TransactionLoggerInterface
                 new DateTime(),
                 $this->connection->getDatabasePlatform()
             ),
-            'action' => $action,
+            'action'          => $action,
             'klarna_order_id' => $klarnaOrderId,
-            'cents' => $cents,
-            'is_successful' => (int) $response->isSuccessful()
+            'cents'           => $cents,
+            'is_successful'   => (int) $response->isSuccessful(),
         ];
 
         if (!$response->isSuccessful()) {
@@ -165,7 +123,7 @@ class TransactionLogger implements TransactionLoggerInterface
                 $this->connection->getDatabasePlatform()
             );
 
-            $insertData['error_code'] = $error->errorCode;
+            $insertData['error_code']     = $error->errorCode;
             $insertData['error_messages'] = $errorMessages;
             $insertData['correlation_id'] = $error->correlationId;
         }

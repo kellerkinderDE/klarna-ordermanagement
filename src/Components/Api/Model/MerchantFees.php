@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Api\Model;
 
 /**
  * Representation of a Klarna merchant fees as an object.
- *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */

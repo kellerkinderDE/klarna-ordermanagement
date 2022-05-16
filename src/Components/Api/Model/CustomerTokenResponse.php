@@ -6,6 +6,6 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
 
 class CustomerTokenResponse
 {
-    /** @var string|null */
+    /** @var null|string */
     public $tokenId;
 }

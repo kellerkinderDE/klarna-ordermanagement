@@ -1,16 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Subscriber\Controller\Backend;
 
 use Enlight\Event\SubscriberInterface;
-use Enlight_Controller_Action;
-use Enlight_Controller_ActionEventArgs;
-use Enlight_Hook_HookArgs;
 
 /**
  * Subscriber to register controller.
- *
- * @package BestitKlarnaOrderManagement\Subscriber\Controller\Backend
  *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -27,33 +24,24 @@ class RegisterController implements SubscriberInterface
         $this->controllersDir = $controllersDir;
     }
 
-    /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'Enlight_Controller_Dispatcher_ControllerPath_Backend_BestitOrderManagement' => [
-                'registerBestitOrderManagementController'
+                'registerBestitOrderManagementController',
             ],
             'Enlight_Controller_Dispatcher_ControllerPath_Backend_BestitKlarnaPluginConfig' => [
-                'registerBestitKlarnaPluginConfigController'
+                'registerBestitKlarnaPluginConfigController',
             ],
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function registerBestitOrderManagementController()
+    public function registerBestitOrderManagementController(): string
     {
         return "{$this->controllersDir}/Backend/BestitOrderManagement.php";
     }
 
-    /**
-     * @return string
-     */
-    public function registerBestitKlarnaPluginConfigController()
+    public function registerBestitKlarnaPluginConfigController(): string
     {
         return "{$this->controllersDir}/Backend/BestitKlarnaPluginConfig.php";
     }

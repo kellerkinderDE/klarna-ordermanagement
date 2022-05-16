@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Trigger;
 
-use BestitKlarnaOrderManagement\Components\Api\Response;
-use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
-use BestitKlarnaOrderManagement\Components\Facade\Capture as CaptureFacade;
-use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrderModel;
+use BestitKlarnaOrderManagement\Components\Api\Response;
+use BestitKlarnaOrderManagement\Components\Facade\Capture as CaptureFacade;
+use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 
 /**
  * Synchronizes the tracking code changes with Klarna.
- *
- * @package BestitKlarnaOrderManagement\Components\Trigger
  *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
@@ -25,34 +25,27 @@ class OrderTrackingCodeChanged
     /** @var CaptureFacade */
     protected $captureFacade;
 
-    /**
-     * @param OrderFacade     $orderFacade
-     * @param CaptureFacade   $captureFacade
-     * @param DataProvider    $dataProvider
-     */
     public function __construct(
         OrderFacade $orderFacade,
         CaptureFacade $captureFacade,
         DataProvider $dataProvider
     ) {
-        $this->dataProvider = $dataProvider;
-        $this->orderFacade = $orderFacade;
+        $this->dataProvider  = $dataProvider;
+        $this->orderFacade   = $orderFacade;
         $this->captureFacade = $captureFacade;
     }
 
     /**
      * @param int    $swOrderId
      * @param string $trackingCode
-     *
-     * @return Response
      */
-    public function execute($swOrderId, $trackingCode)
+    public function execute($swOrderId, $trackingCode): Response
     {
         $klarnaOrderId = $this->dataProvider->getKlarnaOrderId($swOrderId);
-        $trackingInfo = $this->dataProvider->getTrackingInfo($klarnaOrderId);
+        $trackingInfo  = $this->dataProvider->getTrackingInfo($klarnaOrderId);
 
-        $oldTrackingCode = isset($trackingInfo['trackingCode']) ? $trackingInfo['trackingCode'] : null;
-        $dispatchName = isset($trackingInfo['dispatchName']) ? $trackingInfo['dispatchName'] : null;
+        $oldTrackingCode = $trackingInfo['trackingCode'] ?? null;
+        $dispatchName    = $trackingInfo['dispatchName'] ?? null;
 
         if ($oldTrackingCode === $trackingCode) {
             return Response::wrapEmptySuccessResponse();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Api\Model;
 
 use DateTime;
@@ -7,37 +9,35 @@ use DateTime;
 /**
  * Representation of a Klarna order as an object.
  *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Order
 {
-    /** @var string|null */
+    /** @var null|string */
     public $orderId;
 
-    /** @var string|null */
+    /** @var null|string */
     public $status;
 
-    /** @var string|null */
+    /** @var null|string */
     public $fraudStatus;
 
     /** @var int */
     public $orderAmount;
 
-    /** @var int|null */
+    /** @var null|int */
     public $orderTaxAmount;
 
-    /** @var int|null */
+    /** @var null|int */
     public $originalOrderAmount;
 
-    /** @var int|null */
+    /** @var null|int */
     public $capturedAmount;
 
-    /** @var int|null */
+    /** @var null|int */
     public $refundedAmount;
 
-    /** @var int|null */
+    /** @var null|int */
     public $remainingAuthorizedAmount;
 
     /** @var string */
@@ -49,16 +49,16 @@ class Order
     /** @var LineItem[] */
     public $orderLines;
 
-    /** @var string|null */
+    /** @var null|string */
     public $merchantReference1;
 
-    /** @var string|null */
+    /** @var null|string */
     public $merchantReference2;
 
-    /** @var string|null */
+    /** @var null|string */
     public $klarnaReference;
 
-    /** @var Customer|null */
+    /** @var null|Customer */
     public $customer;
 
     /** @var BillingAddress */
@@ -82,16 +82,16 @@ class Order
     /** @var Refund[] */
     public $refunds = [];
 
-    /** @var array|null */
+    /** @var null|array */
     public $merchantUrls;
 
-    /** @var string|null */
+    /** @var null|string */
     public $merchantData;
 
-    /** @var MerchantFees|null */
+    /** @var null|MerchantFees */
     public $merchantFees;
 
-    /** @var Attachment|null */
+    /** @var null|Attachment */
     public $attachment;
 
     /** @var Options */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BestitKlarnaOrderManagement\Components\Factory;
 
 use BestitKlarnaOrderManagement\Components\ConfigReader;
@@ -11,34 +13,29 @@ use Psr\Log\LoggerInterface;
 
 class CurlClient
 {
-    /**
-     * @return Client
-     */
     public static function create(
         ConfigReader $configReader,
         ShopwareVersionHelper $swVersionHelper,
         PluginHelper $pluginHelper,
         LoggerInterface $logger
-    ) {
-        $liveMode = (bool) $configReader->get('live_mode');
-        $shopVersion = $swVersionHelper->getVersion();
-        $pluginName = $pluginHelper->getPluginName();
+    ): Client {
+        $liveMode      = (bool) $configReader->get('live_mode');
+        $shopVersion   = $swVersionHelper->getVersion();
+        $pluginName    = $pluginHelper->getPluginName();
         $pluginVersion = $pluginHelper->getPluginVersion();
 
         $config = [
             'headers' => [
-                'Accept' => 'application/json',
+                'Accept'       => 'application/json',
                 'Content-Type' => 'application/json',
-                'User-Agent' => "Shopware {$shopVersion}/{$pluginName} {$pluginVersion}",
+                'User-Agent'   => "Shopware {$shopVersion}/{$pluginName} {$pluginVersion}",
             ],
         ];
 
-        $client = new Client(
+        return new Client(
             $liveMode ? Constants::LIVE_API : Constants::TEST_API,
             $config,
             $logger
         );
-
-        return $client;
     }
 }
