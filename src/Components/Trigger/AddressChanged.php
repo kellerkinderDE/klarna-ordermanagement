@@ -3,16 +3,14 @@
 namespace BestitKlarnaOrderManagement\Components\Trigger;
 
 use BestitKlarnaOrderManagement\Components\Api\Response;
+use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Transformer\OrderTransformer;
 use Shopware\Models\Order\Billing;
-use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use Shopware\Models\Order\Shipping;
 
 /**
  * Synchronizes the address changes with Klarna.
- *
- * @package BestitKlarnaOrderManagement\Components\Trigger
  *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
@@ -26,32 +24,23 @@ class AddressChanged
     /** @var OrderTransformer */
     protected $orderTransformer;
 
-    /**
-     * @param DataProvider     $dataProvider
-     * @param OrderFacade      $orderFacade
-     * @param OrderTransformer $orderTransformer
-     */
     public function __construct(
         DataProvider $dataProvider,
         OrderFacade $orderFacade,
         OrderTransformer $orderTransformer
     ) {
-        $this->dataProvider = $dataProvider;
-        $this->orderFacade = $orderFacade;
+        $this->dataProvider     = $dataProvider;
+        $this->orderFacade      = $orderFacade;
         $this->orderTransformer = $orderTransformer;
     }
 
     /**
      * @param int $orderId
-     * @param array $shippingData
-     * @param array $billingData
-     *
-     * @return Response
      */
-    public function execute($orderId, array $shippingData, array $billingData)
+    public function execute($orderId, array $shippingData, array $billingData): Response
     {
         $shippingData = $this->loadCountryAndStateForAddress($shippingData);
-        $billingData = $this->loadCountryAndStateForAddress($billingData);
+        $billingData  = $this->loadCountryAndStateForAddress($billingData);
 
         $shopwareOrder = $this->dataProvider->getSwOrder($orderId);
 
@@ -76,18 +65,13 @@ class AddressChanged
             return Response::wrapEmptySuccessResponse();
         }
 
-        $billing = $this->orderTransformer->createBillingAddress($newBilling);
+        $billing  = $this->orderTransformer->createBillingAddress($newBilling);
         $shipping = $this->orderTransformer->createShippingAddress($newShipping);
 
         return $this->orderFacade->updateAddresses($shopwareOrder->getTransactionId(), $shipping, $billing);
     }
 
-    /**
-     * @param array $address
-     *
-     * @return array
-     */
-    protected function loadCountryAndStateForAddress(array $address)
+    protected function loadCountryAndStateForAddress(array $address): array
     {
         if (isset($address['countryId']) && !empty($address['countryId'])) {
             $address['country'] = $this->dataProvider->getCountry($address['countryId']);
@@ -103,10 +87,8 @@ class AddressChanged
     /**
      * @param Billing|Shipping $oldAddress
      * @param Billing|Shipping $newAddress
-     *
-     * @return bool
      */
-    protected function isAddressChanged($oldAddress, $newAddress)
+    protected function isAddressChanged($oldAddress, $newAddress): bool
     {
         /**
          * Do not use strict equality comparison - the objects don't have to be the same.

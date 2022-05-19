@@ -35,11 +35,9 @@ class AuthorizationHelper implements ContainerAwareInterface
     }
 
     /**
-     * Needed for setting the right authorization and using sub shop credetials where necessary
-     *
-     * @return string
+     * Needed for setting the right authorization and using sub shop credentials where necessary
      */
-    public function setAuthHeader(Request $request)
+    public function setAuthHeader(Request $request): void
     {
         $orderId = $request->getQueryParameter('order_id');
 
@@ -54,11 +52,11 @@ class AuthorizationHelper implements ContainerAwareInterface
         $liveMode = (bool) $this->configReader->get('live_mode');
 
         if ($liveMode) {
-            $merchantId = $this->configReader->get('live_merchant_id');
+            $merchantId       = $this->configReader->get('live_merchant_id');
             $merchantPassword = $this->configReader->get('live_merchant_password');
             $request->setBaseUrl(Constants::LIVE_API);
         } else {
-            $merchantId = $this->configReader->get('test_merchant_id');
+            $merchantId       = $this->configReader->get('test_merchant_id');
             $merchantPassword = $this->configReader->get('test_merchant_password');
             $request->setBaseUrl(Constants::TEST_API);
         }
@@ -67,18 +65,14 @@ class AuthorizationHelper implements ContainerAwareInterface
             'Authorization',
             'Basic ' . base64_encode("{$merchantId}:{$merchantPassword}")
         );
-
-        return $request;
     }
 
     /**
      * Sets the right shop in the Config Reader
      *
      * @param int $orderId Klarna Order Id
-     *
-     * @return void
      */
-    protected function setShopForConfigReader($orderId)
+    protected function setShopForConfigReader($orderId): void
     {
         //gets the sw orderid from klarna order id
         $swOrderId = $this->dataProvider->getShopwareOrderId($orderId);
@@ -88,7 +82,7 @@ class AuthorizationHelper implements ContainerAwareInterface
         }
 
         $swOrder = $this->dataProvider->getSwOrder($swOrderId);
-        $shop = $swOrder->getLanguageSubShop();
+        $shop    = $swOrder->getLanguageSubShop();
 
         $this->configReader->setShop($shop);
     }

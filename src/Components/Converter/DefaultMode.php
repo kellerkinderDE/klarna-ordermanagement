@@ -7,8 +7,6 @@ use BestitKlarnaOrderManagement\Components\Constants;
 /**
  * A default converter which return physical as type
  *
- * @package BestitKlarnaOrderManagement\Components\Converter
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class DefaultMode implements ModeInterface
@@ -17,10 +15,8 @@ class DefaultMode implements ModeInterface
      * Is the article mode supported?
      *
      * @param int $mode
-     *
-     * @return bool
      */
-    public function isSupported($mode)
+    public function isSupported($mode): bool
     {
         return true;
     }
@@ -30,10 +26,8 @@ class DefaultMode implements ModeInterface
      *
      * @param int   $mode
      * @param float $price
-     *
-     * @return string
      */
-    public function convert($mode, $price = null)
+    public function convert($mode, $price = null): string
     {
         return Constants::KLARNA_LINE_ITEM_TYPE_PHYSICAL;
     }

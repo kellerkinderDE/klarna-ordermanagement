@@ -1,35 +1,33 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Api\Model;
 
 class RecurringOrder
 {
-    /** @var string|null */
+    /** @var null|string */
     public $merchantReference1;
 
-    /** @var string|null */
+    /** @var null|string */
     public $merchantData;
 
-    /** @var string|null */
+    /** @var null|string */
     public $locale;
 
     /** @var bool */
     public $autoCapture = false;
 
-    /** @var string|null */
+    /** @var null|string */
     public $purchaseCurrency;
 
-    /** @var int|null */
+    /** @var null|int */
     public $orderAmount;
 
-    /** @var int|null */
+    /** @var null|int */
     public $orderTaxAmount;
 
     /** @var LineItem[] */
     public $orderLines;
 
-    /** @var ShippingAddress|null */
+    /** @var null|ShippingAddress */
     public $shippingAddress;
 }

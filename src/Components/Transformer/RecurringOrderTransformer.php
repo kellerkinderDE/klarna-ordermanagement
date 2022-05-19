@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Transformer;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\RecurringOrder;
@@ -24,9 +22,9 @@ class RecurringOrderTransformer implements RecurringOrderTransformerInterface
 
     public function __construct(TaxHelper $taxHelper, CalculatorInterface $calculator, LineItemTransformerInterface $lineItemTransformer, ShippingAddressTransformerInterface $shippingAddressTransformer)
     {
-        $this->taxHelper = $taxHelper;
-        $this->calculator = $calculator;
-        $this->lineItemTransformer = $lineItemTransformer;
+        $this->taxHelper                  = $taxHelper;
+        $this->calculator                 = $calculator;
+        $this->lineItemTransformer        = $lineItemTransformer;
         $this->shippingAddressTransformer = $shippingAddressTransformer;
     }
 
@@ -34,7 +32,7 @@ class RecurringOrderTransformer implements RecurringOrderTransformerInterface
     {
         $orderModel = new RecurringOrder();
 
-        $orderModel->locale = $locale;
+        $orderModel->locale           = $locale;
         $orderModel->purchaseCurrency = $currency;
 
         $this->taxHelper->setUserdata($userData);

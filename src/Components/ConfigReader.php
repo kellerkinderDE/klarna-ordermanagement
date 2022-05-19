@@ -6,10 +6,6 @@ use Shopware\Components\Plugin\ConfigReader as SwConfigReaderInterface;
 use Shopware\Models\Shop\Shop;
 
 /**
- * Class to retrieve plugin configuration values for the current (sub-)shop.
- *
- * @package BestitKlarnaOrderManagement\Components
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class ConfigReader
@@ -18,35 +14,26 @@ class ConfigReader
     protected $swConfigReader;
     /** @var string */
     protected $pluginName;
-    /** @var Shop|null */
+    /** @var null|Shop */
     protected $shop;
     /** @var array */
     protected $data = [];
 
     /**
-     * @param SwConfigReaderInterface $swConfigReader
-     * @param string                  $pluginName
+     * @param string $pluginName
      */
     public function __construct(SwConfigReaderInterface $swConfigReader, $pluginName)
     {
         $this->swConfigReader = $swConfigReader;
-        $this->pluginName = $pluginName;
+        $this->pluginName     = $pluginName;
     }
 
-    /**
-     * @return Shop|null
-     */
-    public function getShop()
+    public function getShop(): ?Shop
     {
         return $this->shop;
     }
 
-    /**
-     * @param Shop $shop
-     *
-     * @return ConfigReader
-     */
-    public function setShop(Shop $shop)
+    public function setShop(Shop $shop): ConfigReader
     {
         $this->shop = $shop;
 
@@ -57,9 +44,6 @@ class ConfigReader
      * Retrieve plugin config value for the current sub-shop.
      *
      * @param string $name
-     * @param mixed  $defaultReturn
-     *
-     * @return mixed
      */
     public function get($name, $defaultReturn = null)
     {

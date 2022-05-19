@@ -7,6 +7,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## Unreleased
 ### Fixed
 - The purchase currency of the order is now used for displaying the amounts
+### Changed
+- Changed client for requests from guzzle to curl
+- Adjusted error handling
+- Codestyle
 
 ## [0.5.1] - 2022-04-12
 ### Fixed

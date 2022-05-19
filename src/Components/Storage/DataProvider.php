@@ -2,8 +2,8 @@
 
 namespace BestitKlarnaOrderManagement\Components\Storage;
 
-use Doctrine\DBAL\Connection;
 use BestitKlarnaOrderManagement\Components\Model\TransactionLog;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Shopware\Models\Article\Detail as ArticleDetail;
 use Shopware\Models\Country\Country;
@@ -15,8 +15,6 @@ use Shopware\Models\Tax\Tax;
 /**
  * Provides several data that is related to an order.
  *
- * @package BestitKlarnaOrderManagement\Components\DataProvider
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class DataProvider
@@ -26,31 +24,24 @@ class DataProvider
     /** @var Connection */
     protected $connection;
 
-    /**
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
-        $this->em = $em;
+        $this->em         = $em;
         $this->connection = $em->getConnection();
     }
 
     /**
      * @param int $id
-     *
-     * @return Order|null
      */
-    public function getSwOrder($id)
+    public function getSwOrder($id): ?Order
     {
         return $this->em->find(Order::class, $id);
     }
 
     /**
      * @param int $shopwareOrderId
-     *
-     * @return string|null
      */
-    public function getKlarnaOrderId($shopwareOrderId)
+    public function getKlarnaOrderId($shopwareOrderId): ?string
     {
         $klarnaOrderId = $this->connection->createQueryBuilder()
             ->select('transactionID')
@@ -58,18 +49,15 @@ class DataProvider
             ->where('id = :orderId')
             ->setParameter('orderId', $shopwareOrderId)
             ->execute()
-            ->fetchColumn()
-        ;
+            ->fetchColumn();
 
         return $klarnaOrderId ?: null;
     }
 
     /**
      * @param int $klarnaOrderId
-     *
-     * @return string|null
      */
-    public function getShopwareOrderId($klarnaOrderId)
+    public function getShopwareOrderId($klarnaOrderId): ?string
     {
         $shopwareOrderId = $this->connection->createQueryBuilder()
             ->select('id')
@@ -77,18 +65,15 @@ class DataProvider
             ->where('transactionID = :transactionID')
             ->setParameter('transactionID', $klarnaOrderId)
             ->execute()
-            ->fetchColumn()
-        ;
+            ->fetchColumn();
 
         return $shopwareOrderId ?: null;
     }
 
     /**
      * @param int $orderId
-     *
-     * @return array
      */
-    public function getOrderDetails($orderId)
+    public function getOrderDetails($orderId): array
     {
         return $this->connection->createQueryBuilder()
             ->select('soda.*, sod.*, sad.id as variantId')
@@ -98,38 +83,31 @@ class DataProvider
             ->where('sod.orderID = :orderId')
             ->setParameter('orderId', $orderId)
             ->execute()
-            ->fetchAll()
-        ;
+            ->fetchAll();
     }
 
     /**
      * @param int $countryId
-     *
-     * @return Country
      */
-    public function getCountry($countryId)
+    public function getCountry($countryId): Country
     {
         return $this->em->find(Country::class, $countryId);
     }
 
     /**
      * @param int $stateId
-     *
-     * @return State
      */
-    public function getState($stateId)
+    public function getState($stateId): State
     {
         return $this->em->find(State::class, $stateId);
     }
 
     /**
      * @param string $klarnaOrderId
-     *
-     * @return array
      */
-    public function getTrackingInfo($klarnaOrderId)
+    public function getTrackingInfo($klarnaOrderId): array
     {
-        return $this->connection->createQueryBuilder()
+        $trackingInfo = $this->connection->createQueryBuilder()
             ->select('so.trackingcode as trackingCode, spd.name as dispatchName')
             ->from('s_order', 'so')
             ->join('so', 's_premium_dispatch', 'spd', 'so.dispatchID = spd.id')
@@ -137,26 +115,28 @@ class DataProvider
             ->setParameter('transactionId', $klarnaOrderId)
             ->execute()
             ->fetch();
+
+        if ($trackingInfo === false) {
+            return [];
+        }
+
+        return $trackingInfo;
     }
 
     /**
-    * @param string $articleNumber
-    *
-    * @return ArticleDetail
-    */
-    public function getArticleDetail($articleNumber)
+     * @param string $articleNumber
+     */
+    public function getArticleDetail($articleNumber): ?ArticleDetail
     {
         return $this->em->getRepository(ArticleDetail::class)->findOneBy([
-            'number' => $articleNumber
+            'number' => $articleNumber,
         ]);
     }
 
     /**
      * @param int $taxId
-     *
-     * @return Tax
      */
-    public function getTax($taxId)
+    public function getTax($taxId): Tax
     {
         return $this->em->find(Tax::class, $taxId);
     }
@@ -164,7 +144,10 @@ class DataProvider
     /**
      * @param int $statusId
      *
-     * @return Status|object
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMException
+     *
+     * @return null|object|Status
      */
     public function getStatusReference($statusId)
     {
@@ -176,7 +159,7 @@ class DataProvider
      *
      * @return TransactionLog[]
      */
-    public function getLogs($klarnaOrderId)
+    public function getLogs($klarnaOrderId): array
     {
         return $this->em->createQueryBuilder()
             ->select('t')
@@ -185,7 +168,6 @@ class DataProvider
             ->orderBy('t.createdAt', 'DESC')
             ->setParameter('orderId', $klarnaOrderId)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }

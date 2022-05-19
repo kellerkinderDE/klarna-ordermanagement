@@ -7,8 +7,6 @@ use Shopware\Components\Routing\Router;
 /**
  * Builds the complete product URLs for line items (by default it is a "shopware.php" URL).
  *
- * @package BestitKlarnaOrderManagement\Components\DataFormatter
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class ProductUrlBuilder implements ProductUrlBuilderInterface
@@ -16,21 +14,16 @@ class ProductUrlBuilder implements ProductUrlBuilderInterface
     /** @var Router */
     protected $router;
 
-    /**
-     * @param Router $router
-     */
     public function __construct(Router $router)
     {
         $this->router = $router;
     }
 
     /**
-     * @param array $lineItems  In the format that `Shopware_Controllers_Frontend_Checkout::getBasket()['content']`
-     *                          returns it.
-     *
-     * @return array
+     * @param array $lineItems in the format that `Shopware_Controllers_Frontend_Checkout::getBasket()['content']`
+     *                         returns it
      */
-    public function addProductUrls(array $lineItems)
+    public function addProductUrls(array $lineItems): array
     {
         /**
          * When trying to generate the URLs in the backend, they are incorrect.
@@ -41,13 +34,13 @@ class ProductUrlBuilder implements ProductUrlBuilderInterface
          * To fix that we just set the module and controller to the values
          * that we need and reset them after we're done.
          */
-        $routerContext = $this->router->getContext();
+        $routerContext    = $this->router->getContext();
         $oldContextParams = $routerContext->getParams();
 
         if (!in_array($routerContext->getModuleKey(), ['frontend', 'widgets'])) {
             $routerContext->setParams([
-                'module' => 'frontend',
-                'controller' => 'detail'
+                'module'     => 'frontend',
+                'controller' => 'detail',
             ]);
         }
 
@@ -70,7 +63,7 @@ class ProductUrlBuilder implements ProductUrlBuilderInterface
         foreach ($lineItems as $key => $lineItem) {
             $articleId = (int) $lineItem['articleID'];
 
-            $lineItems[$key]['linkDetails'] = isset($linkDetails[$articleId]) ? $linkDetails[$articleId] : null;
+            $lineItems[$key]['linkDetails'] = $linkDetails[$articleId] ?? null;
         }
 
         return $lineItems;

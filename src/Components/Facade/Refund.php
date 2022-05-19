@@ -4,6 +4,7 @@ namespace BestitKlarnaOrderManagement\Components\Facade;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\LineItem;
 use BestitKlarnaOrderManagement\Components\Api\Model\Refund as RefundModel;
+use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Refund as RefundResource;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Logging\TransactionLoggerInterface;
@@ -11,13 +12,8 @@ use BestitKlarnaOrderManagement\Components\Shared\AuthorizationHelper;
 use BestitKlarnaOrderManagement\Components\Storage\DataWriter;
 use Shopware\Models\Order\Status;
 use Symfony\Component\Serializer\Serializer;
-use BestitKlarnaOrderManagement\Components\Api\Request;
 
 /**
- * Interface to interact with Klarna refund(s).
- *
- * @package BestitKlarnaOrderManagement\Components\Facade
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class Refund
@@ -33,13 +29,6 @@ class Refund
     /** @var AuthorizationHelper */
     protected $authorizationHelper;
 
-    /**
-     * @param RefundResource             $refundResource
-     * @param Serializer                 $serializer
-     * @param DataWriter                 $dataWriter
-     * @param TransactionLoggerInterface $transactionLogger
-     * @param AuthorizationHelper        $authorizationHelper
-     */
     public function __construct(
         RefundResource $refundResource,
         Serializer $serializer,
@@ -47,30 +36,28 @@ class Refund
         TransactionLoggerInterface $transactionLogger,
         AuthorizationHelper $authorizationHelper
     ) {
-        $this->refundResource = $refundResource;
-        $this->serializer = $serializer;
-        $this->dataWriter = $dataWriter;
-        $this->transactionLogger = $transactionLogger;
+        $this->refundResource      = $refundResource;
+        $this->serializer          = $serializer;
+        $this->dataWriter          = $dataWriter;
+        $this->transactionLogger   = $transactionLogger;
         $this->authorizationHelper = $authorizationHelper;
     }
 
     /**
-     * @param string $orderId
-     * @param int $refundAmount
-     * @param string|array|null $lineItems
-     * @param string|null $description
-     *
-     * @return Response
+     * @param string            $orderId
+     * @param int               $refundAmount
+     * @param null|array|string $lineItems
+     * @param null|string       $description
      *
      * @deprecated Passing $lineItems as a JSON string is deprecated and will be removed in 2.0.
      *             You should pass an array of LineItem objects instead.
      */
-    public function create($orderId, $refundAmount, $lineItems = null, $description = null)
+    public function create($orderId, $refundAmount, $lineItems = null, $description = null): Response
     {
         $refund = new RefundModel();
 
         $refund->refundedAmount = $refundAmount;
-        $refund->description = $description;
+        $refund->description    = $description;
 
         if ($lineItems !== null) {
             if (is_array($lineItems)) {
@@ -81,8 +68,7 @@ class Refund
         }
 
         $request = Request::createFromPayload($this->serializer->normalize($refund))
-            ->addQueryParameter('order_id', $orderId)
-        ;
+            ->addQueryParameter('order_id', $orderId);
         $this->authorizationHelper->setAuthHeader($request);
 
         $response = $this->refundResource->create($request);

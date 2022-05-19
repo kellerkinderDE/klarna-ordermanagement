@@ -2,11 +2,10 @@
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Resource\Order as OrderResource;
+use BestitKlarnaOrderManagement\Components\Constants;
 use BestitKlarnaOrderManagement\Controllers\JsonableResponseTrait;
-use BestitKlarnaOrderManagement\Components\Logging\ZipCreator;
 use Shopware\Components\CSRFWhitelistAware;
 use Symfony\Component\HttpFoundation\Response;
-use BestitKlarnaOrderManagement\Components\Constants;
 
 /**
  * Controller to handle some backend actions related to the config, such as test API credentials or download log files.
@@ -23,10 +22,7 @@ class Shopware_Controllers_Backend_BestitKlarnaPluginConfig extends Shopware_Con
     /** @var OrderResource */
     protected $orderResource;
 
-    /**
-     * @return void
-     */
-    public function preDispatch()
+    public function preDispatch(): void
     {
         $this->viewRenderer = $this->Front()->Plugins()->get('ViewRenderer');
         $this->viewRenderer->setNoRender();
@@ -35,14 +31,12 @@ class Shopware_Controllers_Backend_BestitKlarnaPluginConfig extends Shopware_Con
 
     /**
      * Tests the validity of the given credentials in the plugin config.
-     *
-     * @return void
      */
-    public function testApiCredentialsAction()
+    public function testApiCredentialsAction(): void
     {
-        $success = true;
-        $liveMode = $this->Request()->getParam('liveMode');
-        $merchantId = $this->Request()->getParam('merchantId');
+        $success      = true;
+        $liveMode     = $this->Request()->getParam('liveMode');
+        $merchantId   = $this->Request()->getParam('merchantId');
         $merchantPass = $this->Request()->getParam('merchantPass');
 
         $request = new Request();
@@ -61,7 +55,7 @@ class Shopware_Controllers_Backend_BestitKlarnaPluginConfig extends Shopware_Con
         }
 
         $this->jsonResponse([
-            'success' => $success
+            'success' => $success,
         ]);
     }
 
@@ -70,10 +64,10 @@ class Shopware_Controllers_Backend_BestitKlarnaPluginConfig extends Shopware_Con
      *
      * @return string[]
      */
-    public function getWhitelistedCSRFActions()
+    public function getWhitelistedCSRFActions(): array
     {
         return [
-            'testApiCredentials'
+            'testApiCredentials',
         ];
     }
 }

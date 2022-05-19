@@ -5,8 +5,6 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
 /**
  * Representation of a Klarna line item as an object.
  *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class LineItem
@@ -15,7 +13,7 @@ class LineItem
      * Since custom product plugin order line items (values) dont have an
      * article ordernumber, we have to allow null
      *
-     * @var string|null
+     * @var null|string
      */
     public $reference;
 
@@ -25,7 +23,7 @@ class LineItem
     /** @var int */
     public $quantity;
 
-    /** @var string|null */
+    /** @var null|string */
     public $quantityUnit;
 
     /** @var string */
@@ -46,13 +44,13 @@ class LineItem
     /** @var int */
     public $totalTaxAmount;
 
-    /** @var string|null */
+    /** @var null|string */
     public $merchantData;
 
-    /** @var string|null */
+    /** @var null|string */
     public $productUrl;
 
-    /** @var string|null */
+    /** @var null|string */
     public $imageUrl;
 
     /** @var ProductIdentifiers */

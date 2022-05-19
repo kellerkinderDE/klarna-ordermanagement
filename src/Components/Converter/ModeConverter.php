@@ -5,8 +5,6 @@ namespace BestitKlarnaOrderManagement\Components\Converter;
 /**
  * Converters which converts shopware basket item mode to Klarna item type
  *
- * @package BestitKlarnaOrderManagement\Components\Converter
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class ModeConverter
@@ -22,7 +20,7 @@ class ModeConverter
         $this->modeConverters = $modeConverters;
     }
 
-    public function convert($mode, $price = null)
+    public function convert($mode, $price = null): string
     {
         return $this->getConverter($mode)->convert($mode, $price);
     }
@@ -31,10 +29,8 @@ class ModeConverter
      * Returns the Supported converter
      *
      * @param int $mode
-     *
-     * @return ModeInterface
      */
-    public function getConverter($mode)
+    public function getConverter($mode): ModeInterface
     {
         foreach ($this->modeConverters as $modeConverter) {
             if ($modeConverter->isSupported($mode)) {

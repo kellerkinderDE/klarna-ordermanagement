@@ -15,8 +15,6 @@ use Shopware\Models\Order\Shipping as SwOrderShippingModel;
 /**
  * Convert Shopware Order models to klarna models
  *
- * @package BestitKlarnaOrderManagement\Components\Transformer
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class OrderTransformer implements OrderTransformerInterface
@@ -32,13 +30,6 @@ class OrderTransformer implements OrderTransformerInterface
     /** @var ProductIdentifiersTransformerInterface */
     protected $productIdentifiersTransformer;
 
-    /**
-     * @param CalculatorInterface                    $calculator
-     * @param ModeConverter                          $modeConverter
-     * @param ProductUrlBuilderInterface             $productUrlBuilder
-     * @param BreadcrumbBuilderInterface             $breadcrumbBuilder
-     * @param ProductIdentifiersTransformerInterface $productIdentifiersTransformer
-     */
     public function __construct(
         CalculatorInterface $calculator,
         ModeConverter $modeConverter,
@@ -46,32 +37,27 @@ class OrderTransformer implements OrderTransformerInterface
         BreadcrumbBuilderInterface $breadcrumbBuilder,
         ProductIdentifiersTransformerInterface $productIdentifiersTransformer
     ) {
-        $this->calculator = $calculator;
-        $this->modeConverter = $modeConverter;
-        $this->productUrlBuilder = $productUrlBuilder;
-        $this->breadcrumbBuilder = $breadcrumbBuilder;
+        $this->calculator                    = $calculator;
+        $this->modeConverter                 = $modeConverter;
+        $this->productUrlBuilder             = $productUrlBuilder;
+        $this->breadcrumbBuilder             = $breadcrumbBuilder;
         $this->productIdentifiersTransformer = $productIdentifiersTransformer;
     }
 
-    /**
-     * @param SwOrderShippingModel $shipping
-     *
-     * @return ShippingAddress
-     */
-    public function createShippingAddress(SwOrderShippingModel $shipping)
+    public function createShippingAddress(SwOrderShippingModel $shipping): ShippingAddress
     {
         $shippingAddress = new ShippingAddress();
 
-        $shippingAddress->givenName = $shipping->getFirstName();
-        $shippingAddress->familyName = $shipping->getLastName();
-        $shippingAddress->title = $shipping->getTitle() ?: null;
-        $shippingAddress->streetAddress = $shipping->getStreet();
+        $shippingAddress->givenName      = $shipping->getFirstName();
+        $shippingAddress->familyName     = $shipping->getLastName();
+        $shippingAddress->title          = $shipping->getTitle() ?: null;
+        $shippingAddress->streetAddress  = $shipping->getStreet();
         $shippingAddress->streetAddress2 = $shipping->getCompany() ?: null;
-        $shippingAddress->postalCode = $shipping->getZipCode();
-        $shippingAddress->city = $shipping->getCity();
-        $shippingAddress->region = $shipping->getState() ? $shipping->getState()->getName() : null;
-        $shippingAddress->country = $shipping->getCountry()->getIso();
-        $shippingAddress->email = $shipping->getCustomer()->getEmail();
+        $shippingAddress->postalCode     = $shipping->getZipCode();
+        $shippingAddress->city           = $shipping->getCity();
+        $shippingAddress->region         = $shipping->getState() ? $shipping->getState()->getName() : null;
+        $shippingAddress->country        = $shipping->getCountry()->getIso();
+        $shippingAddress->email          = $shipping->getCustomer()->getEmail();
 
         /**
          * The shipping address has a phone field since shopware 5.3.3.
@@ -85,36 +71,29 @@ class OrderTransformer implements OrderTransformerInterface
         return $shippingAddress;
     }
 
-    /**
-     * @param SwOrderBillingModel $billing
-     *
-     * @return BillingAddress
-     */
-    public function createBillingAddress(SwOrderBillingModel $billing)
+    public function createBillingAddress(SwOrderBillingModel $billing): BillingAddress
     {
         $billingAddress = new BillingAddress();
 
-        $billingAddress->givenName = $billing->getFirstName();
-        $billingAddress->familyName = $billing->getLastName();
-        $billingAddress->title = $billing->getTitle() ?: null;
-        $billingAddress->streetAddress = $billing->getStreet();
+        $billingAddress->givenName      = $billing->getFirstName();
+        $billingAddress->familyName     = $billing->getLastName();
+        $billingAddress->title          = $billing->getTitle() ?: null;
+        $billingAddress->streetAddress  = $billing->getStreet();
         $billingAddress->streetAddress2 = $billing->getCompany() ?: null;
-        $billingAddress->postalCode = $billing->getZipCode();
-        $billingAddress->city = $billing->getCity();
-        $billingAddress->region = $billing->getState() ? $billing->getState()->getName() : null;
-        $billingAddress->country = $billing->getCountry()->getIso();
-        $billingAddress->email = $billing->getCustomer()->getEmail();
-        $billingAddress->phone = $billing->getPhone() ?: null;
+        $billingAddress->postalCode     = $billing->getZipCode();
+        $billingAddress->city           = $billing->getCity();
+        $billingAddress->region         = $billing->getState() ? $billing->getState()->getName() : null;
+        $billingAddress->country        = $billing->getCountry()->getIso();
+        $billingAddress->email          = $billing->getCustomer()->getEmail();
+        $billingAddress->phone          = $billing->getPhone() ?: null;
 
         return $billingAddress;
     }
 
     /**
-     * @param array $details
-     *
      * @return LineItem[]
      */
-    public function createLineItems(array $details)
+    public function createLineItems(array $details): array
     {
         $newLineItems = [];
 
@@ -122,33 +101,33 @@ class OrderTransformer implements OrderTransformerInterface
          * Build the product URLs and the breadcrumbs for all items in one batch
          * to avoid many SQL queries.
          */
-        $detailsWithUrl = $this->productUrlBuilder->addProductUrls($details);
+        $detailsWithUrl              = $this->productUrlBuilder->addProductUrls($details);
         $detailsWithUrlAndBreadcrumb = $this->breadcrumbBuilder->addBreadcrumb($detailsWithUrl);
 
         foreach ($detailsWithUrlAndBreadcrumb as $detail) {
-            $lineItem = new LineItem();
-            $lineItem->type = $this->modeConverter->convert((int) $detail['modus'], (float) $detail['price']);
-            $lineItem->reference = substr($detail['articleordernumber'], 0, 64);
-            $lineItem->name = $detail['name'];
-            $lineItem->quantity = (int) $detail['quantity'];
-            $lineItem->quantityUnit = $detail['unit'] ?: null;
-            $lineItem->unitPrice = $this->calculator->toCents($detail['price']);
-            $lineItem->totalAmount = $this->calculator->toCents((float) $detail['price'] * (int) $detail['quantity']);
+            $lineItem                      = new LineItem();
+            $lineItem->type                = $this->modeConverter->convert((int) $detail['modus'], (float) $detail['price']);
+            $lineItem->reference           = substr($detail['articleordernumber'], 0, 64);
+            $lineItem->name                = $detail['name'];
+            $lineItem->quantity            = (int) $detail['quantity'];
+            $lineItem->quantityUnit        = $detail['unit'] ?: null;
+            $lineItem->unitPrice           = $this->calculator->toCents($detail['price']);
+            $lineItem->totalAmount         = $this->calculator->toCents((float) $detail['price'] * (int) $detail['quantity']);
             $lineItem->totalDiscountAmount = 0;
 
             if (empty($detail['tax_rate'])) {
-                $lineItem->taxRate = 0;
+                $lineItem->taxRate        = 0;
                 $lineItem->totalTaxAmount = 0;
             } else {
-                $lineItem->taxRate = $this->calculator->toCents($detail['tax_rate']);
+                $lineItem->taxRate        = $this->calculator->toCents($detail['tax_rate']);
                 $lineItem->totalTaxAmount = $this->calculator->toCents(
                     ((float) $detail['price'] * (int) $detail['quantity']) / 100 * $detail['tax_rate']
                 );
             }
 
             $lineItem->productIdentifiers = $this->productIdentifiersTransformer->toKlarnaModel($detail);
-            $lineItem->productUrl = isset($detail['linkDetails']) ? $detail['linkDetails'] : null;
-            $lineItem->imageUrl = isset($detail['image']) ? $detail['image'] : null;
+            $lineItem->productUrl         = $detail['linkDetails'] ?? null;
+            $lineItem->imageUrl           = $detail['image'] ?? null;
 
             $newLineItems[] = $lineItem;
         }
@@ -158,10 +137,8 @@ class OrderTransformer implements OrderTransformerInterface
 
     /**
      * @param float $orderAmount
-     *
-     * @return int
      */
-    public function createOrderAmount($orderAmount)
+    public function createOrderAmount($orderAmount): int
     {
         return $this->calculator->toCents($orderAmount);
     }

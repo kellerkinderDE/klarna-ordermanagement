@@ -5,8 +5,6 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
 /**
  * Representation of a Klarna billing address as an object.
  *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class BillingAddress
@@ -17,13 +15,13 @@ class BillingAddress
     /** @var string */
     public $familyName;
 
-    /** @var string|null */
+    /** @var null|string */
     public $title;
 
     /** @var string */
     public $streetAddress;
 
-    /** @var string|null */
+    /** @var null|string */
     public $streetAddress2;
 
     /** @var string */
@@ -32,7 +30,7 @@ class BillingAddress
     /** @var string */
     public $city;
 
-    /** @var string|null */
+    /** @var null|string */
     public $region;
 
     /** @var string */
@@ -41,9 +39,9 @@ class BillingAddress
     /** @var string */
     public $email;
 
-    /** @var string|null */
+    /** @var null|string */
     public $phone;
 
-    /** @var string|null */
+    /** @var null|string */
     public $organizationName;
 }

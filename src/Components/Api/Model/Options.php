@@ -5,8 +5,6 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
 /**
  * Representation of a Klarna options as an object.
  *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class Options

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Facade;
 
 use BestitKlarnaOrderManagement\Components\Api\Request;
@@ -35,8 +33,7 @@ class CustomerToken
         Serializer $serializer,
         Localizer $localizer,
         AuthorizationHelper $authorizationHelper
-    )
-    {
+    ) {
         $this->customerTokenResource    = $customerTokenResource;
         $this->customerTokenTransformer = $customerTokenTransformer;
         $this->serializer               = $serializer;
@@ -46,8 +43,8 @@ class CustomerToken
 
     public function create(string $klarnaAuthToken, array $userData, array $orderBasket, string $confirmationUrl): Response
     {
-        $iso        = $userData['additional']['country']['countryiso'] ?? '';
-        $currency   = $orderBasket['sCurrencyName'];
+        $iso      = $userData['additional']['country']['countryiso'] ?? '';
+        $currency = $orderBasket['sCurrencyName'];
 
         $customerTokenModel = $this->customerTokenTransformer
             ->withUserData($userData)

@@ -5,8 +5,6 @@ namespace BestitKlarnaOrderManagement\Components\Api;
 /**
  * Representation of any request that is fired to Klarna.
  *
- * @package BestitKlarnaOrderManagement\Components\Api
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Request
@@ -17,15 +15,10 @@ class Request
     protected $payload = [];
     /** @var array */
     protected $queryParameters = [];
-    /** @var string|null */
+    /** @var null|string */
     protected $baseUrl;
 
-    /**
-     * @param array $payload
-     *
-     * @return Request
-     */
-    public static function createFromPayload(array $payload)
+    public static function createFromPayload(array $payload): Request
     {
         $static = new static();
 
@@ -34,53 +27,38 @@ class Request
         return $static;
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
 
     /**
      * @param string $key
-     *
-     * @return string|null
      */
-    public function getHeader($key)
+    public function getHeader($key): ?string
     {
-        return isset($this->headers[$key]) ? $this->headers[$key] : null;
+        return $this->headers[$key] ?? null;
     }
 
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return Request
      */
-    public function addHeader($key, $value)
+    public function addHeader($key, $value): Request
     {
         $this->headers[$key] = $value;
 
         return $this;
     }
 
-    /**
-     * @param array $headers
-     *
-     * @return Request
-     */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers): Request
     {
         $this->headers = $headers;
 
         return $this;
     }
 
-    /**
-     * @return Request
-     */
-    public function clearHeaders()
+    public function clearHeaders(): Request
     {
         $this->headers = [];
 
@@ -88,7 +66,7 @@ class Request
     }
 
     /**
-     * @return array|string|null
+     * @return null|array|string
      */
     public function getPayload()
     {
@@ -97,20 +75,15 @@ class Request
 
     /**
      * @param array|string $payload
-     *
-     * @return Request
      */
-    public function setPayload($payload)
+    public function setPayload($payload): Request
     {
         $this->payload = $payload;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getQueryParameters()
+    public function getQueryParameters(): array
     {
         return $this->queryParameters;
     }
@@ -118,52 +91,39 @@ class Request
     /**
      * @param string $key
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     public function getQueryParameter($key)
     {
-        return isset($this->queryParameters[$key]) ? $this->queryParameters[$key] : null;
+        return $this->queryParameters[$key] ?? null;
     }
 
     /**
      * @param string $key
-     * @param mixed $value
-     *
-     * @return Request
      */
-    public function addQueryParameter($key, $value)
+    public function addQueryParameter($key, $value): Request
     {
         $this->queryParameters[$key] = $value;
 
         return $this;
     }
 
-    /**
-     * @param array $extraData
-     *
-     * @return Request
-     */
-    public function setQueryParameters(array $extraData)
+    public function setQueryParameters(array $extraData): Request
     {
         $this->queryParameters = $extraData;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBaseUrl()
+    public function getBaseUrl(): string
     {
         return $this->baseUrl ?: '';
     }
 
     /**
      * @param string $baseUrl
-     *
-     * @return Request
      */
-    public function setBaseUrl($baseUrl)
+    public function setBaseUrl($baseUrl): Request
     {
         $this->baseUrl = $baseUrl;
 

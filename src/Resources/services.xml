@@ -29,25 +29,13 @@
         /////////////////
         -->
         <service
-                class="GuzzleHttp\Client"
-                id="bestit_klarna_order_management.guzzle_http.client">
-            <factory class="BestitKlarnaOrderManagement\Components\Factory\HttpClient" method="create"/>
+                class="BestitKlarnaOrderManagement\Components\Curl\Client"
+                id="bestit_klarna_order_management.curl.client">
+            <factory class="BestitKlarnaOrderManagement\Components\Factory\CurlClient" method="create"/>
             <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
-            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
-            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
             <argument type="service" id="bestit_klarna_order_management.components.shared.plugin_helper" />
-        </service>
-
-        <service
-                class="GuzzleHttp\Client"
-                id="bestit_klarna_order_management.guzzle_shop_aware.http.client">
-            <factory class="BestitKlarnaOrderManagement\Components\Factory\HttpClient" method="create"/>
-            <argument type="service" id="bestit_klarna_order_management.components.shop_aware.config_reader"/>
-            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.logging"/>
-            <argument type="service" id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging"/>
-            <argument type="service" id="bestit_klarna_order_management.components.shared.shopware_version_helper"/>
-            <argument type="service" id="bestit_klarna_order_management.components.shared.plugin_helper" />
+            <argument type="service" id="bestit_klarna_order_management.logger" />
         </service>
 
         <!--
@@ -58,35 +46,35 @@
         <service
                 class="BestitKlarnaOrderManagement\Components\Api\Resource\Order"
                 id="bestit_klarna_order_management.components.api.resource.order">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
         <service
                 class="BestitKlarnaOrderManagement\Components\Api\Resource\Capture"
                 id="bestit_klarna_order_management.components.api.resource.capture">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
         <service
                 class="BestitKlarnaOrderManagement\Components\Api\Resource\Refund"
                 id="bestit_klarna_order_management.components.api.resource.refund">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
         <service
             class="BestitKlarnaOrderManagement\Components\Api\Resource\CustomerToken"
             id="bestit_klarna_order_management.components.api.resource.customer_token">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
         <service
             class="BestitKlarnaOrderManagement\Components\Api\Resource\RecurringOrder"
             id="bestit_klarna_order_management.components.api.resource.recurring_order">
-            <argument type="service" id="bestit_klarna_order_management.guzzle_http.client"/>
+            <argument type="service" id="bestit_klarna_order_management.curl.client"/>
             <argument type="service" id="symfony.component.serializer.serializer"/>
         </service>
 
@@ -505,22 +493,6 @@
         <service
                 class="BestitKlarnaOrderManagement\Components\Converter\DefaultMode"
                 id="bestit_klarna_order_management.components.converter.default_mode"/>
-
-        <!--
-        /////////////////
-        /   Api Middleware
-        /////////////////
-        -->
-        <service class="BestitKlarnaOrderManagement\Components\Api\Middleware\Logging"
-                 id="bestit_klarna_order_management.components.api.middleware.logging">
-            <argument type="service" id="bestit_klarna_order_management.logger"/>
-            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
-        </service>
-        <service class="BestitKlarnaOrderManagement\Components\Api\Middleware\LoggingGuzzle7"
-                 id="bestit_klarna_order_management.components.api.middleware.guzzle7_logging">
-            <argument type="service" id="bestit_klarna_order_management.logger"/>
-            <argument type="service" id="bestit_klarna_order_management.components.config_reader"/>
-        </service>
 
         <service
                 class="BestitKlarnaOrderManagement\Components\Logging\TransactionLogger"

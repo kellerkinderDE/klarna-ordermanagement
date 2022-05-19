@@ -10,27 +10,21 @@ use Shopware\Bundle\StoreFrontBundle\Struct\Category;
 /**
  * Builds a category breadcrumb for the given line items.
  *
- * @package BestitKlarnaOrderManagement\Components\DataFormatter
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class BreadcrumbBuilder implements BreadcrumbBuilderInterface
 {
-    const BREADCRUMB_SEPARATOR = ' > ';
+    public const BREADCRUMB_SEPARATOR = ' > ';
 
     /** @var CategoryServiceInterface */
     protected $categoryService;
     /** @var ContextServiceInterface */
     protected $contextService;
 
-    /**
-     * @param CategoryServiceInterface $categoryService
-     * @param ContextServiceInterface  $contextService
-     */
     public function __construct(CategoryServiceInterface $categoryService, ContextServiceInterface $contextService)
     {
         $this->categoryService = $categoryService;
-        $this->contextService = $contextService;
+        $this->contextService  = $contextService;
     }
 
     /**
@@ -39,12 +33,10 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
      * We use the category service to fetch all categories for all line items in one SQL Query instead
      * of using at least one SQL Query for each line item.
      *
-     * @param array $lineItems  In the format that `Shopware_Controllers_Frontend_Checkout::getBasket()['content']`
-     *                          returns it.
-     *
-     * @return array
+     * @param array $lineItems in the format that `Shopware_Controllers_Frontend_Checkout::getBasket()['content']`
+     *                         returns it
      */
-    public function addBreadcrumb(array $lineItems)
+    public function addBreadcrumb(array $lineItems): array
     {
         $baseProducts = $this->createBaseProducts($lineItems);
 
@@ -70,10 +62,8 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
 
     /**
      * @param Category[] $categories
-     *
-     * @return string
      */
-    public function buildBreadcrumb(array $categories)
+    public function buildBreadcrumb(array $categories): string
     {
         $categoryPath = [];
 
@@ -95,7 +85,7 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
                 continue;
             }
 
-            $categoryPath[] = $category->getName();
+            $categoryPath[]   = $category->getName();
             $previousCategory = $category;
         }
 
@@ -104,13 +94,8 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
 
     /**
      * Callback for `usort` to sort an array of categories by their parentIds.
-     *
-     * @param Category $category1
-     * @param Category $category2
-     *
-     * @return int
      */
-    public function sortCategoryByParentId(Category $category1, Category $category2)
+    public function sortCategoryByParentId(Category $category1, Category $category2): int
     {
         if ($category1->getParentId() > $category2->getParentId()) {
             return 1;
@@ -124,11 +109,9 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
     }
 
     /**
-     * @param array $lineItems
-     *
      * @return BaseProduct[]
      */
-    protected function createBaseProducts(array $lineItems)
+    protected function createBaseProducts(array $lineItems): array
     {
         $products = [];
 
@@ -146,11 +129,9 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
     /**
      * Builds the main path for each product.
      *
-     * @param array $productCategories
-     *
-     * @return array    The key is the product number whereas the value is the breadcrumb.
+     * @return array the key is the product number whereas the value is the breadcrumb
      */
-    protected function transformToMainPathWithProductNumberAsKey(array $productCategories)
+    protected function transformToMainPathWithProductNumberAsKey(array $productCategories): array
     {
         $mainPathCategories = [];
 

@@ -8,18 +8,14 @@ namespace BestitKlarnaOrderManagement\Components\Calculator;
  * This calculator may produce rounding errors.
  * Use the "bcmath" calculator if possible.
  *
- * @package BestitKlarnaOrderManagement\Components\Calculator
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class PhpCalculator implements CalculatorInterface
 {
     /**
      * Is the calculation method supported?
-     *
-     * @return bool
      */
-    public function isSupported()
+    public function isSupported(): bool
     {
         return true;
     }
@@ -28,10 +24,8 @@ class PhpCalculator implements CalculatorInterface
      * Converts the amount which was given to the instance to cents.
      *
      * @param float $amount
-     *
-     * @return int
      */
-    public function toCents($amount)
+    public function toCents($amount): int
     {
         /**
          * We need to round here so that values like "-7.6475" get converted correctly.
@@ -59,10 +53,8 @@ class PhpCalculator implements CalculatorInterface
      * Converts the amount which was given to the method to a float.
      *
      * @param int $amount
-     *
-     * @return float
      */
-    public function toMajorUnit($amount)
+    public function toMajorUnit($amount): float
     {
         return (float) ($amount / 100);
     }

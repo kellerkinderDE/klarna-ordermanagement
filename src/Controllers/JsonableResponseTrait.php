@@ -9,8 +9,6 @@ use JsonSerializable;
 /**
  * Helper to return json responses from controllers.
  *
- * @package BestitKlarnaOrderManagement\Controllers
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 trait JsonableResponseTrait
@@ -18,11 +16,9 @@ trait JsonableResponseTrait
     /**
      * @param array|JsonSerializable $data
      *
-     * @return void
-     *
      * @throws InvalidArgumentException
      */
-    public function jsonResponse($data)
+    public function jsonResponse($data): void
     {
         if (!is_array($data) && !$data instanceof JsonSerializable) {
             throw new InvalidArgumentException('The given input can not be JSON serialized.');
@@ -32,16 +28,11 @@ trait JsonableResponseTrait
         $this->Response()->setBody(json_encode($data));
     }
 
-    /**
-     * @param Exception $e
-     *
-     * @return void
-     */
-    public function jsonException(Exception $e)
+    public function jsonException(Exception $e): void
     {
         $this->jsonResponse([
             'success' => false,
-            'error' => $e->getMessage()
+            'error'   => $e->getMessage(),
         ]);
     }
 }

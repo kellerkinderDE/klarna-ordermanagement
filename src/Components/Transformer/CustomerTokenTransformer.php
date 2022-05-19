@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Transformer;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\CustomerToken as CustomerTokenModel;
@@ -22,7 +20,7 @@ class CustomerTokenTransformer implements CustomerTokenTransformerInterface
 
     public function __construct(CustomerTransformerInterface $customerTransformer, BillingAddressTransformerInterface $billingAddressTransformer)
     {
-        $this->customerTransformer = $customerTransformer;
+        $this->customerTransformer       = $customerTransformer;
         $this->billingAddressTransformer = $billingAddressTransformer;
     }
 
@@ -30,15 +28,15 @@ class CustomerTokenTransformer implements CustomerTokenTransformerInterface
     {
         $customerTokenModel = new CustomerTokenModel();
 
-        $customerTokenModel->purchaseCountry = $purchaseCountry;
+        $customerTokenModel->purchaseCountry  = $purchaseCountry;
         $customerTokenModel->purchaseCurrency = $currency;
-        $customerTokenModel->locale = $locale;
+        $customerTokenModel->locale           = $locale;
 
         $customerTokenModel->merchantUrls = $this->merchantUrls;
 
         if (!empty($this->userData)) {
-            $customerTokenModel->customer = $this->customerTransformer->toKlarnaModel($this->userData);
-            $customerTokenModel->billingAddress  = $this->billingAddressTransformer->toKlarnaModel($this->userData);
+            $customerTokenModel->customer       = $this->customerTransformer->toKlarnaModel($this->userData);
+            $customerTokenModel->billingAddress = $this->billingAddressTransformer->toKlarnaModel($this->userData);
         }
 
         return $customerTokenModel;
@@ -51,10 +49,6 @@ class CustomerTokenTransformer implements CustomerTokenTransformerInterface
         return $this;
     }
 
-    /**
-     * @param string $confirmationUrl
-     * @return CustomerTokenTransformerInterface
-     */
     public function withMerchantUrls(string $confirmationUrl): CustomerTokenTransformerInterface
     {
         $this->merchantUrls = [

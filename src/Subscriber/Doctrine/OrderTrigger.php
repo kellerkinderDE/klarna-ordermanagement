@@ -12,8 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Subscriber to trigger entity changes such as billing address, shipping address
  *  and some specific fields such as order status, order Tracking number.
  *
- * @package BestitKlarnaOrderManagement\Subscriber\Doctrine
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -22,32 +20,21 @@ class OrderTrigger implements EventSubscriber
     /** @var ContainerInterface $container */
     protected $container;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
-    /**
-     * @return array
-     */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
-            'preUpdate'
+            'preUpdate',
         ];
     }
 
-    /**
-     * @param PreUpdateEventArgs $args
-     *
-     * @return void
-     */
-    public function preUpdate(PreUpdateEventArgs $args)
+    public function preUpdate(PreUpdateEventArgs $args): void
     {
-        $orderTrigger = $this->container->get('bestit_klarna_order_management.components.trigger.order_status_changed');
+        $orderTrigger       = $this->container->get('bestit_klarna_order_management.components.trigger.order_status_changed');
         $orderDetailTrigger = $this->container->get(
             'bestit_klarna_order_management.components.trigger.order_detail_status_changed'
         );
@@ -63,12 +50,9 @@ class OrderTrigger implements EventSubscriber
         }
     }
 
-    /**
-     * @return bool
-     */
-    protected function pickwareIsNotEnabled()
+    protected function pickwareIsNotEnabled(): bool
     {
-        $configReader = $this->container->get('bestit_klarna_order_management.components.config_reader');
+        $configReader         = $this->container->get('bestit_klarna_order_management.components.config_reader');
         $pickwareIsNotEnabled = (int) $configReader->get('pickware_enabled', 0);
 
         return $pickwareIsNotEnabled === 0;

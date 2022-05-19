@@ -1,0 +1,16 @@
+stages:
+  - style
+
+codestyle:
+  stage: style
+  image: "dockware/play:5.6.10"
+  variables:
+    PHP_VERSION: "7.2"
+  except:
+    variables: [ $DISABLE_PHP_CS == "1" ]
+  before_script:
+    - curl https://getcomposer.org/download/1.10.23/composer.phar -o /var/www/html/composer
+    - chmod +x /var/www/html/composer
+    - /var/www/html/composer install
+  script:
+    - vendor/bin/php-cs-fixer fix -v --dry-run

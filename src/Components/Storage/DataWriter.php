@@ -2,15 +2,15 @@
 
 namespace BestitKlarnaOrderManagement\Components\Storage;
 
+use function array_key_exists;
 use DateTime;
 use Doctrine\DBAL\Connection;
+use function is_array;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
  *  Changes several data that is related to an order.
- *
- * @package BestitKlarnaOrderManagement\Components
  *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
@@ -22,9 +22,6 @@ class DataWriter
     /** @var LoggerInterface */
     protected $logger;
 
-    /**
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection, LoggerInterface $logger)
     {
         $this->connection = $connection;
@@ -34,10 +31,8 @@ class DataWriter
     /**
      * @param string $transactionId
      * @param int    $statusId
-     *
-     * @return int
      */
-    public function updatePaymentStatus($transactionId, $statusId)
+    public function updatePaymentStatus($transactionId, $statusId): int
     {
         if (empty($transactionId)) {
             return 0;
@@ -53,10 +48,10 @@ class DataWriter
             ->fetch();
 
         if (
-            !\is_array($order) ||
-            !\array_key_exists('status', $order) ||
-            !\array_key_exists('id', $order) ||
-            !\array_key_exists('cleared', $order)
+            !is_array($order) ||
+            !array_key_exists('status', $order) ||
+            !array_key_exists('id', $order) ||
+            !array_key_exists('cleared', $order)
         ) {
             throw new RuntimeException(sprintf('No order with the transactionId %s could be found.', $transactionId));
         }
@@ -68,12 +63,12 @@ class DataWriter
         return $this->connection->insert(
             's_order_history',
             [
-                'orderID' => $order['id'],
-                'previous_order_status_id' => $orderStatus,
-                'order_status_id' => $orderStatus,
+                'orderID'                    => $order['id'],
+                'previous_order_status_id'   => $orderStatus,
+                'order_status_id'            => $orderStatus,
                 'previous_payment_status_id' => $order['cleared'],
-                'payment_status_id' => $statusId,
-                'change_date' => (new DateTime())->format('Y-m-d H:i:s')
+                'payment_status_id'          => $statusId,
+                'change_date'                => (new DateTime())->format('Y-m-d H:i:s'),
             ]
         );
     }
@@ -99,6 +94,7 @@ class DataWriter
                     'orderNumber' => $orderNumber,
                 ]
             );
+
             return;
         }
 

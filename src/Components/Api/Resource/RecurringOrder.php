@@ -1,25 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BestitKlarnaOrderManagement\Components\Api\Resource;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\RecurringOrderResponse;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\RequestException;
+use BestitKlarnaOrderManagement\Components\Curl\Client;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class RecurringOrder
 {
     use ResponseWrapperTrait;
 
-    /** @var HttpClient */
+    /** @var Client */
     protected $httpClient;
 
-    public function __construct(HttpClient $client, SerializerInterface $serializer)
+    public function __construct(Client $client, SerializerInterface $serializer)
     {
         $this->httpClient = $client;
         $this->serializer = $serializer;
@@ -27,21 +25,21 @@ class RecurringOrder
 
     public function create(Request $request): Response
     {
-        $baseUrl   = $request->getBaseUrl();
+        $baseUrl       = $request->getBaseUrl();
         $customerToken = $request->getQueryParameter('customerToken');
 
         try {
             $response = $this->httpClient->post(
                 "{$baseUrl}/customer-token/v1/tokens/{$customerToken}/order",
                 [
-                    'json' => $request->getPayload(),
-                    'headers' => $request->getHeaders()
+                    'json'    => $request->getPayload(),
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response, RecurringOrderResponse::class);
+        return $this->wrapResponse($response, RecurringOrderResponse::class);
     }
 }

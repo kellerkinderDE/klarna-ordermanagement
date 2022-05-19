@@ -9,18 +9,11 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 /**
  * Injects our dependencies into the DIC.
  *
- * @package BestitKlarnaOrderManagement\Components\DependencyInjection
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class DependencyInjectionExtension implements DependencyInjectionExtensionInterface
 {
-    /**
-     * @param ContainerBuilder $containerBuilder
-     *
-     * @return void
-     */
-    public function injectDependencies(ContainerBuilder $containerBuilder)
+    public function injectDependencies(ContainerBuilder $containerBuilder): void
     {
         $orderManagementDir = __DIR__ . '/../..';
 

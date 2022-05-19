@@ -8,8 +8,6 @@ use ZipArchive;
 /**
  * Zips our logs files.
  *
- * @package BestitKlarnaOrderManagement\Components\Logging
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class ZipCreator
@@ -20,7 +18,6 @@ class ZipCreator
     protected $logDir;
 
     /**
-     * @param Finder $finder
      * @param string $logDir
      */
     public function __construct(Finder $finder, $logDir)
@@ -31,10 +28,8 @@ class ZipCreator
 
     /**
      * @param string $zipFileName
-     *
-     * @return string
      */
-    public function zipKlarnaLogFiles($zipFileName)
+    public function zipKlarnaLogFiles($zipFileName): string
     {
         $this->finder->in($this->logDir)->name('bestit_klarna_*');
 

@@ -9,8 +9,6 @@ use RuntimeException;
  * Since we provide a default PHP calculator this exception should
  * never be thrown unless there is a custom modification.
  *
- * @package BestitKlarnaOrderManagement\Components\Exception
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class NoSupportedCalculatorException extends RuntimeException

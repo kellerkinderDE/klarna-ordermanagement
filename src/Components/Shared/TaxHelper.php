@@ -2,33 +2,20 @@
 
 namespace BestitKlarnaOrderManagement\Components\Shared;
 
-/**
- * Class to find out if user is allowed for tax free order.
- *
- * @package BestitKlarnaOrderManagement\Components\Shared
- *
- */
 class TaxHelper
 {
     /** @var array */
     protected $userData = [];
 
-    /**
-     * @param array $userData
-     *
-     * @return void
-     */
-    public function setUserdata(array $userData)
+    public function setUserdata(array $userData): void
     {
         $this->userData = $userData;
     }
 
     /**
      * Validates if the provided customer should get a tax free delivery
-     *
-     * @return bool
      */
-    public function isTaxFreeDelivery()
+    public function isTaxFreeDelivery(): bool
     {
         if (empty($this->userData)) {
             return false;

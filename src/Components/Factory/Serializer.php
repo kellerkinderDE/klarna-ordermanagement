@@ -14,16 +14,11 @@ use Symfony\Component\Serializer\Serializer as SymfonySerializer;
 /**
  * Factory responsible for creating a Serializer.
  *
- * @package BestitKlarnaOrderManagement\Components\Factory
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Serializer
 {
-    /**
-     * @return SymfonySerializer
-     */
-    public static function create()
+    public static function create(): SymfonySerializer
     {
         $objectNormalizer = new ObjectNormalizer(
             null,
@@ -46,7 +41,7 @@ class Serializer
             new ArrayDenormalizer(),
             new OptionsNormalizer(),
             $customObjectNormalizer,
-            $objectNormalizer
+            $objectNormalizer,
         ];
         $encoders = [new JsonEncoder()];
 

@@ -7,8 +7,6 @@ use Shopware\Models\Shop\Shop;
 /**
  * Builds the locale in the format that Klarna needs.
  *
- * @package BestitKlarnaOrderManagement\Components\Shared
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Localizer
@@ -16,18 +14,12 @@ class Localizer
     /** @var Shop */
     protected $shop;
 
-    /**
-     * @param Shop $shop
-     */
     public function __construct(Shop $shop)
     {
         $this->shop = $shop;
     }
 
-    /**
-     * @return string
-     */
-    public function localize()
+    public function localize(): string
     {
         /**
          * Shopware uses "de_DE" as the format for locales whereas the normal way is "de-DE" which

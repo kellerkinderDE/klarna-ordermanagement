@@ -14,8 +14,6 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * Triggers a capture for the given order detail item.
  *
- * @package BestitKlarnaOrderManagement\Components\Trigger\Action
- *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class PartialCapture implements ActionInterface
@@ -29,32 +27,22 @@ class PartialCapture implements ActionInterface
     /** @var Serializer */
     protected $serializer;
 
-    /**
-     * @param CaptureFacade $captureFacade
-     * @param CalculatorInterface $calculator
-     * @param OrderDetailTransformerInterface $detailTransformer
-     * @param Serializer $serializer
-     */
     public function __construct(
         CaptureFacade $captureFacade,
         CalculatorInterface $calculator,
         OrderDetailTransformerInterface $detailTransformer,
         Serializer $serializer
     ) {
-        $this->captureFacade = $captureFacade;
-        $this->calculator = $calculator;
+        $this->captureFacade     = $captureFacade;
+        $this->calculator        = $calculator;
         $this->detailTransformer = $detailTransformer;
-        $this->serializer = $serializer;
+        $this->serializer        = $serializer;
     }
 
     /**
-     * @param SwOrder $swOrder
-     * @param KlarnaOrder $klarnaOrder
-     * @param SwOrderDetail|null $swOrderDetail
-     *
-     * @return int|null The payment status that should be set or null.
+     * @return null|int the payment status that should be set or null
      */
-    public function trigger(SwOrder $swOrder, KlarnaOrder $klarnaOrder, SwOrderDetail $swOrderDetail = null)
+    public function trigger(SwOrder $swOrder, KlarnaOrder $klarnaOrder, SwOrderDetail $swOrderDetail = null): ?int
     {
         if ($swOrderDetail === null) {
             return null;

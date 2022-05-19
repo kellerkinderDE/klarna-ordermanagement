@@ -9,8 +9,6 @@ use BestitKlarnaOrderManagement\Components\Trigger\Helper\OrderUpdater;
 /**
  * Synchronizes the line item changes with Klarna.
  *
- * @package BestitKlarnaOrderManagement\Components\Trigger
- *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
@@ -21,10 +19,6 @@ class LineItemDeleted
     /** @var DataProvider $dataProvider */
     protected $dataProvider;
 
-    /**
-     * @param OrderUpdater     $orderUpdater
-     * @param DataProvider     $dataProvider
-     */
     public function __construct(OrderUpdater $orderUpdater, DataProvider $dataProvider)
     {
         $this->orderUpdater = $orderUpdater;
@@ -32,14 +26,11 @@ class LineItemDeleted
     }
 
     /**
-     * @param int   $orderId
-     * @param array $positions
-     *
-     * @return Response
+     * @param int $orderId
      */
-    public function execute($orderId, array $positions)
+    public function execute($orderId, array $positions): Response
     {
-        $positionIds = array_column($positions, 'id');
+        $positionIds  = array_column($positions, 'id');
         $orderDetails = $this->dataProvider->getOrderDetails($orderId);
 
         foreach ($orderDetails as $key => $orderDetail) {

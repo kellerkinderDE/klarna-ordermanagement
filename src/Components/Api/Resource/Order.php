@@ -6,64 +6,43 @@ use BestitKlarnaOrderManagement\Components\Api\Model\Order as OrderModel;
 use BestitKlarnaOrderManagement\Components\Api\Request;
 use BestitKlarnaOrderManagement\Components\Api\Response;
 use BestitKlarnaOrderManagement\Components\Api\ResponseWrapperTrait;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\RequestException;
+use BestitKlarnaOrderManagement\Components\Curl\Client;
+use BestitKlarnaOrderManagement\Components\Curl\Exception\KlarnaCurlClientException;
 use Symfony\Component\Serializer\SerializerInterface;
 
-/**
- * Interface to interact with Klarna order(s).
- *
- * @package BestitKlarnaOrderManagement\Components\Api\Resource
- *
- * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
- */
 class Order
 {
     use ResponseWrapperTrait;
 
-    /** @var HttpClient */
+    /** @var Client */
     protected $httpClient;
 
-    /**
-     * @param HttpClient          $client
-     * @param SerializerInterface $serializer
-     */
-    public function __construct(HttpClient $client, SerializerInterface $serializer)
+    public function __construct(Client $client, SerializerInterface $serializer)
     {
         $this->httpClient = $client;
         $this->serializer = $serializer;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function get(Request $request)
+    public function get(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
 
         try {
             $response = $this->httpClient->get(
-                "{$baseUrl}/ordermanagement/v1/orders/{$orderId}",
+                "{$baseUrl}ordermanagement/v1/orders/{$orderId}",
                 [
-                    'headers' => $request->getHeaders()
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response, OrderModel::class);
+        return $this->wrapResponse($response, OrderModel::class);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function acknowledge(Request $request)
+    public function acknowledge(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
@@ -72,22 +51,17 @@ class Order
             $response = $this->httpClient->post(
                 "{$baseUrl}/ordermanagement/v1/orders/{$orderId}/acknowledge",
                 [
-                    'headers' => $request->getHeaders()
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response);
+        return $this->wrapResponse($response);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function extendAuthTime(Request $request)
+    public function extendAuthTime(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
@@ -96,22 +70,17 @@ class Order
             $response = $this->httpClient->post(
                 "{$baseUrl}/ordermanagement/v1/orders/{$orderId}/extend-authorization-time",
                 [
-                    'headers' => $request->getHeaders()
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response);
+        return $this->wrapResponse($response);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function releaseRemainingAmount(Request $request)
+    public function releaseRemainingAmount(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
@@ -120,22 +89,17 @@ class Order
             $response = $this->httpClient->post(
                 "{$baseUrl}/ordermanagement/v1/orders/{$orderId}/release-remaining-authorization",
                 [
-                    'headers' => $request->getHeaders()
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response);
+        return $this->wrapResponse($response);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function cancel(Request $request)
+    public function cancel(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
@@ -144,22 +108,17 @@ class Order
             $response = $this->httpClient->post(
                 "{$baseUrl}/ordermanagement/v1/orders/{$orderId}/cancel",
                 [
-                    'headers' => $request->getHeaders()
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response);
+        return $this->wrapResponse($response);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function updateAddress(Request $request)
+    public function updateAddress(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
@@ -168,23 +127,18 @@ class Order
             $response = $this->httpClient->patch(
                 "{$baseUrl}/ordermanagement/v1/orders/{$orderId}/customer-details",
                 [
-                    'json' => $request->getPayload(),
-                    'headers' => $request->getHeaders()
+                    'json'    => $request->getPayload(),
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response);
+        return $this->wrapResponse($response);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function updateOrder(Request $request)
+    public function updateOrder(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
@@ -193,23 +147,18 @@ class Order
             $response = $this->httpClient->patch(
                 "{$baseUrl}/ordermanagement/v1/orders/{$orderId}/authorization",
                 [
-                    'json' => $request->getPayload(),
-                    'headers' => $request->getHeaders()
+                    'json'    => $request->getPayload(),
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response);
+        return $this->wrapResponse($response);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function updateMerchantReferences(Request $request)
+    public function updateMerchantReferences(Request $request): Response
     {
         $baseUrl = $request->getBaseUrl();
         $orderId = $request->getQueryParameter('order_id');
@@ -218,14 +167,14 @@ class Order
             $response = $this->httpClient->patch(
                 "{$baseUrl}/ordermanagement/v1/orders/{$orderId}/merchant-references",
                 [
-                    'json' => $request->getPayload(),
-                    'headers' => $request->getHeaders()
+                    'json'    => $request->getPayload(),
+                    'headers' => $request->getHeaders(),
                 ]
             );
-        } catch (RequestException $e) {
-            return $this->wrapGuzzleException($e);
+        } catch (KlarnaCurlClientException $e) {
+            return $this->wrapException($e);
         }
 
-        return $this->wrapGuzzleResponse($response);
+        return $this->wrapResponse($response);
     }
 }

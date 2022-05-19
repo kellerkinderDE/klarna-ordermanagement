@@ -5,36 +5,34 @@ namespace BestitKlarnaOrderManagement\Components\Api\Model;
 /**
  * Representation of a Klarna customer as an object.
  *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Customer
 {
-    /** @var string|null */
+    /** @var null|string */
     public $dateOfBirth;
 
-    /** @var string|null */
+    /** @var null|string */
     public $nationalIdentificationNumber;
 
-    /** @var string|null */
+    /** @var null|string */
     public $title;
 
-    /** @var string|null */
+    /** @var null|string */
     public $gender;
 
-    /** @var string|null */
+    /** @var null|string */
     public $lastFourSsn;
 
-    /** @var string|null */
+    /** @var null|string */
     public $type;
 
-    /** @var string|null */
+    /** @var null|string */
     public $vatId;
 
-    /** @var string|null */
+    /** @var null|string */
     public $organizationRegistrationId;
 
-    /** @var string|null */
+    /** @var null|string */
     public $organizationEntityType;
 }

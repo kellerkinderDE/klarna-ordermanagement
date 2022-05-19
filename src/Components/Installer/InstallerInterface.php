@@ -8,36 +8,13 @@ use Shopware\Components\Plugin\Context\UninstallContext;
 use Shopware\Components\Plugin\Context\UpdateContext;
 
 /**
- * Interface for the installer of the OrderManagement package.
- *
- * @package BestitKlarnaOrderManagement\Components\Installer
- *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 interface InstallerInterface
 {
-    /**
-     * @param Plugin         $plugin
-     * @param InstallContext $installContext
-     *
-     * @return void
-     *
-     */
-    public function install(Plugin $plugin, InstallContext $installContext);
+    public function install(Plugin $plugin, InstallContext $installContext): void;
 
-    /**
-     * @param Plugin        $plugin
-     * @param UpdateContext $updateContext
-     *
-     * @return void
-     */
-    public function update(Plugin $plugin, UpdateContext $updateContext);
+    public function update(Plugin $plugin, UpdateContext $updateContext): void;
 
-    /**
-     * @param Plugin           $plugin
-     * @param UninstallContext $uninstallContext
-     *
-     * @return void
-     */
-    public function uninstall(Plugin $plugin, UninstallContext $uninstallContext);
+    public function uninstall(Plugin $plugin, UninstallContext $uninstallContext): void;
 }

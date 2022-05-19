@@ -7,8 +7,6 @@ use DateTime;
 /**
  * Representation of a Klarna capture as an object.
  *
- * @package BestitKlarnaOrderManagement\Components\Api\Model
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 class Capture
@@ -25,7 +23,7 @@ class Capture
     /** @var DateTime */
     public $capturedAt;
 
-    /** @var string|null */
+    /** @var null|string */
     public $description;
 
     /** @var LineItem[] */

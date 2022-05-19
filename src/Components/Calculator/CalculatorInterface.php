@@ -5,34 +5,26 @@ namespace BestitKlarnaOrderManagement\Components\Calculator;
 /**
  * Defines the required methods for a calculator.
  *
- * @package BestitKlarnaOrderManagement\Components\Calculator
- *
  * @author Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
 interface CalculatorInterface
 {
     /**
      * Is the calculation method supported?
-     *
-     * @return bool
      */
-    public function isSupported();
+    public function isSupported(): bool;
 
     /**
      * Converts the amount which was given to the method to cents.
      *
      * @param float $amount
-     *
-     * @return int
      */
-    public function toCents($amount);
+    public function toCents($amount): int;
 
     /**
      * Converts the amount which was given to the major unit of a currency.
      *
      * @param int $amount
-     *
-     * @return float
      */
-    public function toMajorUnit($amount);
+    public function toMajorUnit($amount): float;
 }

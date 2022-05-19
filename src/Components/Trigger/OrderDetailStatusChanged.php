@@ -4,9 +4,9 @@ namespace BestitKlarnaOrderManagement\Components\Trigger;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrderModel;
 use BestitKlarnaOrderManagement\Components\ConfigReader;
-use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Facade\Order as OrderFacade;
 use BestitKlarnaOrderManagement\Components\PaymentInsights;
+use BestitKlarnaOrderManagement\Components\Storage\DataProvider;
 use BestitKlarnaOrderManagement\Components\Trigger\Action\ActionFactoryInterface;
 use Shopware\Models\Order\Detail as SwOrderDetail;
 use Shopware\Models\Order\Order as SwOrderModel;
@@ -14,8 +14,6 @@ use Shopware\Models\Order\Status;
 
 /**
  * Executes any defined triggers when the status of an order detail item is changed.
- *
- * @package BestitKlarnaOrderManagement\Components\Trigger
  *
  * @author  Ahmad El-Bardan <ahmad.el-bardan@bestit-online.de>
  */
@@ -32,13 +30,6 @@ class OrderDetailStatusChanged
     /** @var ActionFactoryInterface */
     protected $actionFactory;
 
-    /**
-     * @param OrderFacade $orderFacade
-     * @param ConfigReader $configReader
-     * @param PaymentInsights $paymentInsights
-     * @param DataProvider $dataProvider
-     * @param ActionFactoryInterface $actionFactory
-     */
     public function __construct(
         OrderFacade $orderFacade,
         ConfigReader $configReader,
@@ -46,19 +37,14 @@ class OrderDetailStatusChanged
         DataProvider $dataProvider,
         ActionFactoryInterface $actionFactory
     ) {
-        $this->orderFacade = $orderFacade;
-        $this->configReader = $configReader;
+        $this->orderFacade     = $orderFacade;
+        $this->configReader    = $configReader;
         $this->paymentInsights = $paymentInsights;
-        $this->dataProvider = $dataProvider;
-        $this->actionFactory = $actionFactory;
+        $this->dataProvider    = $dataProvider;
+        $this->actionFactory   = $actionFactory;
     }
 
-    /**
-     * @param SwOrderDetail $orderDetail
-     *
-     * @return SwOrderModel
-     */
-    public function executeDefinedTriggers(SwOrderDetail $orderDetail)
+    public function executeDefinedTriggers(SwOrderDetail $orderDetail): SwOrderModel
     {
         $swOrder = $orderDetail->getOrder();
 
@@ -67,7 +53,7 @@ class OrderDetailStatusChanged
         }
 
         $klarnaOrderId = $swOrder->getTransactionId();
-        $statusId = $orderDetail->getStatus()->getId();
+        $statusId      = $orderDetail->getStatus()->getId();
 
         $action = $this->actionFactory->createForDetailStatus($statusId);
 
@@ -94,34 +80,23 @@ class OrderDetailStatusChanged
     }
 
     /**
-     * @param SwOrderModel $order
-     * @param int          $statusId
-     *
-     * @return SwOrderModel
+     * @param int $statusId
      */
-    protected function setPaymentStatus(SwOrderModel $order, $statusId)
+    protected function setPaymentStatus(SwOrderModel $order, $statusId): SwOrderModel
     {
         $order->setPaymentStatus($this->dataProvider->getStatusReference($statusId));
 
         return $order;
     }
 
-    /**
-     * @return bool
-     */
-    protected function automaticTriggersAreDisabled()
+    protected function automaticTriggersAreDisabled(): bool
     {
         $automaticTriggersEnabled = (int) $this->configReader->get('automatic_triggers_enabled', 0);
 
         return $automaticTriggersEnabled === 0;
     }
 
-    /**
-     * @param SwOrderModel $swOrder
-     *
-     * @return bool
-     */
-    protected function isNotAKlarnaOrder(SwOrderModel $swOrder)
+    protected function isNotAKlarnaOrder(SwOrderModel $swOrder): bool
     {
         return !$this->paymentInsights->isKlarnaPaymentMethodId(
             $swOrder->getPayment()->getId()

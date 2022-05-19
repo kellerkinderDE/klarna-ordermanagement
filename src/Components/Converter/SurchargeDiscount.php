@@ -8,8 +8,6 @@ use BestitKlarnaOrderManagement\Components\Exception\NoSupportedModeException;
 /**
  * Converts Shopware Surcharge/Discount mode to surcharge/discount
  *
- * @package BestitKlarnaOrderManagement\Components\Converter
- *
  * @author Senan Sharhan <senan.sharhan@bestit-online.de>
  */
 class SurchargeDiscount implements ModeInterface
@@ -18,10 +16,8 @@ class SurchargeDiscount implements ModeInterface
      * Is the article mode supported?
      *
      * @param int $mode
-     *
-     * @return bool
      */
-    public function isSupported($mode)
+    public function isSupported($mode): bool
     {
         return $mode === Constants::SHOPWARE_SURCHARGE_DISCOUNT_MODE;
     }
@@ -33,11 +29,9 @@ class SurchargeDiscount implements ModeInterface
      * @param int   $mode
      * @param float $price
      *
-     * @return string
-     *
      * @throws NoSupportedModeException
      */
-    public function convert($mode, $price = null)
+    public function convert($mode, $price = null): string
     {
         if (!$this->isSupported($mode)) {
             throw new NoSupportedModeException();

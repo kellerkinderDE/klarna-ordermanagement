@@ -123,7 +123,7 @@ $(function () {
         var url = $target.attr('data-url');
         var action = $target.attr('data-action');
         var amountClass = '.js--sum.' + action;
-        var descriptionClass = '.js--commend.' + action;
+        var descriptionClass = '.js--comment.' + action;
         var orderLineName = action + '_order_line';
 
         var amount = $(amountClass).val();
