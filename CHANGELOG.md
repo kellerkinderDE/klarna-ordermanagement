@@ -10,6 +10,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - Fixed the config reader to return the correct value when falsy values are configured (e.g. 0, 'false')
 ### Added
 - Allowed manual and individual adding of positions which are not related to an article
+### Changed
+- Changed client for requests from guzzle to curl
+- Adjusted error handling 
+- Codestyle 
 
 ## [0.5.0] - 2022-02-28 
 ### Fixed
