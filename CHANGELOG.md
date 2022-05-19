@@ -6,14 +6,19 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 ### Fixed
-- Fixed a missing auth header during customer token generation
-- Fixed the config reader to return the correct value when falsy values are configured (e.g. 0, 'false')
-### Added
-- Allowed manual and individual adding of positions which are not related to an article
+- The purchase currency of the order is now used for displaying the amounts
 ### Changed
 - Changed client for requests from guzzle to curl
-- Adjusted error handling 
-- Codestyle 
+- Adjusted error handling
+- Codestyle
+
+## [0.5.1] - 2022-04-12
+### Fixed
+- Fixed a missing auth header during customer token generation
+- Fixed the config reader to return the correct value when falsy values are configured (e.g. 0, 'false')
+- Fixed compatibility to PHP 8.0
+### Added
+- Allowed manual and individual adding of positions which are not related to an article
 
 ## [0.5.0] - 2022-02-28 
 ### Fixed
