@@ -21,13 +21,13 @@
                             No further details.
                         {else}
                             <div>
-                                <span class="text-strong">Amount: </span>{$log->getCents()}
+                                <span class="text-strong">Amount: </span>{$log->getCents()|bestitToMajorUnit|currency}
                             </div>
                         {/if}
                     {else}
                         {if $log->getCents()}
                             <div>
-                                <span class="text-strong">Amount: </span>{$log->getCents()}
+                                <span class="text-strong">Amount: </span>{$log->getCents()|bestitToMajorUnit|currency}
                             </div>
                         {/if}
 
