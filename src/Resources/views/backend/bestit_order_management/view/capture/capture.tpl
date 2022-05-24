@@ -51,7 +51,7 @@
 
                         <div class="flex-between w-50 float-right text-strong">
                             <span>{s name='captureAmount'}Capture Amount:{/s}</span>
-                            <input type="number" name="summery" class="js--sum capture capture-sum" value="0">
+                            <input type="number" name="summery" class="js--sum capture capture-sum" value="0" min="0.01" max={$order.remaining_authorized_amount|bestitToMajorUnit}>
                         </div>
 
                         <div class="flex-between w-50 float-right">

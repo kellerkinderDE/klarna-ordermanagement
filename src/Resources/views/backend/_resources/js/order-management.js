@@ -21,6 +21,15 @@ $(function () {
      * @param e
      */
     var $sum = $('.js--sum');
+
+    $sum.each(function(i, e) {
+        e.addEventListener('change', function() {
+            if (parseInt(e.value) > parseInt(e.max)) {
+                e.value = e.max;
+            }
+        });
+    });
+
     function calculateSum(e) {
         var $target = $(e.currentTarget);
         var totalPrice = 0;
@@ -35,7 +44,25 @@ $(function () {
                 totalPrice = Math.round((totalPrice + ($el.attr('data-price') * $quantity.val())) * 100) / 100;
             }
         });
+        
+        var maxTotalPrice = getMaxTotalPrice(action); 
+
+        if (maxTotalPrice && totalPrice > maxTotalPrice) {
+            totalPrice = maxTotalPrice;
+        }
+
         $sum.val(totalPrice);
+    }
+
+    function getMaxTotalPrice(action) {
+        var actionClass = '.' + action + '-sum';
+        var input = document.querySelector(actionClass);
+
+        if (input.max) {
+            return input.max;
+        }
+
+        return null;
     }
 
     /**
