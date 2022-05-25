@@ -31,7 +31,7 @@ $(function () {
 
         e.addEventListener('change', function() {
             if (parseInt(e.value) > parseInt(e.max)) {
-                e.value = parseInt(e.max);
+                e.value = e.max;
             }
 
             if (e.value <= 0) {
