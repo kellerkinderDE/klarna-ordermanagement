@@ -17,23 +17,42 @@ $(function () {
     });
 
     /**
-     * Recalculate the sum for the capture/refund Amount.
+     * Update the sum for the capture/refund amount and disable submit-btn if amount is <= 0.
      * @param e
      */
     var $sum = $('.js--sum');
-
     $sum.each(function(i, e) {
+        var action = e.dataset.action
+        var actionId = '#' + action + '-btn';
+
+        if (parseInt(e.value) <= 0) {
+            $(actionId).prop('disabled', true);
+        }
+
         e.addEventListener('change', function() {
             if (parseInt(e.value) > parseInt(e.max)) {
-                e.value = e.max;
+                e.value = parseInt(e.max);
+            }
+
+            if (e.value <= 0) {
+                $(actionId).prop('disabled', true);
+            }
+
+            if (e.value > 0) {
+                $(actionId).prop('disabled', false);
             }
         });
     });
 
+    /**
+     * Recalculate the sum for the capture/refund Amount.
+     * @param e
+     */
     function calculateSum(e) {
         var $target = $(e.currentTarget);
         var totalPrice = 0;
         var action = $target.attr('data-action');
+        var actionClass = '.js--sum.' + action;
         var orderLinesName = getOrderLinesName(action);
 
         $('input[name^=' + orderLinesName + ']').each(function (i, e) {
@@ -51,11 +70,16 @@ $(function () {
             totalPrice = maxTotalPrice;
         }
 
-        $sum.val(totalPrice);
+        $(actionClass).val(totalPrice);
+        /* trigger change event manually so that eventListener can change the max amount */
+        document.querySelector(actionClass).dispatchEvent(new Event('change'));
     }
 
+    /**
+     * Calculates the maximum total price for a refund/capture.
+     */
     function getMaxTotalPrice(action) {
-        var actionClass = '.' + action + '-sum';
+        var actionClass = '.js--sum.' + action;
         var input = document.querySelector(actionClass);
 
         if (input.max) {
@@ -107,7 +131,6 @@ $(function () {
         var confirmationDiffersClass = '.' + action + '-confirmation-differs';
         var orderLineName = action + '_order_line';
         var amount = $(amountClass).val();
-
 
         var selectedLines = [];
         $('input[name^=' + orderLineName + ']').each(function (i, e) {
