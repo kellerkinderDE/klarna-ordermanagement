@@ -7,6 +7,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## Unreleased
 ### Fixed
 - The purchase currency of the order is now used for displaying the amounts
+- Format of amounts in the details of a capture and refund
 ### Changed
 - Changed client for requests from guzzle to curl
 - Adjusted error handling
