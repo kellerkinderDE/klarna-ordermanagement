@@ -51,7 +51,7 @@
 
                         <div class="flex-between w-50 float-right text-strong">
                             <span>{s name='RefundAmount'}Refund amount:{/s}</span>
-                            <input type="number" name="summery" class="js--sum refund refund-sum" value="0">
+                            <input type="number" name="sum" class="js--sum refund refund-sum" value="0" min="0" max={($order.captured_amount - $order.refunded_amount)|bestitToMajorUnit} data-action="refund">
                         </div>
 
                         <div class="flex-between w-50 float-right">
@@ -77,7 +77,7 @@
                     </div>
 
                     <div>
-                        <button type="button" class="btn btn-primary float-right js-confirmation-btn" data-order="{$order|json_encode|escape}" data-action="refund" data-toggle="modal"
+                        <button type="button" class="btn btn-primary float-right js-confirmation-btn" id="refund-btn" data-order="{$order|json_encode|escape}" data-action="refund" data-toggle="modal"
                                 data-target="#submit-refund-Modal">{s name='Refund'}Refund{/s}</button>
                     </div>
                 </div>

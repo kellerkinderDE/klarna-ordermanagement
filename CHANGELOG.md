@@ -12,6 +12,8 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - Changed client for requests from guzzle to curl
 - Adjusted error handling
 - Codestyle
+### Added
+- Validation of inputs for capture and refund
 
 ## [0.5.1] - 2022-04-12
 ### Fixed
