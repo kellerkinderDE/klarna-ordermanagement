@@ -30,6 +30,10 @@ trait ResponseWrapperTrait
         $rawResponse = (string) $guzzleResponse->getBody();
 
         if ($modelClass !== null && !empty($rawResponse)) {
+            if (!$this->isValidJson($rawResponse)) {
+                $rawResponse = json_encode((string) $guzzleResponse->getBody());
+            }
+
             $response = ApiResponse::wrapObject($this->serializer->deserialize($rawResponse, $modelClass, 'json'));
         } else {
             $response = ApiResponse::wrapEmptySuccessResponse();
@@ -68,5 +72,11 @@ trait ResponseWrapperTrait
         }
 
         return ApiResponse::wrapError($error);
+    }
+
+    private function isValidJson($string): bool
+    {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
     }
 }
