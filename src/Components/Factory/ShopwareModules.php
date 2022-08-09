@@ -5,7 +5,7 @@ namespace BestitKlarnaOrderManagement\Components\Factory;
 use sAdmin;
 use sArticles;
 use sBasket;
-use Shopware\Models\Shop\DetachedShop;
+use Shopware\Models\Shop\Shop;
 use Shopware_Components_Modules;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,7 +35,7 @@ class ShopwareModules
         return $swModules->Basket();
     }
 
-    public static function createShopwareShop(ContainerInterface $container): DetachedShop
+    public static function createShopwareShop(ContainerInterface $container): Shop
     {
         return $container->get('shop');
     }
