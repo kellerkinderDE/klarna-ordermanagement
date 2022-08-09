@@ -1,16 +1,44 @@
 stages:
+  - setup
   - style
+
+variables:
+  DOCKER_DRIVER: overlay2
+  BASE_SW_VERSION: '5.6.10'
+  COMPOSER_COMMAND: "composer install --prefer-dist --no-ansi --no-interaction --no-progress --optimize-autoloader"
+  COMPOSER_HOME: /var/www/html/var/cache/composer
+  DOCKWARE_CI: '1'
+
+before_script:
+  - ${COMPOSER_COMMAND}
+  - cp -r ${CI_PROJECT_DIR} /var/www/html/custom/plugins/${CI_PROJECT_NAME}
+
+composer:
+  stage: setup
+  image: "dockware/dev:${BASE_SW_VERSION}"
+  cache:
+    key:
+      files:
+        - composer.lock
+    paths:
+      - vendor/
+  script:
+    - "true"
 
 codestyle:
   stage: style
-  image: "dockware/play:5.6.10"
-  variables:
-    PHP_VERSION: "7.2"
+  image: "dockware/dev:${BASE_SW_VERSION}"
+  needs:
+    - composer
   except:
     variables: [ $DISABLE_PHP_CS == "1" ]
-  before_script:
-    - curl https://getcomposer.org/download/1.10.23/composer.phar -o /var/www/html/composer
-    - chmod +x /var/www/html/composer
-    - /var/www/html/composer install
   script:
-    - vendor/bin/php-cs-fixer fix -v --dry-run
+    - cd /var/www/html/custom/plugins/${CI_PROJECT_NAME} && vendor/bin/php-cs-fixer fix -v --dry-run
+  cache:
+    key:
+      files:
+        - composer.lock
+    policy: pull
+    paths:
+      - .php-cs-fixer.cache
+      - vendor/
