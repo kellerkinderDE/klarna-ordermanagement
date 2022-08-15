@@ -7,6 +7,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## Unreleased
 ### Fixed
 - Save multiple tracking codes with first capture
+- Added currency fallback if purchase_currency in backend is not valid
 
 ## [0.6.0] - 2022-ß6-14
 ### Fixed
