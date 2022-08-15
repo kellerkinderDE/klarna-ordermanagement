@@ -70,8 +70,7 @@ class Shopware_Controllers_Backend_BestitOrderManagement extends Enlight_Control
         try {
             $this->container->set('currency', new Zend_Currency($this->View()->getAssign('order')['purchase_currency']));
         } catch (\Exception $e) {
-            // fallback if Zend_Currency with purchase_currency fails
-            $this->container->set('currency', new Zend_Currency());
+            // silent fail
         }
     }
 
