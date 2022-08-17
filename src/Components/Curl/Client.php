@@ -126,9 +126,9 @@ class Client
                 $statusCode = $this->extractStatusCode($response);
                 $body       = $this->extractBody($response);
 
-                $error = new Error();
-                $error->errorCode      = $statusCode;
-                $error->errorMessages  = $body; 
+                $error                = new Error();
+                $error->errorCode     = $statusCode;
+                $error->errorMessages = $body;
 
                 throw new RequestException(new Response($statusCode, $body, $error));
             }
@@ -204,6 +204,7 @@ class Client
     private function isValidJson($string): bool
     {
         json_decode($string);
+
         return json_last_error() === JSON_ERROR_NONE;
     }
 
