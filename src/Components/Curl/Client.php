@@ -201,21 +201,21 @@ class Client
         return $curl;
     }
 
-    private function isValidJson($string): bool
+    private function isValidJson(string $jsonData): bool
     {
-        json_decode($string);
+        json_decode($jsonData);
 
         return json_last_error() === JSON_ERROR_NONE;
     }
 
-    private function extractStatusCode($string): int
+    private function extractStatusCode(string $jsonData): int
     {
-        return (int) preg_match('/\d{3}/', $string, $out) ? $out[0] : 401;
+        return (int) preg_match('/\d{3}/', $jsonData, $out) ? $out[0] : 401;
     }
 
-    private function extractBody($string): string
+    private function extractBody(string $jsonData): string
     {
-        $match = preg_match('/<title>(.*?)<\/title>/', $string, $out) ? $out[0] : 'empty response';
+        $match = preg_match('/<title>(.*?)<\/title>/', $jsonData, $out) ? $out[0] : 'empty response';
 
         return str_replace(['<title>', '</title>'], ['', ''], $match);
     }
