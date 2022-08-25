@@ -120,6 +120,18 @@ class Client
                     throw new RequestException(new Response($statusCode, $body, $error));
                 }
             }
+
+            // fallback if response is not valid json
+            if (!$this->isValidJson($response)) {
+                $statusCode = $this->extractStatusCode($response);
+                $body       = $this->extractBody($response);
+
+                $error                = new Error();
+                $error->errorCode     = $statusCode;
+                $error->errorMessages = $body;
+
+                throw new RequestException(new Response($statusCode, $body, $error));
+            }
         }
 
         return new Response($statusCode, $response);
@@ -187,5 +199,24 @@ class Client
         }
 
         return $curl;
+    }
+
+    private function isValidJson(string $jsonData): bool
+    {
+        json_decode($jsonData);
+
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    private function extractStatusCode(string $jsonData): int
+    {
+        return (int) preg_match('/\d{3}/', $jsonData, $out) ? $out[0] : 401;
+    }
+
+    private function extractBody(string $jsonData): string
+    {
+        $match = preg_match('/<title>(.*?)<\/title>/', $jsonData, $out) ? $out[0] : 'empty response';
+
+        return str_replace(['<title>', '</title>'], ['', ''], $match);
     }
 }
