@@ -8,8 +8,9 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Fixed
 - Save multiple tracking codes with first capture
 - Added currency fallback if purchase_currency in backend is not valid
+- Fixed handling of non JSON responses from API
 
-## [0.6.0] - 2022-ß6-14
+## [0.6.0] - 2022-06-14
 ### Fixed
 - The purchase currency of the order is now used for displaying the amounts
 - Format of amounts in the details of a capture and refund
