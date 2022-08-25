@@ -86,10 +86,7 @@ class Capture
             $dispatchName = $trackingInfo['dispatchName'] ?? null;
 
             if ($trackingCode !== null) {
-                $shippingInfoModel                  = new ShippingInfo();
-                $shippingInfoModel->trackingNumber  = $trackingCode;
-                $shippingInfoModel->shippingCompany = $dispatchName;
-                $shippingInfo                       = [$shippingInfoModel];
+                $shippingInfo = $this->splitShipmentNumbers($trackingCode, $dispatchName);
             }
         }
 
@@ -156,15 +153,7 @@ class Capture
      */
     public function updateShippingInfo($orderId, $captureId, $trackingNumber, $shippingCompany): Response
     {
-        $delimitedTrackingNumber = $this->splitShipmentNumbers($trackingNumber);
-        $shippingInfoModels      = [];
-
-        foreach ($delimitedTrackingNumber as $value) {
-            $shippingInfoModel                  = new ShippingInfo();
-            $shippingInfoModel->trackingNumber  = $value;
-            $shippingInfoModel->shippingCompany = $shippingCompany;
-            $shippingInfoModels[]               = $shippingInfoModel;
-        }
+        $shippingInfoModels = $this->splitShipmentNumbers($trackingNumber, $shippingCompany);
 
         $request = Request::createFromPayload([
             'shipping_info' => $this->serializer->normalize($shippingInfoModels),
@@ -175,10 +164,22 @@ class Capture
         return $this->captureResource->updateShippingInfo($request);
     }
 
-    private function splitShipmentNumbers(string $trackingCodes): array
+    /**
+     * @return ShippingInfo[]
+     */
+    private function splitShipmentNumbers(string $trackingCodes, string $shippingCompany): array
     {
-        $delimiter = (string) $this->configReader->get('trackingnumber_delimiter');
+        $delimiter               = (string) $this->configReader->get('trackingnumber_delimiter');
+        $delimitedTrackingNumber = explode($delimiter, $trackingCodes);
+        $shippingInfoModels      = [];
 
-        return explode($delimiter, $trackingCodes);
+        foreach ($delimitedTrackingNumber as $value) {
+            $shippingInfoModel                  = new ShippingInfo();
+            $shippingInfoModel->trackingNumber  = $value;
+            $shippingInfoModel->shippingCompany = $shippingCompany;
+            $shippingInfoModels[]               = $shippingInfoModel;
+        }
+
+        return $shippingInfoModels;
     }
 }
