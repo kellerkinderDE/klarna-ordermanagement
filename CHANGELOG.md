@@ -5,6 +5,8 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+
+## [0.6.1] - 2022-09-05
 ### Fixed
 - Save multiple tracking codes with first capture
 - Added currency fallback if purchase_currency in backend is not valid
