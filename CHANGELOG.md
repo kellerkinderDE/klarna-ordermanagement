@@ -5,6 +5,8 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+### Fixed
+- Fixed handling of nullable column 
 
 ## [0.6.1] - 2022-09-05
 ### Fixed
