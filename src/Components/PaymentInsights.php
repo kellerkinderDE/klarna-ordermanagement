@@ -68,7 +68,7 @@ class PaymentInsights
     /**
      * @param int $orderId
      */
-    public function getOrderChanged($orderId): string
+    public function getOrderChanged($orderId): ?string
     {
         return $this->connection->createQueryBuilder()
             ->select('o.changed')
