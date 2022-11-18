@@ -79,7 +79,6 @@ fieldset[disabled] .btn-danger {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe0e0e0', GradientType=0);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-repeat: repeat-x;
-  border-color: #dbdbdb;
   text-shadow: 0 1px 0 #fff;
   border-color: #ccc;
 }
