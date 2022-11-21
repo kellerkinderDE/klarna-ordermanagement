@@ -7,6 +7,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## Unreleased
 ### Fixed
 - Fixed handling of nullable column 
+- Fixed code style warnings
 
 ## [0.6.1] - 2022-09-05
 ### Fixed
