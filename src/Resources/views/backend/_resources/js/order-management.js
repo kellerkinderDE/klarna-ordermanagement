@@ -22,15 +22,15 @@ $(function () {
      */
     var $sum = $('.js--sum');
     $sum.each(function(i, e) {
-        var action = e.dataset.action
+        var action = e.dataset.action;
         var actionId = '#' + action + '-btn';
 
-        if (parseInt(e.value) <= 0) {
+        if (parseInt(e.value, 10) <= 0) {
             $(actionId).prop('disabled', true);
         }
 
         e.addEventListener('change', function() {
-            if (parseInt(e.value) > parseInt(e.max)) {
+            if (parseInt(e.value, 10) > parseInt(e.max, 10)) {
                 e.value = e.max;
             }
 
@@ -140,7 +140,7 @@ $(function () {
             }
 
             var $quantity = $el.closest('tr').find('.js--orderLine-quantity');
-            order.order_lines[i].quantity = parseInt($quantity.val());
+            order.order_lines[i].quantity = parseInt($quantity.val(), 10);
             selectedLines.push(order.order_lines[i]);
         });
 
@@ -187,7 +187,7 @@ $(function () {
             }
 
             var $quantity = $el.closest('tr').find('.js--orderLine-quantity');
-            order.order_lines[i].quantity = parseInt($quantity.val());
+            order.order_lines[i].quantity = parseInt($quantity.val(), 10);
             selectedLines.push(order.order_lines[i]);
         });
 
