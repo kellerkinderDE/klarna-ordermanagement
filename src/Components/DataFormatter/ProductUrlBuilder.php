@@ -49,7 +49,7 @@ class ProductUrlBuilder implements ProductUrlBuilderInterface
         foreach ($lineItems as $lineItem) {
             $articleId = (int) $lineItem['articleID'];
 
-            if ($articleId === 0) {
+            if ($articleId === 0 || empty($lineItem['linkDetails'])) {
                 continue;
             }
 
