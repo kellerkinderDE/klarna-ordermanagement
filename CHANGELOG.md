@@ -5,8 +5,11 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## Unreleased
+
+## [0.6.3] - 2023-06-19
 ### Fixed
 - Fixed building of product URLs for line items with missing link details because of third-party plugins
+- Added support for PHP 8.2
 
 ## [0.6.2] - 2023-01-13
 ### Fixed
