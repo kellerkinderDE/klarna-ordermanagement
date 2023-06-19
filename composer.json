@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "library",
     "require": {
-        "php": ">=7.2 <=8.2"
+        "php": ">=7.2 <8.3"
     },
     "require-dev": {
         "k10r/codestyle": "^2.0"

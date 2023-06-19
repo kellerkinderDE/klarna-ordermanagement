@@ -6,6 +6,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## Unreleased
 
+## [0.6.4] - 2023-06-19
+### Fixed
+- Changed constraint to match anything below PHP 8.3
+
 ## [0.6.3] - 2023-06-19
 ### Fixed
 - Fixed building of product URLs for line items with missing link details because of third-party plugins
