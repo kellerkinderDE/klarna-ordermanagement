@@ -4,6 +4,7 @@ namespace BestitKlarnaOrderManagement\Components\Trigger\Action;
 
 use BestitKlarnaOrderManagement\Components\Api\Model\Order as KlarnaOrder;
 use BestitKlarnaOrderManagement\Components\Facade\Capture as CaptureFacade;
+use BestitKlarnaOrderManagement\Components\Transformer\OrderDetailTransformerInterface;
 use Shopware\Models\Order\Detail as SwOrderDetail;
 use Shopware\Models\Order\Order as SwOrder;
 use Shopware\Models\Order\Status;
@@ -18,9 +19,13 @@ class Capture implements ActionInterface
     /** @var CaptureFacade */
     protected $captureFacade;
 
-    public function __construct(CaptureFacade $captureFacade)
+    /** @var OrderDetailTransformerInterface */
+    protected $orderDetailTransformer;
+
+    public function __construct(CaptureFacade $captureFacade, OrderDetailTransformerInterface $orderDetailTransformer)
     {
-        $this->captureFacade = $captureFacade;
+        $this->captureFacade          = $captureFacade;
+        $this->orderDetailTransformer = $orderDetailTransformer;
     }
 
     /**
@@ -38,7 +43,17 @@ class Capture implements ActionInterface
             return null;
         }
 
-        $response = $this->captureFacade->create($swOrder->getTransactionId(), $klarnaOrder->remainingAuthorizedAmount);
+        $lineItems = null;
+
+        if ($klarnaOrder->remainingAuthorizedAmount === $klarnaOrder->orderAmount) {
+            $lineItems = $this->orderDetailTransformer->createLineItems($swOrder->getDetails()->toArray());
+        }
+
+        $response = $this->captureFacade->create(
+            $swOrder->getTransactionId(),
+            $klarnaOrder->remainingAuthorizedAmount,
+            $lineItems
+        );
 
         if ($response->isError()) {
             return Status::PAYMENT_STATE_REVIEW_NECESSARY;
