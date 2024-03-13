@@ -4,7 +4,7 @@ All notable changes to `klarnaordermanagement` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-## Unreleased
+## [0.6.5] - 2024-03-13
 ### Added
 - Added all line items to automatic capture request of full amount
 
